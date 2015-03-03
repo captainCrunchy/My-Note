@@ -35,71 +35,52 @@
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolbarPanel = new System.Windows.Forms.Panel();
-            this.pictureBox9 = new System.Windows.Forms.PictureBox();
-            this.pictureBox8 = new System.Windows.Forms.PictureBox();
-            this.pictureBox7 = new System.Windows.Forms.PictureBox();
-            this.pictureBox6 = new System.Windows.Forms.PictureBox();
-            this.pictureBox5 = new System.Windows.Forms.PictureBox();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.currentColorBox = new System.Windows.Forms.PictureBox();
-            this.grayColorBox = new System.Windows.Forms.PictureBox();
-            this.tealColorBox = new System.Windows.Forms.PictureBox();
-            this.purpleColorBox = new System.Windows.Forms.PictureBox();
-            this.greenColorBox = new System.Windows.Forms.PictureBox();
-            this.yellowColorBox = new System.Windows.Forms.PictureBox();
-            this.orangeColorBox = new System.Windows.Forms.PictureBox();
-            this.whiteColorBox = new System.Windows.Forms.PictureBox();
-            this.blackColorBox = new System.Windows.Forms.PictureBox();
-            this.blueColorBox = new System.Windows.Forms.PictureBox();
-            this.redColorBox = new System.Windows.Forms.PictureBox();
+            this.drawColorButton = new System.Windows.Forms.Button();
+            this.whiteColorButton = new System.Windows.Forms.Button();
+            this.blackColorButton = new System.Windows.Forms.Button();
+            this.button25 = new System.Windows.Forms.Button();
+            this.button24 = new System.Windows.Forms.Button();
+            this.button23 = new System.Windows.Forms.Button();
+            this.button22 = new System.Windows.Forms.Button();
+            this.button21 = new System.Windows.Forms.Button();
+            this.button20 = new System.Windows.Forms.Button();
+            this.button19 = new System.Windows.Forms.Button();
+            this.button9 = new System.Windows.Forms.Button();
+            this.vertTextButton = new System.Windows.Forms.Button();
+            this.dottedSelectButton = new System.Windows.Forms.Button();
+            this.dashedSelectButton = new System.Windows.Forms.Button();
+            this.solidSelectButton = new System.Windows.Forms.Button();
+            this.circleSelectButton = new System.Windows.Forms.Button();
+            this.squareSelectButton = new System.Windows.Forms.Button();
+            this.SEarrrowButton = new System.Windows.Forms.Button();
+            this.SarrowButton = new System.Windows.Forms.Button();
+            this.EarrowButton = new System.Windows.Forms.Button();
+            this.SWarrowButton = new System.Windows.Forms.Button();
+            this.WarrowButton = new System.Windows.Forms.Button();
+            this.NEarrowButton = new System.Windows.Forms.Button();
+            this.NarrowButton = new System.Windows.Forms.Button();
+            this.NWarrowButton = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.eraserSelectButton = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.pencilSelectButton = new System.Windows.Forms.Button();
+            this.textSelectButton = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.pictureBox18 = new System.Windows.Forms.PictureBox();
+            this.pictureBox17 = new System.Windows.Forms.PictureBox();
             this.textColorButton = new System.Windows.Forms.Button();
-            this.highlighterButton = new System.Windows.Forms.Button();
+            this.highlightColorButton = new System.Windows.Forms.Button();
             this.strikeoutButton = new System.Windows.Forms.Button();
             this.underlineButton = new System.Windows.Forms.Button();
             this.italicButton = new System.Windows.Forms.Button();
             this.boldButton = new System.Windows.Forms.Button();
             this.fontComboBox = new System.Windows.Forms.ComboBox();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.pictureBox10 = new System.Windows.Forms.PictureBox();
-            this.pictureBox11 = new System.Windows.Forms.PictureBox();
-            this.pictureBox12 = new System.Windows.Forms.PictureBox();
-            this.pictureBox13 = new System.Windows.Forms.PictureBox();
-            this.pictureBox14 = new System.Windows.Forms.PictureBox();
-            this.pictureBox15 = new System.Windows.Forms.PictureBox();
-            this.pictureBox16 = new System.Windows.Forms.PictureBox();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.richTextBox = new System.Windows.Forms.RichTextBox();
             this.menuStrip1.SuspendLayout();
             this.toolbarPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.currentColorBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.grayColorBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tealColorBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.purpleColorBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.greenColorBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.yellowColorBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.orangeColorBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.whiteColorBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.blackColorBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.blueColorBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.redColorBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox11)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox12)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox13)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox14)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox15)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox16)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox18)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox17)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -111,7 +92,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(885, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(812, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -142,35 +123,41 @@
             // toolbarPanel
             // 
             this.toolbarPanel.BackColor = System.Drawing.Color.Silver;
-            this.toolbarPanel.Controls.Add(this.pictureBox16);
-            this.toolbarPanel.Controls.Add(this.pictureBox15);
-            this.toolbarPanel.Controls.Add(this.pictureBox14);
-            this.toolbarPanel.Controls.Add(this.pictureBox13);
-            this.toolbarPanel.Controls.Add(this.pictureBox12);
-            this.toolbarPanel.Controls.Add(this.pictureBox11);
-            this.toolbarPanel.Controls.Add(this.pictureBox10);
-            this.toolbarPanel.Controls.Add(this.pictureBox9);
-            this.toolbarPanel.Controls.Add(this.pictureBox8);
-            this.toolbarPanel.Controls.Add(this.pictureBox7);
-            this.toolbarPanel.Controls.Add(this.pictureBox6);
-            this.toolbarPanel.Controls.Add(this.pictureBox5);
-            this.toolbarPanel.Controls.Add(this.pictureBox4);
-            this.toolbarPanel.Controls.Add(this.pictureBox3);
-            this.toolbarPanel.Controls.Add(this.pictureBox2);
-            this.toolbarPanel.Controls.Add(this.pictureBox1);
-            this.toolbarPanel.Controls.Add(this.currentColorBox);
-            this.toolbarPanel.Controls.Add(this.grayColorBox);
-            this.toolbarPanel.Controls.Add(this.tealColorBox);
-            this.toolbarPanel.Controls.Add(this.purpleColorBox);
-            this.toolbarPanel.Controls.Add(this.greenColorBox);
-            this.toolbarPanel.Controls.Add(this.yellowColorBox);
-            this.toolbarPanel.Controls.Add(this.orangeColorBox);
-            this.toolbarPanel.Controls.Add(this.whiteColorBox);
-            this.toolbarPanel.Controls.Add(this.blackColorBox);
-            this.toolbarPanel.Controls.Add(this.blueColorBox);
-            this.toolbarPanel.Controls.Add(this.redColorBox);
+            this.toolbarPanel.Controls.Add(this.drawColorButton);
+            this.toolbarPanel.Controls.Add(this.whiteColorButton);
+            this.toolbarPanel.Controls.Add(this.blackColorButton);
+            this.toolbarPanel.Controls.Add(this.button25);
+            this.toolbarPanel.Controls.Add(this.button24);
+            this.toolbarPanel.Controls.Add(this.button23);
+            this.toolbarPanel.Controls.Add(this.button22);
+            this.toolbarPanel.Controls.Add(this.button21);
+            this.toolbarPanel.Controls.Add(this.button20);
+            this.toolbarPanel.Controls.Add(this.button19);
+            this.toolbarPanel.Controls.Add(this.button9);
+            this.toolbarPanel.Controls.Add(this.vertTextButton);
+            this.toolbarPanel.Controls.Add(this.dottedSelectButton);
+            this.toolbarPanel.Controls.Add(this.dashedSelectButton);
+            this.toolbarPanel.Controls.Add(this.solidSelectButton);
+            this.toolbarPanel.Controls.Add(this.circleSelectButton);
+            this.toolbarPanel.Controls.Add(this.squareSelectButton);
+            this.toolbarPanel.Controls.Add(this.SEarrrowButton);
+            this.toolbarPanel.Controls.Add(this.SarrowButton);
+            this.toolbarPanel.Controls.Add(this.EarrowButton);
+            this.toolbarPanel.Controls.Add(this.SWarrowButton);
+            this.toolbarPanel.Controls.Add(this.WarrowButton);
+            this.toolbarPanel.Controls.Add(this.NEarrowButton);
+            this.toolbarPanel.Controls.Add(this.NarrowButton);
+            this.toolbarPanel.Controls.Add(this.NWarrowButton);
+            this.toolbarPanel.Controls.Add(this.label3);
+            this.toolbarPanel.Controls.Add(this.eraserSelectButton);
+            this.toolbarPanel.Controls.Add(this.label2);
+            this.toolbarPanel.Controls.Add(this.pencilSelectButton);
+            this.toolbarPanel.Controls.Add(this.textSelectButton);
+            this.toolbarPanel.Controls.Add(this.label1);
+            this.toolbarPanel.Controls.Add(this.pictureBox18);
+            this.toolbarPanel.Controls.Add(this.pictureBox17);
             this.toolbarPanel.Controls.Add(this.textColorButton);
-            this.toolbarPanel.Controls.Add(this.highlighterButton);
+            this.toolbarPanel.Controls.Add(this.highlightColorButton);
             this.toolbarPanel.Controls.Add(this.strikeoutButton);
             this.toolbarPanel.Controls.Add(this.underlineButton);
             this.toolbarPanel.Controls.Add(this.italicButton);
@@ -178,229 +165,353 @@
             this.toolbarPanel.Controls.Add(this.fontComboBox);
             this.toolbarPanel.Location = new System.Drawing.Point(0, 27);
             this.toolbarPanel.Name = "toolbarPanel";
-            this.toolbarPanel.Size = new System.Drawing.Size(885, 57);
+            this.toolbarPanel.Size = new System.Drawing.Size(812, 57);
             this.toolbarPanel.TabIndex = 1;
             // 
-            // pictureBox9
+            // drawColorButton
             // 
-            this.pictureBox9.BackColor = System.Drawing.Color.White;
-            this.pictureBox9.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox9.Image")));
-            this.pictureBox9.Location = new System.Drawing.Point(577, 39);
-            this.pictureBox9.Name = "pictureBox9";
-            this.pictureBox9.Size = new System.Drawing.Size(19, 19);
-            this.pictureBox9.TabIndex = 24;
-            this.pictureBox9.TabStop = false;
+            this.drawColorButton.BackColor = System.Drawing.Color.Black;
+            this.drawColorButton.Location = new System.Drawing.Point(606, 5);
+            this.drawColorButton.Name = "drawColorButton";
+            this.drawColorButton.Size = new System.Drawing.Size(48, 48);
+            this.drawColorButton.TabIndex = 65;
+            this.drawColorButton.UseVisualStyleBackColor = false;
             // 
-            // pictureBox8
+            // whiteColorButton
             // 
-            this.pictureBox8.BackColor = System.Drawing.Color.White;
-            this.pictureBox8.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox8.Image")));
-            this.pictureBox8.Location = new System.Drawing.Point(577, 20);
-            this.pictureBox8.Name = "pictureBox8";
-            this.pictureBox8.Size = new System.Drawing.Size(19, 19);
-            this.pictureBox8.TabIndex = 23;
-            this.pictureBox8.TabStop = false;
+            this.whiteColorButton.BackColor = System.Drawing.Color.White;
+            this.whiteColorButton.Location = new System.Drawing.Point(660, 29);
+            this.whiteColorButton.Name = "whiteColorButton";
+            this.whiteColorButton.Size = new System.Drawing.Size(23, 23);
+            this.whiteColorButton.TabIndex = 64;
+            this.whiteColorButton.UseVisualStyleBackColor = false;
             // 
-            // pictureBox7
+            // blackColorButton
             // 
-            this.pictureBox7.BackColor = System.Drawing.Color.White;
-            this.pictureBox7.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox7.Image")));
-            this.pictureBox7.Location = new System.Drawing.Point(577, 1);
-            this.pictureBox7.Name = "pictureBox7";
-            this.pictureBox7.Size = new System.Drawing.Size(19, 19);
-            this.pictureBox7.TabIndex = 22;
-            this.pictureBox7.TabStop = false;
+            this.blackColorButton.BackColor = System.Drawing.Color.Black;
+            this.blackColorButton.Location = new System.Drawing.Point(660, 5);
+            this.blackColorButton.Name = "blackColorButton";
+            this.blackColorButton.Size = new System.Drawing.Size(23, 23);
+            this.blackColorButton.TabIndex = 63;
+            this.blackColorButton.UseVisualStyleBackColor = false;
             // 
-            // pictureBox6
+            // button25
             // 
-            this.pictureBox6.BackColor = System.Drawing.Color.White;
-            this.pictureBox6.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox6.Image")));
-            this.pictureBox6.Location = new System.Drawing.Point(539, 39);
-            this.pictureBox6.Name = "pictureBox6";
-            this.pictureBox6.Size = new System.Drawing.Size(19, 19);
-            this.pictureBox6.TabIndex = 21;
-            this.pictureBox6.TabStop = false;
+            this.button25.BackColor = System.Drawing.Color.Green;
+            this.button25.Location = new System.Drawing.Point(689, 29);
+            this.button25.Name = "button25";
+            this.button25.Size = new System.Drawing.Size(23, 23);
+            this.button25.TabIndex = 62;
+            this.button25.UseVisualStyleBackColor = false;
             // 
-            // pictureBox5
+            // button24
             // 
-            this.pictureBox5.BackColor = System.Drawing.Color.White;
-            this.pictureBox5.Location = new System.Drawing.Point(558, 20);
-            this.pictureBox5.Name = "pictureBox5";
-            this.pictureBox5.Size = new System.Drawing.Size(19, 19);
-            this.pictureBox5.TabIndex = 20;
-            this.pictureBox5.TabStop = false;
+            this.button24.BackColor = System.Drawing.Color.Gray;
+            this.button24.Location = new System.Drawing.Point(689, 5);
+            this.button24.Name = "button24";
+            this.button24.Size = new System.Drawing.Size(23, 23);
+            this.button24.TabIndex = 61;
+            this.button24.UseVisualStyleBackColor = false;
             // 
-            // pictureBox4
+            // button23
             // 
-            this.pictureBox4.BackColor = System.Drawing.Color.White;
-            this.pictureBox4.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox4.Image")));
-            this.pictureBox4.Location = new System.Drawing.Point(539, 20);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(19, 19);
-            this.pictureBox4.TabIndex = 19;
-            this.pictureBox4.TabStop = false;
+            this.button23.BackColor = System.Drawing.Color.Teal;
+            this.button23.Location = new System.Drawing.Point(718, 29);
+            this.button23.Name = "button23";
+            this.button23.Size = new System.Drawing.Size(23, 23);
+            this.button23.TabIndex = 60;
+            this.button23.UseVisualStyleBackColor = false;
             // 
-            // pictureBox3
+            // button22
             // 
-            this.pictureBox3.BackColor = System.Drawing.Color.White;
-            this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(558, 39);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(19, 19);
-            this.pictureBox3.TabIndex = 18;
-            this.pictureBox3.TabStop = false;
+            this.button22.BackColor = System.Drawing.Color.Red;
+            this.button22.Location = new System.Drawing.Point(718, 5);
+            this.button22.Name = "button22";
+            this.button22.Size = new System.Drawing.Size(23, 23);
+            this.button22.TabIndex = 59;
+            this.button22.UseVisualStyleBackColor = false;
             // 
-            // pictureBox2
+            // button21
             // 
-            this.pictureBox2.BackColor = System.Drawing.Color.White;
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(558, 1);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(19, 19);
-            this.pictureBox2.TabIndex = 18;
-            this.pictureBox2.TabStop = false;
+            this.button21.BackColor = System.Drawing.Color.Blue;
+            this.button21.Location = new System.Drawing.Point(747, 29);
+            this.button21.Name = "button21";
+            this.button21.Size = new System.Drawing.Size(23, 23);
+            this.button21.TabIndex = 58;
+            this.button21.UseVisualStyleBackColor = false;
             // 
-            // pictureBox1
+            // button20
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.White;
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(539, 1);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(19, 19);
-            this.pictureBox1.TabIndex = 17;
-            this.pictureBox1.TabStop = false;
+            this.button20.BackColor = System.Drawing.Color.Orange;
+            this.button20.Location = new System.Drawing.Point(747, 5);
+            this.button20.Name = "button20";
+            this.button20.Size = new System.Drawing.Size(23, 23);
+            this.button20.TabIndex = 57;
+            this.button20.UseVisualStyleBackColor = false;
             // 
-            // currentColorBox
+            // button19
             // 
-            this.currentColorBox.BackColor = System.Drawing.Color.Black;
-            this.currentColorBox.Location = new System.Drawing.Point(656, 4);
-            this.currentColorBox.Name = "currentColorBox";
-            this.currentColorBox.Size = new System.Drawing.Size(50, 50);
-            this.currentColorBox.TabIndex = 16;
-            this.currentColorBox.TabStop = false;
+            this.button19.BackColor = System.Drawing.Color.Purple;
+            this.button19.Location = new System.Drawing.Point(776, 29);
+            this.button19.Name = "button19";
+            this.button19.Size = new System.Drawing.Size(23, 23);
+            this.button19.TabIndex = 56;
+            this.button19.UseVisualStyleBackColor = false;
             // 
-            // grayColorBox
+            // button9
             // 
-            this.grayColorBox.BackColor = System.Drawing.Color.Gray;
-            this.grayColorBox.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.grayColorBox.Location = new System.Drawing.Point(740, 4);
-            this.grayColorBox.Name = "grayColorBox";
-            this.grayColorBox.Size = new System.Drawing.Size(22, 22);
-            this.grayColorBox.TabIndex = 10;
-            this.grayColorBox.TabStop = false;
+            this.button9.BackColor = System.Drawing.Color.Yellow;
+            this.button9.Location = new System.Drawing.Point(776, 5);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(23, 23);
+            this.button9.TabIndex = 55;
+            this.button9.UseVisualStyleBackColor = false;
             // 
-            // tealColorBox
+            // vertTextButton
             // 
-            this.tealColorBox.BackColor = System.Drawing.Color.Teal;
-            this.tealColorBox.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.tealColorBox.Location = new System.Drawing.Point(768, 32);
-            this.tealColorBox.Name = "tealColorBox";
-            this.tealColorBox.Size = new System.Drawing.Size(22, 22);
-            this.tealColorBox.TabIndex = 15;
-            this.tealColorBox.TabStop = false;
+            this.vertTextButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("vertTextButton.BackgroundImage")));
+            this.vertTextButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.vertTextButton.Location = new System.Drawing.Point(573, 5);
+            this.vertTextButton.Name = "vertTextButton";
+            this.vertTextButton.Size = new System.Drawing.Size(27, 46);
+            this.vertTextButton.TabIndex = 54;
+            this.vertTextButton.UseVisualStyleBackColor = true;
             // 
-            // purpleColorBox
+            // dottedSelectButton
             // 
-            this.purpleColorBox.BackColor = System.Drawing.Color.Purple;
-            this.purpleColorBox.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.purpleColorBox.Location = new System.Drawing.Point(824, 32);
-            this.purpleColorBox.Name = "purpleColorBox";
-            this.purpleColorBox.Size = new System.Drawing.Size(22, 22);
-            this.purpleColorBox.TabIndex = 14;
-            this.purpleColorBox.TabStop = false;
+            this.dottedSelectButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("dottedSelectButton.BackgroundImage")));
+            this.dottedSelectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.dottedSelectButton.Location = new System.Drawing.Point(522, 42);
+            this.dottedSelectButton.Name = "dottedSelectButton";
+            this.dottedSelectButton.Size = new System.Drawing.Size(45, 11);
+            this.dottedSelectButton.TabIndex = 53;
+            this.dottedSelectButton.UseVisualStyleBackColor = true;
             // 
-            // greenColorBox
+            // dashedSelectButton
             // 
-            this.greenColorBox.BackColor = System.Drawing.Color.Green;
-            this.greenColorBox.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.greenColorBox.Location = new System.Drawing.Point(740, 32);
-            this.greenColorBox.Name = "greenColorBox";
-            this.greenColorBox.Size = new System.Drawing.Size(22, 22);
-            this.greenColorBox.TabIndex = 13;
-            this.greenColorBox.TabStop = false;
+            this.dashedSelectButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("dashedSelectButton.BackgroundImage")));
+            this.dashedSelectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.dashedSelectButton.Location = new System.Drawing.Point(522, 22);
+            this.dashedSelectButton.Name = "dashedSelectButton";
+            this.dashedSelectButton.Size = new System.Drawing.Size(45, 11);
+            this.dashedSelectButton.TabIndex = 52;
+            this.dashedSelectButton.UseVisualStyleBackColor = true;
             // 
-            // yellowColorBox
+            // solidSelectButton
             // 
-            this.yellowColorBox.BackColor = System.Drawing.Color.Yellow;
-            this.yellowColorBox.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.yellowColorBox.Location = new System.Drawing.Point(824, 4);
-            this.yellowColorBox.Name = "yellowColorBox";
-            this.yellowColorBox.Size = new System.Drawing.Size(22, 22);
-            this.yellowColorBox.TabIndex = 12;
-            this.yellowColorBox.TabStop = false;
+            this.solidSelectButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("solidSelectButton.BackgroundImage")));
+            this.solidSelectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.solidSelectButton.Location = new System.Drawing.Point(522, 4);
+            this.solidSelectButton.Name = "solidSelectButton";
+            this.solidSelectButton.Size = new System.Drawing.Size(45, 11);
+            this.solidSelectButton.TabIndex = 51;
+            this.solidSelectButton.UseVisualStyleBackColor = true;
             // 
-            // orangeColorBox
+            // circleSelectButton
             // 
-            this.orangeColorBox.BackColor = System.Drawing.Color.Orange;
-            this.orangeColorBox.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.orangeColorBox.Location = new System.Drawing.Point(796, 4);
-            this.orangeColorBox.Name = "orangeColorBox";
-            this.orangeColorBox.Size = new System.Drawing.Size(22, 22);
-            this.orangeColorBox.TabIndex = 11;
-            this.orangeColorBox.TabStop = false;
+            this.circleSelectButton.Font = new System.Drawing.Font("Wingdings", 14F);
+            this.circleSelectButton.Location = new System.Drawing.Point(476, 28);
+            this.circleSelectButton.Name = "circleSelectButton";
+            this.circleSelectButton.Size = new System.Drawing.Size(27, 27);
+            this.circleSelectButton.TabIndex = 50;
+            this.circleSelectButton.Text = "¡";
+            this.circleSelectButton.UseVisualStyleBackColor = true;
             // 
-            // whiteColorBox
+            // squareSelectButton
             // 
-            this.whiteColorBox.BackColor = System.Drawing.Color.White;
-            this.whiteColorBox.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.whiteColorBox.Location = new System.Drawing.Point(712, 32);
-            this.whiteColorBox.Name = "whiteColorBox";
-            this.whiteColorBox.Size = new System.Drawing.Size(22, 22);
-            this.whiteColorBox.TabIndex = 10;
-            this.whiteColorBox.TabStop = false;
+            this.squareSelectButton.Font = new System.Drawing.Font("Wingdings", 14F);
+            this.squareSelectButton.Location = new System.Drawing.Point(476, 1);
+            this.squareSelectButton.Name = "squareSelectButton";
+            this.squareSelectButton.Size = new System.Drawing.Size(27, 27);
+            this.squareSelectButton.TabIndex = 49;
+            this.squareSelectButton.Text = "¨";
+            this.squareSelectButton.UseVisualStyleBackColor = true;
             // 
-            // blackColorBox
+            // SEarrrowButton
             // 
-            this.blackColorBox.BackColor = System.Drawing.Color.Black;
-            this.blackColorBox.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.blackColorBox.Location = new System.Drawing.Point(712, 4);
-            this.blackColorBox.Name = "blackColorBox";
-            this.blackColorBox.Size = new System.Drawing.Size(22, 22);
-            this.blackColorBox.TabIndex = 9;
-            this.blackColorBox.TabStop = false;
+            this.SEarrrowButton.Font = new System.Drawing.Font("Wingdings 3", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.SEarrrowButton.Location = new System.Drawing.Point(444, 38);
+            this.SEarrrowButton.Name = "SEarrrowButton";
+            this.SEarrrowButton.Size = new System.Drawing.Size(19, 19);
+            this.SEarrrowButton.TabIndex = 48;
+            this.SEarrrowButton.Text = "m";
+            this.SEarrrowButton.UseVisualStyleBackColor = true;
             // 
-            // blueColorBox
+            // SarrowButton
             // 
-            this.blueColorBox.BackColor = System.Drawing.Color.Blue;
-            this.blueColorBox.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.blueColorBox.Location = new System.Drawing.Point(796, 32);
-            this.blueColorBox.Name = "blueColorBox";
-            this.blueColorBox.Size = new System.Drawing.Size(22, 22);
-            this.blueColorBox.TabIndex = 8;
-            this.blueColorBox.TabStop = false;
+            this.SarrowButton.Font = new System.Drawing.Font("Wingdings 3", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.SarrowButton.Location = new System.Drawing.Point(425, 38);
+            this.SarrowButton.Name = "SarrowButton";
+            this.SarrowButton.Size = new System.Drawing.Size(19, 19);
+            this.SarrowButton.TabIndex = 47;
+            this.SarrowButton.Text = "i";
+            this.SarrowButton.UseVisualStyleBackColor = true;
             // 
-            // redColorBox
+            // EarrowButton
             // 
-            this.redColorBox.BackColor = System.Drawing.Color.Red;
-            this.redColorBox.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.redColorBox.Location = new System.Drawing.Point(768, 4);
-            this.redColorBox.Name = "redColorBox";
-            this.redColorBox.Size = new System.Drawing.Size(22, 22);
-            this.redColorBox.TabIndex = 7;
-            this.redColorBox.TabStop = false;
+            this.EarrowButton.Font = new System.Drawing.Font("Wingdings 3", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.EarrowButton.Location = new System.Drawing.Point(444, 19);
+            this.EarrowButton.Name = "EarrowButton";
+            this.EarrowButton.Size = new System.Drawing.Size(19, 19);
+            this.EarrowButton.TabIndex = 46;
+            this.EarrowButton.Text = "g";
+            this.EarrowButton.UseVisualStyleBackColor = true;
+            // 
+            // SWarrowButton
+            // 
+            this.SWarrowButton.Font = new System.Drawing.Font("Wingdings 3", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.SWarrowButton.Location = new System.Drawing.Point(406, 38);
+            this.SWarrowButton.Name = "SWarrowButton";
+            this.SWarrowButton.Size = new System.Drawing.Size(19, 19);
+            this.SWarrowButton.TabIndex = 44;
+            this.SWarrowButton.Text = "l";
+            this.SWarrowButton.UseVisualStyleBackColor = true;
+            // 
+            // WarrowButton
+            // 
+            this.WarrowButton.Font = new System.Drawing.Font("Wingdings 3", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.WarrowButton.Location = new System.Drawing.Point(406, 19);
+            this.WarrowButton.Name = "WarrowButton";
+            this.WarrowButton.Size = new System.Drawing.Size(19, 19);
+            this.WarrowButton.TabIndex = 43;
+            this.WarrowButton.Text = "f";
+            this.WarrowButton.UseVisualStyleBackColor = true;
+            // 
+            // NEarrowButton
+            // 
+            this.NEarrowButton.Font = new System.Drawing.Font("Wingdings 3", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.NEarrowButton.Location = new System.Drawing.Point(444, 0);
+            this.NEarrowButton.Name = "NEarrowButton";
+            this.NEarrowButton.Size = new System.Drawing.Size(19, 19);
+            this.NEarrowButton.TabIndex = 42;
+            this.NEarrowButton.Text = "k";
+            this.NEarrowButton.UseVisualStyleBackColor = true;
+            // 
+            // NarrowButton
+            // 
+            this.NarrowButton.Font = new System.Drawing.Font("Wingdings 3", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.NarrowButton.Location = new System.Drawing.Point(425, 0);
+            this.NarrowButton.Name = "NarrowButton";
+            this.NarrowButton.Size = new System.Drawing.Size(19, 19);
+            this.NarrowButton.TabIndex = 41;
+            this.NarrowButton.Text = "h";
+            this.NarrowButton.UseVisualStyleBackColor = true;
+            // 
+            // NWarrowButton
+            // 
+            this.NWarrowButton.Font = new System.Drawing.Font("Wingdings 3", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.NWarrowButton.Location = new System.Drawing.Point(406, 0);
+            this.NWarrowButton.Name = "NWarrowButton";
+            this.NWarrowButton.Size = new System.Drawing.Size(19, 19);
+            this.NWarrowButton.TabIndex = 40;
+            this.NWarrowButton.Text = "j";
+            this.NWarrowButton.UseVisualStyleBackColor = true;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Century Gothic", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(323, 3);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(31, 13);
+            this.label3.TabIndex = 39;
+            this.label3.Text = "Erase";
+            // 
+            // eraserSelectButton
+            // 
+            this.eraserSelectButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("eraserSelectButton.BackgroundImage")));
+            this.eraserSelectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.eraserSelectButton.Font = new System.Drawing.Font("Constantia", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.eraserSelectButton.Location = new System.Drawing.Point(321, 19);
+            this.eraserSelectButton.Name = "eraserSelectButton";
+            this.eraserSelectButton.Size = new System.Drawing.Size(33, 33);
+            this.eraserSelectButton.TabIndex = 38;
+            this.eraserSelectButton.UseVisualStyleBackColor = true;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Century Gothic", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(245, 3);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(26, 13);
+            this.label2.TabIndex = 37;
+            this.label2.Text = "Text";
+            // 
+            // pencilSelectButton
+            // 
+            this.pencilSelectButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pencilSelectButton.BackgroundImage")));
+            this.pencilSelectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pencilSelectButton.Font = new System.Drawing.Font("Constantia", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.pencilSelectButton.Location = new System.Drawing.Point(282, 19);
+            this.pencilSelectButton.Name = "pencilSelectButton";
+            this.pencilSelectButton.Size = new System.Drawing.Size(33, 33);
+            this.pencilSelectButton.TabIndex = 36;
+            this.pencilSelectButton.UseVisualStyleBackColor = true;
+            // 
+            // textSelectButton
+            // 
+            this.textSelectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.textSelectButton.Font = new System.Drawing.Font("Constantia", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textSelectButton.Location = new System.Drawing.Point(243, 19);
+            this.textSelectButton.Name = "textSelectButton";
+            this.textSelectButton.Size = new System.Drawing.Size(33, 33);
+            this.textSelectButton.TabIndex = 35;
+            this.textSelectButton.Text = "T";
+            this.textSelectButton.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Century Gothic", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(281, 3);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(33, 13);
+            this.label1.TabIndex = 34;
+            this.label1.Text = "Pencil";
+            // 
+            // pictureBox18
+            // 
+            this.pictureBox18.BackColor = System.Drawing.Color.YellowGreen;
+            this.pictureBox18.Location = new System.Drawing.Point(195, 42);
+            this.pictureBox18.Name = "pictureBox18";
+            this.pictureBox18.Size = new System.Drawing.Size(33, 10);
+            this.pictureBox18.TabIndex = 33;
+            this.pictureBox18.TabStop = false;
+            // 
+            // pictureBox17
+            // 
+            this.pictureBox17.BackColor = System.Drawing.Color.Yellow;
+            this.pictureBox17.Location = new System.Drawing.Point(156, 42);
+            this.pictureBox17.Name = "pictureBox17";
+            this.pictureBox17.Size = new System.Drawing.Size(33, 10);
+            this.pictureBox17.TabIndex = 32;
+            this.pictureBox17.TabStop = false;
             // 
             // textColorButton
             // 
-            this.textColorButton.Location = new System.Drawing.Point(205, 3);
+            this.textColorButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("textColorButton.BackgroundImage")));
+            this.textColorButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.textColorButton.Location = new System.Drawing.Point(195, 4);
             this.textColorButton.Name = "textColorButton";
-            this.textColorButton.Size = new System.Drawing.Size(51, 51);
+            this.textColorButton.Size = new System.Drawing.Size(33, 33);
             this.textColorButton.TabIndex = 6;
-            this.textColorButton.Text = "T";
             this.textColorButton.UseVisualStyleBackColor = true;
             // 
-            // highlighterButton
+            // highlightColorButton
             // 
-            this.highlighterButton.Location = new System.Drawing.Point(148, 3);
-            this.highlighterButton.Name = "highlighterButton";
-            this.highlighterButton.Size = new System.Drawing.Size(51, 51);
-            this.highlighterButton.TabIndex = 5;
-            this.highlighterButton.Text = "H";
-            this.highlighterButton.UseVisualStyleBackColor = true;
+            this.highlightColorButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("highlightColorButton.BackgroundImage")));
+            this.highlightColorButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.highlightColorButton.Location = new System.Drawing.Point(156, 4);
+            this.highlightColorButton.Name = "highlightColorButton";
+            this.highlightColorButton.Size = new System.Drawing.Size(33, 33);
+            this.highlightColorButton.TabIndex = 5;
+            this.highlightColorButton.UseVisualStyleBackColor = true;
             // 
             // strikeoutButton
             // 
             this.strikeoutButton.Font = new System.Drawing.Font("Constantia", 9.75F, System.Drawing.FontStyle.Strikeout, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.strikeoutButton.Location = new System.Drawing.Point(112, 31);
+            this.strikeoutButton.Location = new System.Drawing.Point(120, 31);
             this.strikeoutButton.Name = "strikeoutButton";
             this.strikeoutButton.Size = new System.Drawing.Size(30, 23);
             this.strikeoutButton.TabIndex = 4;
@@ -410,7 +521,7 @@
             // underlineButton
             // 
             this.underlineButton.Font = new System.Drawing.Font("Constantia", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.underlineButton.Location = new System.Drawing.Point(76, 31);
+            this.underlineButton.Location = new System.Drawing.Point(84, 31);
             this.underlineButton.Name = "underlineButton";
             this.underlineButton.Size = new System.Drawing.Size(30, 23);
             this.underlineButton.TabIndex = 3;
@@ -420,7 +531,7 @@
             // italicButton
             // 
             this.italicButton.Font = new System.Drawing.Font("Constantia", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.italicButton.Location = new System.Drawing.Point(40, 31);
+            this.italicButton.Location = new System.Drawing.Point(48, 31);
             this.italicButton.Name = "italicButton";
             this.italicButton.Size = new System.Drawing.Size(30, 23);
             this.italicButton.TabIndex = 2;
@@ -430,7 +541,7 @@
             // boldButton
             // 
             this.boldButton.Font = new System.Drawing.Font("Constantia", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.boldButton.Location = new System.Drawing.Point(4, 31);
+            this.boldButton.Location = new System.Drawing.Point(12, 31);
             this.boldButton.Name = "boldButton";
             this.boldButton.Size = new System.Drawing.Size(30, 23);
             this.boldButton.TabIndex = 1;
@@ -445,97 +556,26 @@
             "Calibri",
             "Consolas",
             "Times New Roman"});
-            this.fontComboBox.Location = new System.Drawing.Point(4, 4);
+            this.fontComboBox.Location = new System.Drawing.Point(12, 4);
             this.fontComboBox.Name = "fontComboBox";
             this.fontComboBox.Size = new System.Drawing.Size(138, 21);
             this.fontComboBox.TabIndex = 0;
             // 
-            // pictureBox10
+            // richTextBox
             // 
-            this.pictureBox10.BackColor = System.Drawing.Color.White;
-            this.pictureBox10.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox10.Image")));
-            this.pictureBox10.Location = new System.Drawing.Point(605, 9);
-            this.pictureBox10.Name = "pictureBox10";
-            this.pictureBox10.Size = new System.Drawing.Size(45, 11);
-            this.pictureBox10.TabIndex = 25;
-            this.pictureBox10.TabStop = false;
-            // 
-            // pictureBox11
-            // 
-            this.pictureBox11.BackColor = System.Drawing.Color.White;
-            this.pictureBox11.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox11.Image")));
-            this.pictureBox11.Location = new System.Drawing.Point(605, 26);
-            this.pictureBox11.Name = "pictureBox11";
-            this.pictureBox11.Size = new System.Drawing.Size(45, 11);
-            this.pictureBox11.TabIndex = 26;
-            this.pictureBox11.TabStop = false;
-            // 
-            // pictureBox12
-            // 
-            this.pictureBox12.BackColor = System.Drawing.Color.White;
-            this.pictureBox12.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox12.Image")));
-            this.pictureBox12.Location = new System.Drawing.Point(605, 43);
-            this.pictureBox12.Name = "pictureBox12";
-            this.pictureBox12.Size = new System.Drawing.Size(45, 11);
-            this.pictureBox12.TabIndex = 27;
-            this.pictureBox12.TabStop = false;
-            // 
-            // pictureBox13
-            // 
-            this.pictureBox13.BackColor = System.Drawing.Color.White;
-            this.pictureBox13.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBox13.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox13.Image")));
-            this.pictureBox13.Location = new System.Drawing.Point(509, 4);
-            this.pictureBox13.Name = "pictureBox13";
-            this.pictureBox13.Size = new System.Drawing.Size(24, 24);
-            this.pictureBox13.TabIndex = 28;
-            this.pictureBox13.TabStop = false;
-            // 
-            // pictureBox14
-            // 
-            this.pictureBox14.BackColor = System.Drawing.Color.White;
-            this.pictureBox14.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBox14.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox14.Image")));
-            this.pictureBox14.Location = new System.Drawing.Point(509, 31);
-            this.pictureBox14.Name = "pictureBox14";
-            this.pictureBox14.Size = new System.Drawing.Size(24, 24);
-            this.pictureBox14.TabIndex = 29;
-            this.pictureBox14.TabStop = false;
-            // 
-            // pictureBox15
-            // 
-            this.pictureBox15.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox15.Image")));
-            this.pictureBox15.Location = new System.Drawing.Point(387, 3);
-            this.pictureBox15.Name = "pictureBox15";
-            this.pictureBox15.Size = new System.Drawing.Size(51, 51);
-            this.pictureBox15.TabIndex = 30;
-            this.pictureBox15.TabStop = false;
-            // 
-            // pictureBox16
-            // 
-            this.pictureBox16.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBox16.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox16.Image")));
-            this.pictureBox16.Location = new System.Drawing.Point(851, 9);
-            this.pictureBox16.Name = "pictureBox16";
-            this.pictureBox16.Size = new System.Drawing.Size(24, 44);
-            this.pictureBox16.TabIndex = 31;
-            this.pictureBox16.TabStop = false;
-            // 
-            // richTextBox1
-            // 
-            this.richTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.richTextBox1.Location = new System.Drawing.Point(93, 109);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(623, 505);
-            this.richTextBox1.TabIndex = 2;
-            this.richTextBox1.Text = "";
+            this.richTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.richTextBox.Location = new System.Drawing.Point(93, 151);
+            this.richTextBox.Name = "richTextBox";
+            this.richTextBox.Size = new System.Drawing.Size(623, 568);
+            this.richTextBox.TabIndex = 2;
+            this.richTextBox.Text = "";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(885, 916);
-            this.Controls.Add(this.richTextBox1);
+            this.ClientSize = new System.Drawing.Size(812, 916);
+            this.Controls.Add(this.richTextBox);
             this.Controls.Add(this.toolbarPanel);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -544,33 +584,9 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.toolbarPanel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.currentColorBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.grayColorBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tealColorBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.purpleColorBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.greenColorBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.yellowColorBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.orangeColorBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.whiteColorBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.blackColorBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.blueColorBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.redColorBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox11)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox12)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox13)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox14)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox15)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox16)).EndInit();
+            this.toolbarPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox18)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox17)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -585,41 +601,47 @@
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.Panel toolbarPanel;
         private System.Windows.Forms.Button textColorButton;
-        private System.Windows.Forms.Button highlighterButton;
+        private System.Windows.Forms.Button highlightColorButton;
         private System.Windows.Forms.Button strikeoutButton;
         private System.Windows.Forms.Button underlineButton;
         private System.Windows.Forms.Button italicButton;
         private System.Windows.Forms.Button boldButton;
         private System.Windows.Forms.ComboBox fontComboBox;
-        private System.Windows.Forms.PictureBox blueColorBox;
-        private System.Windows.Forms.PictureBox redColorBox;
-        private System.Windows.Forms.PictureBox tealColorBox;
-        private System.Windows.Forms.PictureBox purpleColorBox;
-        private System.Windows.Forms.PictureBox greenColorBox;
-        private System.Windows.Forms.PictureBox yellowColorBox;
-        private System.Windows.Forms.PictureBox orangeColorBox;
-        private System.Windows.Forms.PictureBox whiteColorBox;
-        private System.Windows.Forms.PictureBox blackColorBox;
-        private System.Windows.Forms.PictureBox grayColorBox;
-        private System.Windows.Forms.PictureBox currentColorBox;
-        private System.Windows.Forms.PictureBox pictureBox9;
-        private System.Windows.Forms.PictureBox pictureBox8;
-        private System.Windows.Forms.PictureBox pictureBox7;
-        private System.Windows.Forms.PictureBox pictureBox6;
-        private System.Windows.Forms.PictureBox pictureBox5;
-        private System.Windows.Forms.PictureBox pictureBox4;
-        private System.Windows.Forms.PictureBox pictureBox3;
-        private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ColorDialog colorDialog1;
-        private System.Windows.Forms.PictureBox pictureBox12;
-        private System.Windows.Forms.PictureBox pictureBox11;
-        private System.Windows.Forms.PictureBox pictureBox10;
-        private System.Windows.Forms.PictureBox pictureBox15;
-        private System.Windows.Forms.PictureBox pictureBox14;
-        private System.Windows.Forms.PictureBox pictureBox13;
-        private System.Windows.Forms.PictureBox pictureBox16;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.RichTextBox richTextBox;
+        private System.Windows.Forms.PictureBox pictureBox17;
+        private System.Windows.Forms.PictureBox pictureBox18;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button pencilSelectButton;
+        private System.Windows.Forms.Button textSelectButton;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button eraserSelectButton;
+        private System.Windows.Forms.Button SEarrrowButton;
+        private System.Windows.Forms.Button SarrowButton;
+        private System.Windows.Forms.Button EarrowButton;
+        private System.Windows.Forms.Button SWarrowButton;
+        private System.Windows.Forms.Button WarrowButton;
+        private System.Windows.Forms.Button NEarrowButton;
+        private System.Windows.Forms.Button NarrowButton;
+        private System.Windows.Forms.Button NWarrowButton;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button circleSelectButton;
+        private System.Windows.Forms.Button squareSelectButton;
+        private System.Windows.Forms.Button dottedSelectButton;
+        private System.Windows.Forms.Button dashedSelectButton;
+        private System.Windows.Forms.Button solidSelectButton;
+        private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.Button vertTextButton;
+        private System.Windows.Forms.Button drawColorButton;
+        private System.Windows.Forms.Button whiteColorButton;
+        private System.Windows.Forms.Button blackColorButton;
+        private System.Windows.Forms.Button button25;
+        private System.Windows.Forms.Button button24;
+        private System.Windows.Forms.Button button23;
+        private System.Windows.Forms.Button button22;
+        private System.Windows.Forms.Button button21;
+        private System.Windows.Forms.Button button20;
+        private System.Windows.Forms.Button button19;
     }
 }
 
