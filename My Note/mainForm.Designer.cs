@@ -1,6 +1,6 @@
 ﻿namespace My_Note
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.eidtToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -77,6 +77,9 @@
             this.fontComboBox = new System.Windows.Forms.ComboBox();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.richTextBox = new System.Windows.Forms.RichTextBox();
+            this.backPanel = new System.Windows.Forms.Panel();
+            this.logTextBox = new System.Windows.Forms.TextBox();
+            this.transparentPanel = new My_Note.TransparentPanel();
             this.menuStrip1.SuspendLayout();
             this.toolbarPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox18)).BeginInit();
@@ -427,6 +430,7 @@
             this.eraserSelectButton.Size = new System.Drawing.Size(33, 33);
             this.eraserSelectButton.TabIndex = 38;
             this.eraserSelectButton.UseVisualStyleBackColor = true;
+            this.eraserSelectButton.Click += new System.EventHandler(this.eraserSelectButton_Click);
             // 
             // label2
             // 
@@ -448,6 +452,7 @@
             this.pencilSelectButton.Size = new System.Drawing.Size(33, 33);
             this.pencilSelectButton.TabIndex = 36;
             this.pencilSelectButton.UseVisualStyleBackColor = true;
+            this.pencilSelectButton.Click += new System.EventHandler(this.pencilSelectButton_Click);
             // 
             // textSelectButton
             // 
@@ -459,6 +464,7 @@
             this.textSelectButton.TabIndex = 35;
             this.textSelectButton.Text = "T";
             this.textSelectButton.UseVisualStyleBackColor = true;
+            this.textSelectButton.Click += new System.EventHandler(this.textSelectButton_Click);
             // 
             // label1
             // 
@@ -555,32 +561,66 @@
             this.fontComboBox.Items.AddRange(new object[] {
             "Calibri",
             "Consolas",
+            "Microsoft Sans Serif",
             "Times New Roman"});
             this.fontComboBox.Location = new System.Drawing.Point(12, 4);
             this.fontComboBox.Name = "fontComboBox";
             this.fontComboBox.Size = new System.Drawing.Size(138, 21);
             this.fontComboBox.TabIndex = 0;
+            this.fontComboBox.SelectedIndexChanged += new System.EventHandler(this.fontComboBox_SelectedIndexChanged);
             // 
             // richTextBox
             // 
+            this.richTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.richTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.richTextBox.Location = new System.Drawing.Point(93, 151);
+            this.richTextBox.Location = new System.Drawing.Point(190, 125);
+            this.richTextBox.MaxLength = 1860;
             this.richTextBox.Name = "richTextBox";
-            this.richTextBox.Size = new System.Drawing.Size(623, 568);
+            this.richTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.richTextBox.Size = new System.Drawing.Size(480, 570);
             this.richTextBox.TabIndex = 2;
-            this.richTextBox.Text = "";
+            this.richTextBox.Text = resources.GetString("richTextBox.Text");
+            this.richTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.richTextBox_KeyPress);
             // 
-            // Form1
+            // backPanel
+            // 
+            this.backPanel.BackColor = System.Drawing.Color.White;
+            this.backPanel.Location = new System.Drawing.Point(150, 90);
+            this.backPanel.Name = "backPanel";
+            this.backPanel.Size = new System.Drawing.Size(520, 605);
+            this.backPanel.TabIndex = 3;
+            // 
+            // logTextBox
+            // 
+            this.logTextBox.Location = new System.Drawing.Point(170, 707);
+            this.logTextBox.Name = "logTextBox";
+            this.logTextBox.Size = new System.Drawing.Size(443, 20);
+            this.logTextBox.TabIndex = 5;
+            // 
+            // transparentPanel
+            // 
+            this.transparentPanel.Location = new System.Drawing.Point(150, 90);
+            this.transparentPanel.Name = "transparentPanel";
+            this.transparentPanel.Size = new System.Drawing.Size(520, 605);
+            this.transparentPanel.TabIndex = 4;
+            this.transparentPanel.Click += new System.EventHandler(this.transparentPanel_Click);
+            // 
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(812, 916);
+            this.ClientSize = new System.Drawing.Size(812, 739);
+            this.Controls.Add(this.logTextBox);
+            this.Controls.Add(this.transparentPanel);
             this.Controls.Add(this.richTextBox);
             this.Controls.Add(this.toolbarPanel);
             this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.backPanel);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "Form1";
+            this.Name = "MainForm";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.MainForm_Load);
+            this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.toolbarPanel.ResumeLayout(false);
@@ -642,6 +682,9 @@
         private System.Windows.Forms.Button button21;
         private System.Windows.Forms.Button button20;
         private System.Windows.Forms.Button button19;
+        private System.Windows.Forms.Panel backPanel;
+        private My_Note.TransparentPanel transparentPanel;
+        private System.Windows.Forms.TextBox logTextBox;
     }
 }
 
