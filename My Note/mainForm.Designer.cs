@@ -580,7 +580,6 @@
             this.richTextBox.Size = new System.Drawing.Size(480, 570);
             this.richTextBox.TabIndex = 2;
             this.richTextBox.Text = resources.GetString("richTextBox.Text");
-            this.richTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.richTextBox_KeyPress);
             // 
             // backPanel
             // 
@@ -604,6 +603,12 @@
             this.transparentPanel.Size = new System.Drawing.Size(520, 605);
             this.transparentPanel.TabIndex = 4;
             this.transparentPanel.Click += new System.EventHandler(this.transparentPanel_Click);
+            this.transparentPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.transparentPanel_Paint);
+            this.transparentPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseDown);
+            this.transparentPanel.MouseEnter += new System.EventHandler(this.transparentPanel_MouseEnter);
+            this.transparentPanel.MouseLeave += new System.EventHandler(this.transparentPanel_MouseLeave);
+            this.transparentPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseMove);
+            this.transparentPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseUp);
             // 
             // MainForm
             // 

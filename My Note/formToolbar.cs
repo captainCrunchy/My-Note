@@ -33,21 +33,29 @@ namespace My_Note
             logTextBox.Text = "textSelectButton clicked";
             m_currentSelectedControl = e_SelectedControl.TEXT;
             setDefaultBackColorForControls();
-            textSelectButton.BackColor = selectedControlColor;
+            textSelectButton.BackColor = selectedControlButtonColor;
         }
         private void pencilSelectButton_Click(object sender, EventArgs e)
         {
+            // Appearance
             logTextBox.Text = "pencilSelectButton clicked";
             m_currentSelectedControl = e_SelectedControl.PENCIL;
             setDefaultBackColorForControls();
-            pencilSelectButton.BackColor = selectedControlColor;
+            pencilSelectButton.BackColor = selectedControlButtonColor;
+
+            // Functionality
+            Brush = true;
         }
         private void eraserSelectButton_Click(object sender, EventArgs e)
         {
+            // Appearance
             logTextBox.Text = "eraserSelectButton clicked";
             m_currentSelectedControl = e_SelectedControl.ERASER;
             setDefaultBackColorForControls();
-            eraserSelectButton.BackColor = selectedControlColor;
+            eraserSelectButton.BackColor = selectedControlButtonColor;
+
+            // Functionality
+            Brush = false;
         }
 
         /* This method gets called to reset the BackColor of all controls to default, it is

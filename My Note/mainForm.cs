@@ -38,18 +38,26 @@ namespace My_Note
         }
 
         private e_SelectedControl m_currentSelectedControl;
-        private Color selectedControlColor;
+        private Color selectedControlButtonColor;
 
         public MainForm()
         {
             InitializeComponent();
+            /*
+            //Set Double Buffering (Set by original PaintPanel project)
+            transparentPanel.GetType().GetMethod("SetStyle", System.Reflection.BindingFlags.Instance | 
+                System.Reflection.BindingFlags.NonPublic).Invoke(transparentPanel, 
+                new object[] { System.Windows.Forms.ControlStyles.UserPaint | 
+                    System.Windows.Forms.ControlStyles.AllPaintingInWmPaint | 
+                    System.Windows.Forms.ControlStyles.DoubleBuffer, true });
+            */
 
             // Initialize variables and values of controls
             m_currentSelectedControl = e_SelectedControl.TEXT;
-            selectedControlColor = Color.SandyBrown;
+            selectedControlButtonColor = Color.SandyBrown;
 
             // Set default values
-            textSelectButton.BackColor = selectedControlColor;
+            textSelectButton.BackColor = selectedControlButtonColor;
             fontComboBox.Text = "Microsoft Sans Serif";
             richTextBox.Font = new Font("Microsoft Sans Serif", 12);
 
