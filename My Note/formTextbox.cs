@@ -54,13 +54,17 @@ namespace My_Note
         {
             //transparentPanel.Update();  // Does nothing
             //transparentPanel.Refresh();  // Refreshes but not every time
-            transparentPanel.Invalidate();  // Works like a charm
+            //transparentPanel.Invalidate();  // Works like a charm
 
-            if (richTextBox.TextLength == richTextBox.MaxLength)
-            {
-                MessageBox.Show("Current page is at maximum limit of characters",
-                    "My Application", MessageBoxButtons.OKCancel, MessageBoxIcon.Asterisk);
-            }
+            
+        }
+        /*
+         * 3/11/15 8:44am
+         */
+        private void richTextBox_TextChanged(object sender, EventArgs e)
+        {
+            richTextBox.Invalidate();
+            transparentPanel.Invalidate();
         }
         #endregion
 
@@ -95,14 +99,16 @@ namespace My_Note
          */
         private void transparentPanel_MouseDown(object sender, MouseEventArgs e)
         {
+            //mslog("MouseDown");
             if (m_currentSelectedControl == e_SelectedControl.PENCIL)
             {
+                //mslog("MouseDown PENCIL");
                 //IsMouseDown = true;
                 //logTextBox.Text = "panel mouse down";
                 //If we're painting...
                 if (Brush)
                 {
-                    logTextBox.Text = "panel mouse down and PAINTING";
+                    //mslog("MouseDown Brush");
                     //set it to mouse down, illatrate the shape being drawn and reset the last position
                     IsPainting = true;
                     ShapeNum++;
@@ -117,7 +123,7 @@ namespace My_Note
             }
             if (m_currentSelectedControl == e_SelectedControl.ERASER)
             {
-                logTextBox.Text = "panel mouse down and ERASING";
+                //mslog("MouseDown ERASER");
                 IsEraseing = true;
             }
         }
@@ -126,14 +132,16 @@ namespace My_Note
          */
         private void transparentPanel_MouseMove(object sender, MouseEventArgs e)
         {
+            //mslog("MouseMove");
             if (m_currentSelectedControl == e_SelectedControl.PENCIL)
             {
+                //mslog("MouseMove PENCIL");
                 //logTextBox.Text = "panel mouse move";
                 MouseLoc = e.Location;
                 //PAINTING
                 if (IsPainting)
                 {
-                    logTextBox.Text = "panel mouse move and PAINTING";
+                    //mslog("MouseMove IsPainting");
                     //check its not at the same place it was last time, saves on recording more data.
                     if (LastPos != e.Location)
                     {
@@ -154,6 +162,7 @@ namespace My_Note
             }
             if (m_currentSelectedControl == e_SelectedControl.ERASER)
             {
+                //mslog("MouseMove ERASER");
                 //logTextBox.Text = "panel mouse move";
                 MouseLoc = e.Location;
                 ////PAINTING
@@ -171,9 +180,13 @@ namespace My_Note
                 //}
                 if (IsEraseing)
                 {
-                    logTextBox.Text = "panel mouse move and ERASING";
+                    //mslog("MouseMove IsEraseing");
                     //Remove any point within a certain distance of the mouse
                     DrawingShapes.RemoveShape(e.Location, 10);
+
+                    transparentPanel.Invalidate();
+                    backPanel.Invalidate();
+                    richTextBox.Invalidate();
                 }
                 //refresh the panel so it will be forced to re-draw.
                 transparentPanel.Refresh();
@@ -185,12 +198,14 @@ namespace My_Note
          */
         private void transparentPanel_MouseUp(object sender, MouseEventArgs e)
         {
+            //mslog("MouseUp");
             if (m_currentSelectedControl == e_SelectedControl.PENCIL)
             {
+                //mslog("MouseUp, PENCIL");
                 //IsMouseDown = false;
                 if (IsPainting)
                 {
-                    logTextBox.Text = "panel mouse up, finished painting";
+                    //mslog("MouseUp, finished painting");
                     //Finished Painting.
                     IsPainting = false;
                 }
@@ -212,9 +227,10 @@ namespace My_Note
                 //    //Finished Painting.
                 //    IsPainting = false;
                 //}
+                //mslog("MouseUp, ERASER");
                 if (IsEraseing)
                 {
-                    logTextBox.Text = "panel mouse up, finished erasing";
+                    //mslog("MouseUp, finished erasing");
                     //Finished Earsing.
                     IsEraseing = false;
                 }
@@ -223,16 +239,45 @@ namespace My_Note
             }
         }
         /*
+         * 3/11/15 8:19am.
+         */
+        private void transparentPanel_MouseEnter(object sender, EventArgs e)
+        {
+            //mslog("MouseEnter");
+
+            if (m_currentSelectedControl == e_SelectedControl.PENCIL)
+            {
+                //Hide the mouse cursor and tell the re-drawing function to draw the mouse
+                //Cursor.Hide();
+                //IsMouseing = true;
+                //mslog("MouseEnter PENCIL");
+            }
+        }
+        /*
+         * 3/10/15 9:54am
+         */
+        private void transparentPanel_MouseLeave(object sender, EventArgs e)
+        {
+            //mslog("MouseLeave");
+            //show the mouse, tell the re-drawing function to stop drawing it and force the panel to re-draw.
+            //Cursor.Show();
+            //IsMouseing = false;
+            //transparentPanel.Refresh();
+        }
+
+        /*
          * Paint and update the panel graphics 3/10/15 9:52am
          */
         private void transparentPanel_Paint(object sender, PaintEventArgs e)
         {
+            //mslog("Paint");
             //logTextBox.Text = "panel paint";
             //Apply a smoothing mode to smooth out the line.
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             //DRAW THE LINES
             for (int i = 0; i < DrawingShapes.NumberOfShapes() - 1; i++)
             {
+                //mslog("Paint DRAW THE LINES");
                 Shape T = DrawingShapes.GetShape(i);
                 Shape T1 = DrawingShapes.GetShape(i + 1);
                 //make sure shape the two ajoining shape numbers are part of the same shape
@@ -252,6 +297,7 @@ namespace My_Note
             //if (IsMouseing && IsMouseDown)
             if (IsMouseing)
             {
+                //mslog("Paint isMouseing");
                 //e.Graphics.DrawEllipse(new Pen(Color.Transparent, 0.5f), MouseLoc.X - (CurrentWidth / 2), MouseLoc.Y - (CurrentWidth / 2), CurrentWidth, CurrentWidth);
                 e.Graphics.DrawEllipse(new Pen(Color.White, 0.5f), MouseLoc.X - (CurrentWidth / 2), MouseLoc.Y - (CurrentWidth / 2), CurrentWidth, CurrentWidth);
                 transparentPanel.Invalidate();
@@ -293,27 +339,7 @@ namespace My_Note
         /*
          * 3/10/15 9:53am
          */
-        private void transparentPanel_MouseEnter(object sender, EventArgs e)
-        {
-            //logTextBox.Text = "panel mouse enter";
-            
-            if(m_currentSelectedControl == e_SelectedControl.PENCIL)
-            {
-                //Hide the mouse cursor and tell the re-drawing function to draw the mouse
-                Cursor.Hide();
-                IsMouseing = true;
-            }
-        }
-        /*
-         * 3/10/15 9:54am
-         */
-        private void transparentPanel_MouseLeave(object sender, EventArgs e)
-        {
-            //show the mouse, tell the re-drawing function to stop drawing it and force the panel to re-draw.
-            Cursor.Show();
-            IsMouseing = false;
-            transparentPanel.Refresh();
-        }
+
         #endregion
     }
 

@@ -95,7 +95,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(812, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(975, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -332,7 +332,7 @@
             // 
             // SEarrrowButton
             // 
-            this.SEarrrowButton.Font = new System.Drawing.Font("Wingdings 3", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.SEarrrowButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
             this.SEarrrowButton.Location = new System.Drawing.Point(444, 38);
             this.SEarrrowButton.Name = "SEarrrowButton";
             this.SEarrrowButton.Size = new System.Drawing.Size(19, 19);
@@ -342,7 +342,7 @@
             // 
             // SarrowButton
             // 
-            this.SarrowButton.Font = new System.Drawing.Font("Wingdings 3", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.SarrowButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
             this.SarrowButton.Location = new System.Drawing.Point(425, 38);
             this.SarrowButton.Name = "SarrowButton";
             this.SarrowButton.Size = new System.Drawing.Size(19, 19);
@@ -352,7 +352,7 @@
             // 
             // EarrowButton
             // 
-            this.EarrowButton.Font = new System.Drawing.Font("Wingdings 3", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.EarrowButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
             this.EarrowButton.Location = new System.Drawing.Point(444, 19);
             this.EarrowButton.Name = "EarrowButton";
             this.EarrowButton.Size = new System.Drawing.Size(19, 19);
@@ -362,7 +362,7 @@
             // 
             // SWarrowButton
             // 
-            this.SWarrowButton.Font = new System.Drawing.Font("Wingdings 3", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.SWarrowButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
             this.SWarrowButton.Location = new System.Drawing.Point(406, 38);
             this.SWarrowButton.Name = "SWarrowButton";
             this.SWarrowButton.Size = new System.Drawing.Size(19, 19);
@@ -372,7 +372,7 @@
             // 
             // WarrowButton
             // 
-            this.WarrowButton.Font = new System.Drawing.Font("Wingdings 3", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.WarrowButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
             this.WarrowButton.Location = new System.Drawing.Point(406, 19);
             this.WarrowButton.Name = "WarrowButton";
             this.WarrowButton.Size = new System.Drawing.Size(19, 19);
@@ -382,7 +382,7 @@
             // 
             // NEarrowButton
             // 
-            this.NEarrowButton.Font = new System.Drawing.Font("Wingdings 3", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.NEarrowButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
             this.NEarrowButton.Location = new System.Drawing.Point(444, 0);
             this.NEarrowButton.Name = "NEarrowButton";
             this.NEarrowButton.Size = new System.Drawing.Size(19, 19);
@@ -392,7 +392,7 @@
             // 
             // NarrowButton
             // 
-            this.NarrowButton.Font = new System.Drawing.Font("Wingdings 3", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.NarrowButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
             this.NarrowButton.Location = new System.Drawing.Point(425, 0);
             this.NarrowButton.Name = "NarrowButton";
             this.NarrowButton.Size = new System.Drawing.Size(19, 19);
@@ -402,7 +402,7 @@
             // 
             // NWarrowButton
             // 
-            this.NWarrowButton.Font = new System.Drawing.Font("Wingdings 3", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.NWarrowButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
             this.NWarrowButton.Location = new System.Drawing.Point(406, 0);
             this.NWarrowButton.Name = "NWarrowButton";
             this.NWarrowButton.Size = new System.Drawing.Size(19, 19);
@@ -413,10 +413,10 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Century Gothic", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(323, 3);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(31, 13);
+            this.label3.Size = new System.Drawing.Size(29, 12);
             this.label3.TabIndex = 39;
             this.label3.Text = "Erase";
             // 
@@ -435,10 +435,10 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Century Gothic", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(245, 3);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(26, 13);
+            this.label2.Size = new System.Drawing.Size(23, 12);
             this.label2.TabIndex = 37;
             this.label2.Text = "Text";
             // 
@@ -469,10 +469,10 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Century Gothic", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(281, 3);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(33, 13);
+            this.label1.Size = new System.Drawing.Size(30, 12);
             this.label1.TabIndex = 34;
             this.label1.Text = "Pencil";
             // 
@@ -580,6 +580,7 @@
             this.richTextBox.Size = new System.Drawing.Size(480, 570);
             this.richTextBox.TabIndex = 2;
             this.richTextBox.Text = resources.GetString("richTextBox.Text");
+            this.richTextBox.TextChanged += new System.EventHandler(this.richTextBox_TextChanged);
             // 
             // backPanel
             // 
@@ -591,9 +592,11 @@
             // 
             // logTextBox
             // 
-            this.logTextBox.Location = new System.Drawing.Point(170, 707);
+            this.logTextBox.Location = new System.Drawing.Point(676, 90);
+            this.logTextBox.Multiline = true;
             this.logTextBox.Name = "logTextBox";
-            this.logTextBox.Size = new System.Drawing.Size(443, 20);
+            this.logTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.logTextBox.Size = new System.Drawing.Size(281, 605);
             this.logTextBox.TabIndex = 5;
             // 
             // transparentPanel
@@ -607,6 +610,7 @@
             this.transparentPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseDown);
             this.transparentPanel.MouseEnter += new System.EventHandler(this.transparentPanel_MouseEnter);
             this.transparentPanel.MouseLeave += new System.EventHandler(this.transparentPanel_MouseLeave);
+            this.transparentPanel.MouseHover += new System.EventHandler(this.transparentPanel_MouseHover);
             this.transparentPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseMove);
             this.transparentPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseUp);
             // 
@@ -614,7 +618,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(812, 739);
+            this.ClientSize = new System.Drawing.Size(975, 739);
             this.Controls.Add(this.logTextBox);
             this.Controls.Add(this.transparentPanel);
             this.Controls.Add(this.richTextBox);

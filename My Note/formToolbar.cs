@@ -30,7 +30,7 @@ namespace My_Note
 
         private void textSelectButton_Click(object sender, EventArgs e)
         {
-            logTextBox.Text = "textSelectButton clicked";
+            //mslog("textSelectButton clicked");
             m_currentSelectedControl = e_SelectedControl.TEXT;
             setDefaultBackColorForControls();
             textSelectButton.BackColor = selectedControlButtonColor;
@@ -38,7 +38,7 @@ namespace My_Note
         private void pencilSelectButton_Click(object sender, EventArgs e)
         {
             // Appearance
-            logTextBox.Text = "pencilSelectButton clicked";
+            //mslog("pencilSelectButton clicked");
             m_currentSelectedControl = e_SelectedControl.PENCIL;
             setDefaultBackColorForControls();
             pencilSelectButton.BackColor = selectedControlButtonColor;
@@ -49,7 +49,7 @@ namespace My_Note
         private void eraserSelectButton_Click(object sender, EventArgs e)
         {
             // Appearance
-            logTextBox.Text = "eraserSelectButton clicked";
+            //mslog("eraserSelectButton clicked");
             m_currentSelectedControl = e_SelectedControl.ERASER;
             setDefaultBackColorForControls();
             eraserSelectButton.BackColor = selectedControlButtonColor;

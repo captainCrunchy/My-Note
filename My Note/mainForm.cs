@@ -65,7 +65,7 @@ namespace My_Note
 
         private void MainForm_Load(object sender, System.EventArgs e)
         {
-            logTextBox.Text = "form loaded";
+            //mslog("form loaded");
             textSelectButton.Select();
         }
 
@@ -104,5 +104,39 @@ namespace My_Note
                     break;
             }
         }
+
+        // Temp
+        private void moveLogCursor()
+        {
+            logTextBox.SelectionStart = logTextBox.Text.Length;
+            logTextBox.SelectionLength = 0;
+            logTextBox.ScrollToCaret();
+        }
+        private void mslog(string a_str)
+        {
+            logTextBox.Text += a_str + "\r\n";
+            moveLogCursor();
+        }
+
+        private void transparentPanel_MouseHover(object sender, EventArgs e)
+        {
+            //mslog("MouseHover");
+            if (m_currentSelectedControl == e_SelectedControl.TEXT)
+            {
+                transparentPanel.Cursor = Cursors.IBeam;
+                //mslog("IBeam");
+            }
+            if (m_currentSelectedControl == e_SelectedControl.PENCIL)
+            {
+                transparentPanel.Cursor = Cursors.Cross;
+                //mslog("Cross");
+            }
+            if (m_currentSelectedControl == e_SelectedControl.ERASER)
+            {
+                transparentPanel.Cursor = Cursors.Hand;
+                //mslog("Hand");
+            }
+        }
+        
     }
 }
