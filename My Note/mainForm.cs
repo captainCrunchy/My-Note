@@ -137,6 +137,5 @@ namespace My_Note
                 //mslog("Hand");
             }
         }
-        
     }
 }

@@ -337,7 +337,7 @@
             this.SEarrrowButton.Name = "SEarrrowButton";
             this.SEarrrowButton.Size = new System.Drawing.Size(19, 19);
             this.SEarrrowButton.TabIndex = 48;
-            this.SEarrrowButton.Text = "m";
+            this.SEarrrowButton.Text = "æ";
             this.SEarrrowButton.UseVisualStyleBackColor = true;
             // 
             // SarrowButton
@@ -347,7 +347,7 @@
             this.SarrowButton.Name = "SarrowButton";
             this.SarrowButton.Size = new System.Drawing.Size(19, 19);
             this.SarrowButton.TabIndex = 47;
-            this.SarrowButton.Text = "i";
+            this.SarrowButton.Text = "â";
             this.SarrowButton.UseVisualStyleBackColor = true;
             // 
             // EarrowButton
@@ -357,7 +357,7 @@
             this.EarrowButton.Name = "EarrowButton";
             this.EarrowButton.Size = new System.Drawing.Size(19, 19);
             this.EarrowButton.TabIndex = 46;
-            this.EarrowButton.Text = "g";
+            this.EarrowButton.Text = "à";
             this.EarrowButton.UseVisualStyleBackColor = true;
             // 
             // SWarrowButton
@@ -367,7 +367,7 @@
             this.SWarrowButton.Name = "SWarrowButton";
             this.SWarrowButton.Size = new System.Drawing.Size(19, 19);
             this.SWarrowButton.TabIndex = 44;
-            this.SWarrowButton.Text = "l";
+            this.SWarrowButton.Text = "å";
             this.SWarrowButton.UseVisualStyleBackColor = true;
             // 
             // WarrowButton
@@ -377,7 +377,7 @@
             this.WarrowButton.Name = "WarrowButton";
             this.WarrowButton.Size = new System.Drawing.Size(19, 19);
             this.WarrowButton.TabIndex = 43;
-            this.WarrowButton.Text = "f";
+            this.WarrowButton.Text = "ß";
             this.WarrowButton.UseVisualStyleBackColor = true;
             // 
             // NEarrowButton
@@ -387,7 +387,7 @@
             this.NEarrowButton.Name = "NEarrowButton";
             this.NEarrowButton.Size = new System.Drawing.Size(19, 19);
             this.NEarrowButton.TabIndex = 42;
-            this.NEarrowButton.Text = "k";
+            this.NEarrowButton.Text = "ä";
             this.NEarrowButton.UseVisualStyleBackColor = true;
             // 
             // NarrowButton
@@ -397,7 +397,7 @@
             this.NarrowButton.Name = "NarrowButton";
             this.NarrowButton.Size = new System.Drawing.Size(19, 19);
             this.NarrowButton.TabIndex = 41;
-            this.NarrowButton.Text = "h";
+            this.NarrowButton.Text = "á";
             this.NarrowButton.UseVisualStyleBackColor = true;
             // 
             // NWarrowButton
@@ -407,7 +407,7 @@
             this.NWarrowButton.Name = "NWarrowButton";
             this.NWarrowButton.Size = new System.Drawing.Size(19, 19);
             this.NWarrowButton.TabIndex = 40;
-            this.NWarrowButton.Text = "j";
+            this.NWarrowButton.Text = "ã";
             this.NWarrowButton.UseVisualStyleBackColor = true;
             // 
             // label3

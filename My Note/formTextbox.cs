@@ -69,6 +69,7 @@ namespace My_Note
         #endregion
 
         #region transparentPanelMethods
+
         /* When textControl is selected, this method will pass down the click coordinates
          * from transparent panel on top to the richTextBox below so that the cursor is positioned
          * accordingly. Coordinate modifications were created because transparentPanel and
@@ -76,8 +77,6 @@ namespace My_Note
          */
         private void transparentPanel_Click(object sender, System.EventArgs e)
         {
-            //logTextBox.Text = "transparentPanel clicked";
-
             // If currently in text editing mode
             if (m_currentSelectedControl == e_SelectedControl.TEXT)
             {
@@ -87,10 +86,6 @@ namespace My_Note
                 int charIndex = richTextBox.GetCharIndexFromPosition(newPoint);
                 richTextBox.SelectionStart = charIndex;
                 richTextBox.Select();
-            }
-            else
-            {
-                //logTextBox.Text = "transparentPanel clicked NOT in text mode";
             }
         }
 
@@ -104,7 +99,6 @@ namespace My_Note
             {
                 //mslog("MouseDown PENCIL");
                 //IsMouseDown = true;
-                //logTextBox.Text = "panel mouse down";
                 //If we're painting...
                 if (Brush)
                 {
@@ -117,7 +111,6 @@ namespace My_Note
                 ////but if we're eraseing...
                 //else
                 //{
-                //    logTextBox.Text = "panel mouse down and ERASING";
                 //    IsEraseing = true;
                 //}
             }
@@ -136,7 +129,6 @@ namespace My_Note
             if (m_currentSelectedControl == e_SelectedControl.PENCIL)
             {
                 //mslog("MouseMove PENCIL");
-                //logTextBox.Text = "panel mouse move";
                 MouseLoc = e.Location;
                 //PAINTING
                 if (IsPainting)
@@ -163,12 +155,10 @@ namespace My_Note
             if (m_currentSelectedControl == e_SelectedControl.ERASER)
             {
                 //mslog("MouseMove ERASER");
-                //logTextBox.Text = "panel mouse move";
                 MouseLoc = e.Location;
                 ////PAINTING
                 //if (IsPainting)
                 //{
-                //    logTextBox.Text = "panel mouse move and PAINTING";
                 //    //check its not at the same place it was last time, saves on recording more data.
                 //    if (LastPos != e.Location)
                 //    {
@@ -211,7 +201,6 @@ namespace My_Note
                 }
                 //if (IsEraseing)
                 //{
-                //    logTextBox.Text = "panel mouse up, finished erasing";
                 //    //Finished Earsing.
                 //    IsEraseing = false;
                 //}
@@ -223,7 +212,6 @@ namespace My_Note
                 ////IsMouseDown = false;
                 //if (IsPainting)
                 //{
-                //    logTextBox.Text = "panel mouse up, finished painting";
                 //    //Finished Painting.
                 //    IsPainting = false;
                 //}
@@ -237,6 +225,7 @@ namespace My_Note
                 transparentPanel.Invalidate();
                 richTextBox.Invalidate();
             }
+
         }
         /*
          * 3/11/15 8:19am.
@@ -271,7 +260,6 @@ namespace My_Note
         private void transparentPanel_Paint(object sender, PaintEventArgs e)
         {
             //mslog("Paint");
-            //logTextBox.Text = "panel paint";
             //Apply a smoothing mode to smooth out the line.
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             //DRAW THE LINES
@@ -369,10 +357,12 @@ namespace My_Note
     public class Shapes
     {
         private List<Shape> _Shapes;    //Stores all the shapes
+        public int ShapeCount;          // Temporary
 
         public Shapes()
         {
             _Shapes = new List<Shape>();
+            ShapeCount = _Shapes.Count;
         }
         //Returns the number of shapes being stored.
         public int NumberOfShapes()
