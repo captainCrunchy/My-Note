@@ -272,11 +272,11 @@ namespace My_Note
                 if (T.ShapeNumber == T1.ShapeNumber)
                 {
                     //create a new pen with its width and colour
-                    Pen p = new Pen(T.Colour, T.Width);
+                    Pen p = new Pen(T.LineColor, T.LineWidth);
                     p.StartCap = System.Drawing.Drawing2D.LineCap.Round;
                     p.EndCap = System.Drawing.Drawing2D.LineCap.Round;
                     //draw a line between the two ajoining points
-                    e.Graphics.DrawLine(p, T.Location, T1.Location);
+                    e.Graphics.DrawLine(p, T.PointLocation, T1.PointLocation);
                     //get rid of the pen when finished
                     p.Dispose();
                 }
@@ -336,18 +336,70 @@ namespace My_Note
      */
     public class Shape
     {
-        public Point Location;          //position of the point
-        public float Width;             //width of the line
-        public Color Colour;            //colour of the line
-        public int ShapeNumber;         //part of which shape it belongs to
+        private Point m_pointLocation;          // position of the point
+        private float m_lineWidth;              // width of the line
+        private Color m_lineColor;              // color of the line
+        private int m_shapeNumber;              // part of which shape it belongs to
 
-        //CONSTRUCTOR
-        public Shape(Point L, float W, Color C, int S)
+        // Position of the point
+        public Point PointLocation
         {
-            Location = L;               //Stores the Location
-            Width = W;                  //Stores the width
-            Colour = C;                 //Stores the colour
-            ShapeNumber = S;            //Stores the shape number
+            get
+            {
+                return m_pointLocation;
+            }
+            set
+            {
+                m_pointLocation = value;
+            }
+        }
+
+        // Width of the line
+        public float LineWidth
+        {
+            get
+            {
+                return m_lineWidth;
+            }
+            set
+            {
+                m_lineWidth = value;
+            }
+        }
+
+        // Color of the line
+        public Color LineColor
+        {
+            get
+            {
+                return m_lineColor;
+            }
+            set
+            {
+                m_lineColor = value;
+            }
+        }
+
+        // Part of which shape it belongs to
+        public int ShapeNumber
+        {
+            get
+            {
+                return m_shapeNumber;
+            }
+            set
+            {
+                m_shapeNumber = value;
+            }
+        }
+
+        // Constructor 
+        public Shape(Point a_pointLocation, float a_lineWidth, Color a_lineColor, int a_shapeNumber)
+        {
+            PointLocation = a_pointLocation;    // stores the line location
+            LineWidth = a_lineWidth;            // stores the line width
+            LineColor = a_lineColor;            // stores the line color
+            ShapeNumber = a_shapeNumber;        // stores the shape number
         }
     }
 
@@ -356,44 +408,45 @@ namespace My_Note
      */
     public class Shapes
     {
-        private List<Shape> _Shapes;    //Stores all the shapes
-        public int ShapeCount;          // Temporary
+        private List<Shape> m_shapes;    //Stores all the shapes
+        public int ShapeCount;          // ******************************************* Temporary
 
         public Shapes()
         {
-            _Shapes = new List<Shape>();
-            ShapeCount = _Shapes.Count;
+            m_shapes = new List<Shape>();
+            ShapeCount = m_shapes.Count;
         }
         //Returns the number of shapes being stored.
         public int NumberOfShapes()
         {
-            return _Shapes.Count;
+            return m_shapes.Count;
         }
         //Add a shape to the database, recording its position, width, colour and shape relation information
-        public void NewShape(Point L, float W, Color C, int S)
+        public void NewShape(Point a_pointLocation, float a_lineWidth, Color a_lineColor, int a_shapeNumber)
         {
-            _Shapes.Add(new Shape(L, W, C, S));
+            m_shapes.Add(new Shape(a_pointLocation, a_lineWidth, a_lineColor, a_shapeNumber));
         }
         //returns a shape of the requested data.
-        public Shape GetShape(int Index)
+        public Shape GetShape(int a_index)
         {
-            return _Shapes[Index];
+            return m_shapes[a_index];
         }
         //Removes any point data within a certain threshold of a point.
-        public void RemoveShape(Point L, float threshold)
+        public void RemoveShape(Point a_pointLocation, float a_threshold)
         {
-            for (int i = 0; i < _Shapes.Count; i++)
+            for (int i = 0; i < m_shapes.Count; i++)
             {
                 //Finds if a point is within a certain distance of the point to remove.
-                if ((Math.Abs(L.X - _Shapes[i].Location.X) < threshold) && (Math.Abs(L.Y - _Shapes[i].Location.Y) < threshold))
+                if ((Math.Abs(a_pointLocation.X - m_shapes[i].PointLocation.X) < a_threshold) && 
+                    (Math.Abs(a_pointLocation.Y - m_shapes[i].PointLocation.Y) < a_threshold))
                 {
                     //removes all data for that number
-                    _Shapes.RemoveAt(i);
+                    m_shapes.RemoveAt(i);
 
                     //goes through the rest of the data and adds an extra 1 to defined them as a seprate shape and shuffles on the effect.
-                    for (int n = i; n < _Shapes.Count; n++)
+                    for (int n = i; n < m_shapes.Count; n++)
                     {
-                        _Shapes[n].ShapeNumber += 1;
+                        m_shapes[n].ShapeNumber += 1;
                     }
                     //Go back a step so we dont miss a point.
                     i -= 1;
