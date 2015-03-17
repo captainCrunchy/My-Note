@@ -27,37 +27,19 @@ namespace My_Note
 {
     public partial class MainForm : Form
     {
-        // Drawing tools
-        //private bool drawPencil;
-        //private bool drawEraser;
-        //private Color m_currentDrawColor;
-
-        private bool Brush = true;                      //Uses either Brush or Eraser. Default is Brush
-        private Shapes DrawingShapes = new Shapes();    //Stores all the drawing data
-        private bool IsPainting = false;                //Is the mouse currently down (PAINTING)
-        private bool IsEraseing = false;                 //Is the mouse currently down (ERASEING)
-        private Point LastPos = new Point(0, 0);        //Last Position, used to cut down on repative data.
-        private Color CurrentColour = Color.Black;      //Deafult Colour
-        private float CurrentWidth = 1;                //Deafult Pen width
-        private int ShapeNum = 0;                       //record the shapes so they can be drawn sepratley.
-        private Point MouseLoc = new Point(0, 0);       //Record the mouse position
+        private Shapes m_shapesStorage = new Shapes();      // Storage of all the drawing data
+        private bool m_isDrawing = false;                   // Is the mouse currently down (DRAWING)
+        private bool m_isErasing = false;                   // Is the mouse currently down (ERASING)
+        private Point m_lastPosition = new Point(0, 0);     // Last Position, used to cut down on repetative data
+        private Color m_currentDrawColor = Color.Black;     // Current drawing color
+        private float m_currentPenWidth = 1;                // Current pen width
+        private int m_shapeNumber = 0;                      // Record the shape numbers so they can be drawn separately
+        private Point m_mouseLoc = new Point(0, 0);         // Current mouse position
+        private Point m_drawStartPoint;                     // Start point of arrow or line
+        private Point m_drawEndPoint;                       // End point of arrow or line
         private bool IsMouseing = false;                //Draw the mouse?
-        //private bool IsMouseDown = false;
 
         #region richTextBoxMethods
-        /*
-         * refresh the transparentPanel on top
-         * limit the number of characters entered and handle it properly
-         * 3/10/15 8:36 am
-         */
-        private void richTextBox_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            //transparentPanel.Update();  // Does nothing
-            //transparentPanel.Refresh();  // Refreshes but not every time
-            //transparentPanel.Invalidate();  // Works like a charm
-
-            
-        }
         /*
          * 3/11/15 8:44am
          */
@@ -94,30 +76,29 @@ namespace My_Note
          */
         private void transparentPanel_MouseDown(object sender, MouseEventArgs e)
         {
-            //mslog("MouseDown");
+            mslog("MouseDown");
+            // Prepare to draw using pencil
             if (m_currentSelectedControl == e_SelectedControl.PENCIL)
             {
-                //mslog("MouseDown PENCIL");
-                //IsMouseDown = true;
-                //If we're painting...
-                if (Brush)
-                {
-                    //mslog("MouseDown Brush");
-                    //set it to mouse down, illatrate the shape being drawn and reset the last position
-                    IsPainting = true;
-                    ShapeNum++;
-                    LastPos = new Point(0, 0);
-                }
-                ////but if we're eraseing...
-                //else
-                //{
-                //    IsEraseing = true;
-                //}
+                m_isDrawing = true;
+                m_shapeNumber++;
+                m_lastPosition = new Point(0, 0);
             }
+            // Prepare to erase anything that is not text
             if (m_currentSelectedControl == e_SelectedControl.ERASER)
             {
-                //mslog("MouseDown ERASER");
-                IsEraseing = true;
+                m_isErasing = true;
+            }
+            // Prepare to draw arrow, west direction only
+            if (m_currentSelectedControl == e_SelectedControl.WARROW)
+            {
+                m_isDrawing = true;
+                m_drawStartPoint = e.Location;
+// WARNING!!!!!!!!!!!!!!!!! incrementing shape
+                m_shapeNumber++;
+                m_lastPosition = new Point(0, 0);
+
+                //mslog("start point = " + m_drawStartPoint);
             }
         }
         /*
@@ -125,61 +106,58 @@ namespace My_Note
          */
         private void transparentPanel_MouseMove(object sender, MouseEventArgs e)
         {
-            //mslog("MouseMove");
             if (m_currentSelectedControl == e_SelectedControl.PENCIL)
             {
-                //mslog("MouseMove PENCIL");
-                MouseLoc = e.Location;
-                //PAINTING
-                if (IsPainting)
+                if (m_isDrawing)
                 {
-                    //mslog("MouseMove IsPainting");
-                    //check its not at the same place it was last time, saves on recording more data.
-                    if (LastPos != e.Location)
+                    // Free hand draw any shape in any direction
+                    if (m_lastPosition != e.Location)
                     {
                         //set this position as the last positon
-                        LastPos = e.Location;
+                        m_lastPosition = e.Location;
                         //store the position, width, colour and shape relation data
-                        DrawingShapes.NewShape(LastPos, CurrentWidth, CurrentColour, ShapeNum);
+                        m_shapesStorage.NewShape(m_lastPosition, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
                     }
+                    transparentPanel.Refresh();
                 }
-                //if (IsEraseing)
-                //{
-                //    logTextBox.Text = "panel mouse move and ERASING";
-                //    //Remove any point within a certain distance of the mouse
-                //    DrawingShapes.RemoveShape(e.Location, 10);
-                //}
-                //refresh the panel so it will be forced to re-draw.
-                transparentPanel.Refresh();
             }
             if (m_currentSelectedControl == e_SelectedControl.ERASER)
             {
-                //mslog("MouseMove ERASER");
-                MouseLoc = e.Location;
-                ////PAINTING
-                //if (IsPainting)
-                //{
-                //    //check its not at the same place it was last time, saves on recording more data.
-                //    if (LastPos != e.Location)
-                //    {
-                //        //set this position as the last positon
-                //        LastPos = e.Location;
-                //        //store the position, width, colour and shape relation data
-                //        DrawingShapes.NewShape(LastPos, CurrentWidth, CurrentColour, ShapeNum);
-                //    }
-                //}
-                if (IsEraseing)
+                if (m_isErasing)
                 {
-                    //mslog("MouseMove IsEraseing");
-                    //Remove any point within a certain distance of the mouse
-                    DrawingShapes.RemoveShape(e.Location, 10);
+                    // Remove any point within a certain distance of the mouse
+                    m_shapesStorage.RemoveShape(e.Location, 10);
 
                     transparentPanel.Invalidate();
                     backPanel.Invalidate();
                     richTextBox.Invalidate();
+                    transparentPanel.Refresh();
                 }
-                //refresh the panel so it will be forced to re-draw.
-                transparentPanel.Refresh();
+            }
+            if (m_currentSelectedControl == e_SelectedControl.WARROW)
+            {
+                if (m_isDrawing)
+                {
+                    // Draw an arrow pointing West
+                    if (m_lastPosition != e.Location &&
+                        e.Location.X < m_drawStartPoint.X)
+                    {
+                        m_lastPosition.X = e.Location.X;  // Restrict drawing direction
+                        m_lastPosition.Y = m_drawStartPoint.Y;  // Restrict vertical movement
+                        //m_shapesStorage.NewShape(m_lastPosition, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
+                        //mslog("drawing arrow");
+                        
+                        
+                        Graphics g = this.transparentPanel.CreateGraphics();
+                        Pen pen = new Pen(m_currentDrawColor);
+                        g.DrawLine(pen, m_drawStartPoint, m_lastPosition);
+                        //g.Dispose();
+                        transparentPanel.Invalidate();
+                        richTextBox.Invalidate();
+                        backPanel.Invalidate();
+                    }
+                    //transparentPanel.Refresh();
+                }
             }
         }
 
@@ -188,48 +166,70 @@ namespace My_Note
          */
         private void transparentPanel_MouseUp(object sender, MouseEventArgs e)
         {
-            //mslog("MouseUp");
             if (m_currentSelectedControl == e_SelectedControl.PENCIL)
             {
-                //mslog("MouseUp, PENCIL");
-                //IsMouseDown = false;
-                if (IsPainting)
+                if (m_isDrawing)
                 {
-                    //mslog("MouseUp, finished painting");
-                    //Finished Painting.
-                    IsPainting = false;
+                    m_isDrawing = false;
                 }
-                //if (IsEraseing)
-                //{
-                //    //Finished Earsing.
-                //    IsEraseing = false;
-                //}
                 transparentPanel.Invalidate();
                 richTextBox.Invalidate();
             }
             if (m_currentSelectedControl == e_SelectedControl.ERASER)
             {
-                ////IsMouseDown = false;
-                //if (IsPainting)
-                //{
-                //    //Finished Painting.
-                //    IsPainting = false;
-                //}
-                //mslog("MouseUp, ERASER");
-                if (IsEraseing)
+                if (m_isErasing)
                 {
-                    //mslog("MouseUp, finished erasing");
-                    //Finished Earsing.
-                    IsEraseing = false;
+                    m_isErasing = false;
                 }
                 transparentPanel.Invalidate();
                 richTextBox.Invalidate();
             }
+            if (m_currentSelectedControl == e_SelectedControl.WARROW)
+            {
+                if (m_isDrawing)
+                {
+                    // Draw and save only from beginning to end points
+                    m_drawEndPoint = e.Location;
+                    for (int i = m_drawEndPoint.X; i <= m_drawStartPoint.X; i++)
+                    {
+                        m_lastPosition.X = i;  // Draw the X points
+                        m_lastPosition.Y = m_drawStartPoint.Y;  // Restrict vertical movement
+                        m_shapesStorage.NewShape(m_lastPosition, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
+                        //mslog("drew shapes, m_shapeNumber = " + m_shapeNumber);
+                    }
+                    m_isDrawing = false;
+                }
+                //mslog("end point = " + m_drawEndPoint);
+                transparentPanel.Invalidate();
+                richTextBox.Invalidate();
+            }
+        }
 
+        /*
+         * 3/17/15 12:38pm
+         */
+        private void transparentPanel_MouseHover(object sender, EventArgs e)
+        {
+            if (m_currentSelectedControl == e_SelectedControl.TEXT)
+            {
+                transparentPanel.Cursor = Cursors.IBeam;
+            }
+            if (m_currentSelectedControl == e_SelectedControl.PENCIL)
+            {
+                transparentPanel.Cursor = Cursors.Cross;
+            }
+            if (m_currentSelectedControl == e_SelectedControl.WARROW)
+            {
+                transparentPanel.Cursor = Cursors.Cross;
+            }
+            if (m_currentSelectedControl == e_SelectedControl.ERASER)
+            {
+                transparentPanel.Cursor = Cursors.Hand;
+            }
         }
         /*
-         * 3/11/15 8:19am.
-         */
+             * 3/11/15 8:19am.
+             */
         private void transparentPanel_MouseEnter(object sender, EventArgs e)
         {
             //mslog("MouseEnter");
@@ -259,15 +259,14 @@ namespace My_Note
          */
         private void transparentPanel_Paint(object sender, PaintEventArgs e)
         {
-            //mslog("Paint");
             //Apply a smoothing mode to smooth out the line.
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             //DRAW THE LINES
-            for (int i = 0; i < DrawingShapes.NumberOfShapes() - 1; i++)
+            for (int i = 0; i < m_shapesStorage.NumberOfShapes() - 1; i++)
             {
                 //mslog("Paint DRAW THE LINES");
-                Shape T = DrawingShapes.GetShape(i);
-                Shape T1 = DrawingShapes.GetShape(i + 1);
+                Shape T = m_shapesStorage.GetShape(i);
+                Shape T1 = m_shapesStorage.GetShape(i + 1);
                 //make sure shape the two ajoining shape numbers are part of the same shape
                 if (T.ShapeNumber == T1.ShapeNumber)
                 {
@@ -287,7 +286,7 @@ namespace My_Note
             {
                 //mslog("Paint isMouseing");
                 //e.Graphics.DrawEllipse(new Pen(Color.Transparent, 0.5f), MouseLoc.X - (CurrentWidth / 2), MouseLoc.Y - (CurrentWidth / 2), CurrentWidth, CurrentWidth);
-                e.Graphics.DrawEllipse(new Pen(Color.White, 0.5f), MouseLoc.X - (CurrentWidth / 2), MouseLoc.Y - (CurrentWidth / 2), CurrentWidth, CurrentWidth);
+                e.Graphics.DrawEllipse(new Pen(Color.White, 0.5f), m_mouseLoc.X - (m_currentPenWidth / 2), m_mouseLoc.Y - (m_currentPenWidth / 2), m_currentPenWidth, m_currentPenWidth);
                 transparentPanel.Invalidate();
             }
             /*
@@ -409,12 +408,10 @@ namespace My_Note
     public class Shapes
     {
         private List<Shape> m_shapes;    //Stores all the shapes
-        public int ShapeCount;          // ******************************************* Temporary
 
         public Shapes()
         {
             m_shapes = new List<Shape>();
-            ShapeCount = m_shapes.Count;
         }
         //Returns the number of shapes being stored.
         public int NumberOfShapes()
@@ -437,7 +434,7 @@ namespace My_Note
             for (int i = 0; i < m_shapes.Count; i++)
             {
                 //Finds if a point is within a certain distance of the point to remove.
-                if ((Math.Abs(a_pointLocation.X - m_shapes[i].PointLocation.X) < a_threshold) && 
+                if ((Math.Abs(a_pointLocation.X - m_shapes[i].PointLocation.X) < a_threshold) &&
                     (Math.Abs(a_pointLocation.Y - m_shapes[i].PointLocation.Y) < a_threshold))
                 {
                     //removes all data for that number

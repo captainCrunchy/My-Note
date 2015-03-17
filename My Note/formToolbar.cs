@@ -27,32 +27,171 @@ namespace My_Note
 {
     public partial class MainForm : Form
     {
-
+        /*
+         * 3/17/15 12:12pm
+         */
         private void textSelectButton_Click(object sender, EventArgs e)
         {
             m_currentSelectedControl = e_SelectedControl.TEXT;
             setDefaultBackColorForControls();
-            textSelectButton.BackColor = selectedControlButtonColor;
+            textSelectButton.BackColor = m_selectedControlButtonColor;
         }
+        /*
+         * 3/17/15 12:13pm
+         */
         private void pencilSelectButton_Click(object sender, EventArgs e)
         {
-            // Appearance
             m_currentSelectedControl = e_SelectedControl.PENCIL;
             setDefaultBackColorForControls();
-            pencilSelectButton.BackColor = selectedControlButtonColor;
-
-            // Functionality
-            Brush = true;
+            pencilSelectButton.BackColor = m_selectedControlButtonColor;
+            //Brush = true;
         }
+        /*
+         * 3/17/15 12:14pm
+         */
         private void eraserSelectButton_Click(object sender, EventArgs e)
         {
-            // Appearance
             m_currentSelectedControl = e_SelectedControl.ERASER;
             setDefaultBackColorForControls();
-            eraserSelectButton.BackColor = selectedControlButtonColor;
+            eraserSelectButton.BackColor = m_selectedControlButtonColor;
+            //Brush = false;
+        }
+        
+        /*
+         * 3/17/15 12:15pm
+         */
+        private void WarrowButton_Click(object sender, EventArgs e)
+        {
+            m_currentSelectedControl = e_SelectedControl.WARROW;
+            setDefaultBackColorForControls();
+            WarrowButton.BackColor = m_selectedControlButtonColor;
+        }
 
-            // Functionality
-            Brush = false;
+        /*
+         * Displays a color dialog to select drawing color
+         * 3/17/15 10:54am 
+         */
+        private void drawColorButton_Click(object sender, EventArgs e)
+        {
+            mslog("drawColorButon_Click");
+            DialogResult dr = drawColorDialog.ShowDialog();
+            if (dr == DialogResult.OK)
+            {
+                // Apply new color
+                m_currentDrawColor = drawColorDialog.Color;
+                drawColorButton.BackColor = m_currentDrawColor;
+                mslog("selected color = " + drawColorDialog.Color);
+            }
+        }
+
+        /*
+         * Set current drawing color to black and update it in the drawColorButton.BackColor
+         * to let the user know which color they selected.
+         * 3/17/15 11:13am
+         */
+        private void blackColorButton_Click(object sender, EventArgs e)
+        {
+            m_currentDrawColor = blackColorButton.BackColor;
+            drawColorButton.BackColor = m_currentDrawColor;
+        }
+
+        /*
+         * Set current drawing color to white and update it in the drawColorButton.BackColor
+         * to let the user know which color they selected.
+         * 3/17/15 11:14am
+         */
+        private void whiteColorButton_Click(object sender, EventArgs e)
+        {
+            m_currentDrawColor = whiteColorButton.BackColor;
+            drawColorButton.BackColor = m_currentDrawColor;
+        }
+
+        /*
+         * Set current drawing color to gray and update it in the drawColorButton.BackColor
+         * to let the user know which color they selected.
+         * 3/17/15 11:15am
+         */
+        private void grayColorButton_Click(object sender, EventArgs e)
+        {
+            m_currentDrawColor = grayColorButton.BackColor;
+            drawColorButton.BackColor = m_currentDrawColor;
+        }
+
+        /*
+         * Set current drawing color to greent and update it in the drawColorButton.BackColor
+         * to let the user know which color they selected.
+         * 3/17/15 11:16am
+         */
+        private void greenColorButton_Click(object sender, EventArgs e)
+        {
+            m_currentDrawColor = greenColorButton.BackColor;
+            drawColorButton.BackColor = m_currentDrawColor;
+        }
+
+        /*
+         * Set current drawing color to red and update it in the drawColorButton.BackColor
+         * to let the user know which color they selected.
+         * 3/17/15 11:17am
+         */
+        private void redColorButton_Click(object sender, EventArgs e)
+        {
+            m_currentDrawColor = redColorButton.BackColor;
+            drawColorButton.BackColor = m_currentDrawColor;
+        }
+
+        /*
+         * Set current drawing color to teal and update it in the drawColorButton.BackColor
+         * to let the user know which color they selected.
+         * 3/17/15 11:18am
+         */
+        private void tealColorButton_Click(object sender, EventArgs e)
+        {
+            m_currentDrawColor = tealColorButton.BackColor;
+            drawColorButton.BackColor = m_currentDrawColor;
+        }
+
+        /*
+         * Set current drawing color to orange and update it in the drawColorButton.BackColor
+         * to let the user know which color they selected.
+         * 3/17/15 11:19am
+         */
+        private void orangeColorButton_Click(object sender, EventArgs e)
+        {
+            m_currentDrawColor = orangeColorButton.BackColor;
+            drawColorButton.BackColor = m_currentDrawColor;
+        }
+
+        /*
+         * Set current drawing color to blue and update it in the drawColorButton.BackColor
+         * to let the user know which color they selected.
+         * 3/17/15 11:20am
+         */
+        private void blueColorButton_Click(object sender, EventArgs e)
+        {
+            m_currentDrawColor = blueColorButton.BackColor;
+            drawColorButton.BackColor = m_currentDrawColor;
+        }
+
+        /*
+         * Set current drawing color to yellow and update it in the drawColorButton.BackColor
+         * to let the user know which color they selected.
+         * 3/17/15 11:21am
+         */
+        private void yellowColorButton_Click(object sender, EventArgs e)
+        {
+            m_currentDrawColor = yellowColorButton.BackColor;
+            drawColorButton.BackColor = m_currentDrawColor;
+        }
+
+        /*
+         * Set current drawing color to purple and update it in the drawColorButton.BackColor
+         * to let the user know which color they selected.
+         * 3/17/15 11:22am
+         */
+        private void purpleColorButton_Click(object sender, EventArgs e)
+        {
+            m_currentDrawColor = purpleColorButton.BackColor;
+            drawColorButton.BackColor = m_currentDrawColor;
         }
 
         /* This method gets called to reset the BackColor of all controls to default, it is
@@ -77,7 +216,6 @@ namespace My_Note
             dashedSelectButton.BackColor = Color.Transparent;
             dottedSelectButton.BackColor = Color.Transparent;
             vertTextButton.BackColor = Color.Transparent;
-
         }
     }
 }

@@ -34,30 +34,23 @@ namespace My_Note
         {
             TEXT,
             PENCIL,
-            ERASER
+            ERASER,
+            WARROW
         }
 
         private e_SelectedControl m_currentSelectedControl;
-        private Color selectedControlButtonColor;
+        private Color m_selectedControlButtonColor;
 
         public MainForm()
         {
             InitializeComponent();
-            /*
-            //Set Double Buffering (Set by original PaintPanel project)
-            transparentPanel.GetType().GetMethod("SetStyle", System.Reflection.BindingFlags.Instance | 
-                System.Reflection.BindingFlags.NonPublic).Invoke(transparentPanel, 
-                new object[] { System.Windows.Forms.ControlStyles.UserPaint | 
-                    System.Windows.Forms.ControlStyles.AllPaintingInWmPaint | 
-                    System.Windows.Forms.ControlStyles.DoubleBuffer, true });
-            */
 
             // Initialize variables and values of controls
             m_currentSelectedControl = e_SelectedControl.TEXT;
-            selectedControlButtonColor = Color.SandyBrown;
+            m_selectedControlButtonColor = Color.SandyBrown;
 
             // Set default values
-            textSelectButton.BackColor = selectedControlButtonColor;
+            textSelectButton.BackColor = m_selectedControlButtonColor;
             fontComboBox.Text = "Microsoft Sans Serif";
             richTextBox.Font = new Font("Microsoft Sans Serif", 12);
 
@@ -65,18 +58,7 @@ namespace My_Note
 
         private void MainForm_Load(object sender, System.EventArgs e)
         {
-            //mslog("form loaded");
             textSelectButton.Select();
-        }
-
-        private void MainForm_Activated(object sender, System.EventArgs e)
-        {
-
-        }
-
-        private void MainForm_Closed(object sender, System.EventArgs e)
-        {
-
         }
 
         private void MainForm_Shown(object sender, System.EventArgs e)
@@ -116,26 +98,6 @@ namespace My_Note
         {
             logTextBox.Text += a_str + "\r\n";
             moveLogCursor();
-        }
-
-        private void transparentPanel_MouseHover(object sender, EventArgs e)
-        {
-            //mslog("MouseHover");
-            if (m_currentSelectedControl == e_SelectedControl.TEXT)
-            {
-                transparentPanel.Cursor = Cursors.IBeam;
-                //mslog("IBeam");
-            }
-            if (m_currentSelectedControl == e_SelectedControl.PENCIL)
-            {
-                transparentPanel.Cursor = Cursors.Cross;
-                //mslog("Cross");
-            }
-            if (m_currentSelectedControl == e_SelectedControl.ERASER)
-            {
-                transparentPanel.Cursor = Cursors.Hand;
-                //mslog("Hand");
-            }
         }
     }
 }
