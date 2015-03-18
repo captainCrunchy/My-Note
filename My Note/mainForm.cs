@@ -35,7 +35,8 @@ namespace My_Note
             TEXT,
             PENCIL,
             ERASER,
-            WARROW
+            WARROW,
+            SOLID
         }
 
         private e_SelectedControl m_currentSelectedControl;
@@ -81,7 +82,6 @@ namespace My_Note
                     richTextBox.Font = new Font("Microsoft Sans Serif", 12);
                     break;
                 case 3:
-                    //richTextBox.Font = new Font("Times New Roman", 12);
                     richTextBox.SelectionFont = new Font("Times New Roman", 12);
                     break;
             }

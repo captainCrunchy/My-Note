@@ -36,6 +36,7 @@ namespace My_Note
             setDefaultBackColorForControls();
             textSelectButton.BackColor = m_selectedControlButtonColor;
         }
+
         /*
          * 3/17/15 12:13pm
          */
@@ -46,6 +47,7 @@ namespace My_Note
             pencilSelectButton.BackColor = m_selectedControlButtonColor;
             //Brush = true;
         }
+
         /*
          * 3/17/15 12:14pm
          */
@@ -65,6 +67,16 @@ namespace My_Note
             m_currentSelectedControl = e_SelectedControl.WARROW;
             setDefaultBackColorForControls();
             WarrowButton.BackColor = m_selectedControlButtonColor;
+        }
+
+        /*
+         * 3/18/15 11:23am
+         */
+        private void solidSelectButton_Click(object sender, EventArgs e)
+        {
+            m_currentSelectedControl = e_SelectedControl.SOLID;
+            setDefaultBackColorForControls();
+            solidSelectButton.BackColor = m_selectedControlButtonColor;
         }
 
         /*

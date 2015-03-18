@@ -320,6 +320,7 @@
             this.solidSelectButton.Size = new System.Drawing.Size(45, 11);
             this.solidSelectButton.TabIndex = 51;
             this.solidSelectButton.UseVisualStyleBackColor = true;
+            this.solidSelectButton.Click += new System.EventHandler(this.solidSelectButton_Click);
             // 
             // circleSelectButton
             // 
@@ -620,8 +621,6 @@
             this.transparentPanel.Click += new System.EventHandler(this.transparentPanel_Click);
             this.transparentPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.transparentPanel_Paint);
             this.transparentPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseDown);
-            this.transparentPanel.MouseEnter += new System.EventHandler(this.transparentPanel_MouseEnter);
-            this.transparentPanel.MouseLeave += new System.EventHandler(this.transparentPanel_MouseLeave);
             this.transparentPanel.MouseHover += new System.EventHandler(this.transparentPanel_MouseHover);
             this.transparentPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseMove);
             this.transparentPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseUp);
