@@ -32,11 +32,9 @@ namespace My_Note
     {
         private enum e_SelectedControl
         {
-            TEXT,
-            PENCIL,
-            ERASER,
-            WARROW,
-            SOLID
+            TEXT, PENCIL, ERASER, WARROW, NWARROW, NARROW,
+            NEARROW, EARROW, SEARROW, SARROW, SWARROW,
+            RECTANGLE, OVAL, SOLID, DASHED, DOTTED, VERTTEXT
         }
 
         private e_SelectedControl m_currentSelectedControl;

@@ -70,6 +70,95 @@ namespace My_Note
         }
 
         /*
+         * 3/19/15 7:27AM
+         */
+        private void NWarrowButton_Click(object sender, EventArgs e)
+        {
+            m_currentSelectedControl = e_SelectedControl.NWARROW;
+            setDefaultBackColorForControls();
+            NWarrowButton.BackColor = m_selectedControlButtonColor;
+        }
+
+        /*
+         * 3/19/15 7:28AM
+         */
+        private void NarrowButton_Click(object sender, EventArgs e)
+        {
+            m_currentSelectedControl = e_SelectedControl.NARROW;
+            setDefaultBackColorForControls();
+            NarrowButton.BackColor = m_selectedControlButtonColor;
+        }
+
+        /*
+         * 3/19/15 7:29AM
+         */
+        private void NEarrowButton_Click(object sender, EventArgs e)
+        {
+            m_currentSelectedControl = e_SelectedControl.NEARROW;
+            setDefaultBackColorForControls();
+            NEarrowButton.BackColor = m_selectedControlButtonColor;
+        }
+        /*
+         * 3/19/15 7:30AM
+         */
+        private void EarrowButton_Click(object sender, EventArgs e)
+        {
+            m_currentSelectedControl = e_SelectedControl.EARROW;
+            setDefaultBackColorForControls();
+            EarrowButton.BackColor = m_selectedControlButtonColor;
+        }
+
+        /*
+         * 3/19/15 7:31AM
+         */
+        private void SEarrowButton_Click(object sender, EventArgs e)
+        {
+            m_currentSelectedControl = e_SelectedControl.SEARROW;
+            setDefaultBackColorForControls();
+            SEarrowButton.BackColor = m_selectedControlButtonColor;
+        }
+
+        /*
+         * 3/19/15 7:32AM
+         */
+        private void SarrowButton_Click(object sender, EventArgs e)
+        {
+            m_currentSelectedControl = e_SelectedControl.SARROW;
+            setDefaultBackColorForControls();
+            SarrowButton.BackColor = m_selectedControlButtonColor;
+        }
+
+        /*
+         * 3/19/15 7:33AM
+         */
+        private void SWarrowButton_Click(object sender, EventArgs e)
+        {
+            m_currentSelectedControl = e_SelectedControl.SWARROW;
+            setDefaultBackColorForControls();
+            SWarrowButton.BackColor = m_selectedControlButtonColor;
+        }
+
+        /*
+         * 3/19/15 7:34AM
+         */
+        private void rectangleSelectButton_Click(object sender, EventArgs e)
+        {
+            m_currentSelectedControl = e_SelectedControl.RECTANGLE;
+            setDefaultBackColorForControls();
+            rectangleSelectButton.BackColor = m_selectedControlButtonColor;
+        }
+
+        /*
+         * 3/19/15 7:35AM
+         */
+        private void ovalSelectButton_Click(object sender, EventArgs e)
+        {
+            m_currentSelectedControl = e_SelectedControl.OVAL;
+            setDefaultBackColorForControls();
+            ovalSelectButton.BackColor = m_selectedControlButtonColor;
+        }
+
+        /*
          * 3/18/15 11:23am
          */
         private void solidSelectButton_Click(object sender, EventArgs e)
@@ -77,6 +166,36 @@ namespace My_Note
             m_currentSelectedControl = e_SelectedControl.SOLID;
             setDefaultBackColorForControls();
             solidSelectButton.BackColor = m_selectedControlButtonColor;
+        }
+
+        /*
+         * 3/19/15 7:36AM
+         */
+        private void dashedSelectButton_Click(object sender, EventArgs e)
+        {
+            m_currentSelectedControl = e_SelectedControl.DASHED;
+            setDefaultBackColorForControls();
+            dashedSelectButton.BackColor = m_selectedControlButtonColor;
+        }
+
+        /*
+         * 3/19/15 7:37AM
+         */
+        private void dottedSelectButton_Click(object sender, EventArgs e)
+        {
+            m_currentSelectedControl = e_SelectedControl.DOTTED;
+            setDefaultBackColorForControls();
+            dottedSelectButton.BackColor = m_selectedControlButtonColor;
+        }
+
+        /*
+         * 3/19/15 7:38AM
+         */
+        private void vertTextButton_Click(object sender, EventArgs e)
+        {
+            m_currentSelectedControl = e_SelectedControl.VERTTEXT;
+            setDefaultBackColorForControls();
+            vertTextButton.BackColor = m_selectedControlButtonColor;
         }
 
         /*
@@ -218,12 +337,12 @@ namespace My_Note
             NarrowButton.BackColor = Color.Transparent;
             NEarrowButton.BackColor = Color.Transparent;
             EarrowButton.BackColor = Color.Transparent;
-            SEarrrowButton.BackColor = Color.Transparent;
+            SEarrowButton.BackColor = Color.Transparent;
             SarrowButton.BackColor = Color.Transparent;
             SWarrowButton.BackColor = Color.Transparent;
             WarrowButton.BackColor = Color.Transparent;
-            squareSelectButton.BackColor = Color.Transparent;
-            circleSelectButton.BackColor = Color.Transparent;
+            rectangleSelectButton.BackColor = Color.Transparent;
+            ovalSelectButton.BackColor = Color.Transparent;
             solidSelectButton.BackColor = Color.Transparent;
             dashedSelectButton.BackColor = Color.Transparent;
             dottedSelectButton.BackColor = Color.Transparent;

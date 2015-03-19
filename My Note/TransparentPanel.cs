@@ -40,7 +40,7 @@ namespace My_Note
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            base.OnPaint(e);  // This draws the shapes before the lines below
+            base.OnPaint(e);  // This draws the shapes
             Graphics g = e.Graphics;
             Pen bluePen = new Pen(Color.Blue);
             for (int i = 0; i < 30; i++)
@@ -51,6 +51,7 @@ namespace My_Note
 
             Pen redPen = new Pen(Color.Red);
             e.Graphics.DrawLine(redPen, 35, 5, 35, thisHeight - 5);
+            //base.OnPaint(e);  // This draws the shapes
         }
     }
 }

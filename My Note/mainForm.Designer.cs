@@ -50,9 +50,9 @@
             this.dottedSelectButton = new System.Windows.Forms.Button();
             this.dashedSelectButton = new System.Windows.Forms.Button();
             this.solidSelectButton = new System.Windows.Forms.Button();
-            this.circleSelectButton = new System.Windows.Forms.Button();
-            this.squareSelectButton = new System.Windows.Forms.Button();
-            this.SEarrrowButton = new System.Windows.Forms.Button();
+            this.ovalSelectButton = new System.Windows.Forms.Button();
+            this.rectangleSelectButton = new System.Windows.Forms.Button();
+            this.SEarrowButton = new System.Windows.Forms.Button();
             this.SarrowButton = new System.Windows.Forms.Button();
             this.EarrowButton = new System.Windows.Forms.Button();
             this.SWarrowButton = new System.Windows.Forms.Button();
@@ -141,9 +141,9 @@
             this.toolbarPanel.Controls.Add(this.dottedSelectButton);
             this.toolbarPanel.Controls.Add(this.dashedSelectButton);
             this.toolbarPanel.Controls.Add(this.solidSelectButton);
-            this.toolbarPanel.Controls.Add(this.circleSelectButton);
-            this.toolbarPanel.Controls.Add(this.squareSelectButton);
-            this.toolbarPanel.Controls.Add(this.SEarrrowButton);
+            this.toolbarPanel.Controls.Add(this.ovalSelectButton);
+            this.toolbarPanel.Controls.Add(this.rectangleSelectButton);
+            this.toolbarPanel.Controls.Add(this.SEarrowButton);
             this.toolbarPanel.Controls.Add(this.SarrowButton);
             this.toolbarPanel.Controls.Add(this.EarrowButton);
             this.toolbarPanel.Controls.Add(this.SWarrowButton);
@@ -290,6 +290,7 @@
             this.vertTextButton.Size = new System.Drawing.Size(27, 46);
             this.vertTextButton.TabIndex = 54;
             this.vertTextButton.UseVisualStyleBackColor = true;
+            this.vertTextButton.Click += new System.EventHandler(this.vertTextButton_Click);
             // 
             // dottedSelectButton
             // 
@@ -300,6 +301,7 @@
             this.dottedSelectButton.Size = new System.Drawing.Size(45, 11);
             this.dottedSelectButton.TabIndex = 53;
             this.dottedSelectButton.UseVisualStyleBackColor = true;
+            this.dottedSelectButton.Click += new System.EventHandler(this.dottedSelectButton_Click);
             // 
             // dashedSelectButton
             // 
@@ -310,6 +312,7 @@
             this.dashedSelectButton.Size = new System.Drawing.Size(45, 11);
             this.dashedSelectButton.TabIndex = 52;
             this.dashedSelectButton.UseVisualStyleBackColor = true;
+            this.dashedSelectButton.Click += new System.EventHandler(this.dashedSelectButton_Click);
             // 
             // solidSelectButton
             // 
@@ -322,35 +325,38 @@
             this.solidSelectButton.UseVisualStyleBackColor = true;
             this.solidSelectButton.Click += new System.EventHandler(this.solidSelectButton_Click);
             // 
-            // circleSelectButton
+            // ovalSelectButton
             // 
-            this.circleSelectButton.Font = new System.Drawing.Font("Wingdings", 14F);
-            this.circleSelectButton.Location = new System.Drawing.Point(476, 28);
-            this.circleSelectButton.Name = "circleSelectButton";
-            this.circleSelectButton.Size = new System.Drawing.Size(27, 27);
-            this.circleSelectButton.TabIndex = 50;
-            this.circleSelectButton.Text = "¡";
-            this.circleSelectButton.UseVisualStyleBackColor = true;
+            this.ovalSelectButton.Font = new System.Drawing.Font("Wingdings", 14F);
+            this.ovalSelectButton.Location = new System.Drawing.Point(476, 28);
+            this.ovalSelectButton.Name = "ovalSelectButton";
+            this.ovalSelectButton.Size = new System.Drawing.Size(27, 27);
+            this.ovalSelectButton.TabIndex = 50;
+            this.ovalSelectButton.Text = "¡";
+            this.ovalSelectButton.UseVisualStyleBackColor = true;
+            this.ovalSelectButton.Click += new System.EventHandler(this.ovalSelectButton_Click);
             // 
-            // squareSelectButton
+            // rectangleSelectButton
             // 
-            this.squareSelectButton.Font = new System.Drawing.Font("Wingdings", 14F);
-            this.squareSelectButton.Location = new System.Drawing.Point(476, 1);
-            this.squareSelectButton.Name = "squareSelectButton";
-            this.squareSelectButton.Size = new System.Drawing.Size(27, 27);
-            this.squareSelectButton.TabIndex = 49;
-            this.squareSelectButton.Text = "¨";
-            this.squareSelectButton.UseVisualStyleBackColor = true;
+            this.rectangleSelectButton.Font = new System.Drawing.Font("Wingdings", 14F);
+            this.rectangleSelectButton.Location = new System.Drawing.Point(476, 1);
+            this.rectangleSelectButton.Name = "rectangleSelectButton";
+            this.rectangleSelectButton.Size = new System.Drawing.Size(27, 27);
+            this.rectangleSelectButton.TabIndex = 49;
+            this.rectangleSelectButton.Text = "¨";
+            this.rectangleSelectButton.UseVisualStyleBackColor = true;
+            this.rectangleSelectButton.Click += new System.EventHandler(this.rectangleSelectButton_Click);
             // 
-            // SEarrrowButton
+            // SEarrowButton
             // 
-            this.SEarrrowButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
-            this.SEarrrowButton.Location = new System.Drawing.Point(444, 38);
-            this.SEarrrowButton.Name = "SEarrrowButton";
-            this.SEarrrowButton.Size = new System.Drawing.Size(19, 19);
-            this.SEarrrowButton.TabIndex = 48;
-            this.SEarrrowButton.Text = "æ";
-            this.SEarrrowButton.UseVisualStyleBackColor = true;
+            this.SEarrowButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.SEarrowButton.Location = new System.Drawing.Point(444, 38);
+            this.SEarrowButton.Name = "SEarrowButton";
+            this.SEarrowButton.Size = new System.Drawing.Size(19, 19);
+            this.SEarrowButton.TabIndex = 48;
+            this.SEarrowButton.Text = "æ";
+            this.SEarrowButton.UseVisualStyleBackColor = true;
+            this.SEarrowButton.Click += new System.EventHandler(this.SEarrowButton_Click);
             // 
             // SarrowButton
             // 
@@ -361,6 +367,7 @@
             this.SarrowButton.TabIndex = 47;
             this.SarrowButton.Text = "â";
             this.SarrowButton.UseVisualStyleBackColor = true;
+            this.SarrowButton.Click += new System.EventHandler(this.SarrowButton_Click);
             // 
             // EarrowButton
             // 
@@ -371,6 +378,7 @@
             this.EarrowButton.TabIndex = 46;
             this.EarrowButton.Text = "à";
             this.EarrowButton.UseVisualStyleBackColor = true;
+            this.EarrowButton.Click += new System.EventHandler(this.EarrowButton_Click);
             // 
             // SWarrowButton
             // 
@@ -381,6 +389,7 @@
             this.SWarrowButton.TabIndex = 44;
             this.SWarrowButton.Text = "å";
             this.SWarrowButton.UseVisualStyleBackColor = true;
+            this.SWarrowButton.Click += new System.EventHandler(this.SWarrowButton_Click);
             // 
             // WarrowButton
             // 
@@ -402,6 +411,7 @@
             this.NEarrowButton.TabIndex = 42;
             this.NEarrowButton.Text = "ä";
             this.NEarrowButton.UseVisualStyleBackColor = true;
+            this.NEarrowButton.Click += new System.EventHandler(this.NEarrowButton_Click);
             // 
             // NarrowButton
             // 
@@ -412,6 +422,7 @@
             this.NarrowButton.TabIndex = 41;
             this.NarrowButton.Text = "á";
             this.NarrowButton.UseVisualStyleBackColor = true;
+            this.NarrowButton.Click += new System.EventHandler(this.NarrowButton_Click);
             // 
             // NWarrowButton
             // 
@@ -422,6 +433,7 @@
             this.NWarrowButton.TabIndex = 40;
             this.NWarrowButton.Text = "ã";
             this.NWarrowButton.UseVisualStyleBackColor = true;
+            this.NWarrowButton.Click += new System.EventHandler(this.NWarrowButton_Click);
             // 
             // label3
             // 
@@ -676,7 +688,7 @@
         private System.Windows.Forms.Button textSelectButton;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button eraserSelectButton;
-        private System.Windows.Forms.Button SEarrrowButton;
+        private System.Windows.Forms.Button SEarrowButton;
         private System.Windows.Forms.Button SarrowButton;
         private System.Windows.Forms.Button EarrowButton;
         private System.Windows.Forms.Button SWarrowButton;
@@ -685,8 +697,8 @@
         private System.Windows.Forms.Button NarrowButton;
         private System.Windows.Forms.Button NWarrowButton;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button circleSelectButton;
-        private System.Windows.Forms.Button squareSelectButton;
+        private System.Windows.Forms.Button ovalSelectButton;
+        private System.Windows.Forms.Button rectangleSelectButton;
         private System.Windows.Forms.Button dottedSelectButton;
         private System.Windows.Forms.Button dashedSelectButton;
         private System.Windows.Forms.Button solidSelectButton;
