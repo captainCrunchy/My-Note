@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using System.Windows.Forms;
 using System.Drawing;
+
 /*
  * This is one of several 'partial' classes of the MainForm class. It is responsible
  * for performing a specific task. Below are the related files of the MainForm class:
@@ -27,26 +28,24 @@ namespace My_Note
 {
     public partial class MainForm : Form
     {
-// WARNING should I add Pen and Graphics variables here so that it performs faster?
-        /*
-         * More ideas to optimize my code is to add and initialize pen in here and set the current width
-         * and color on mouse down to take some work from the mouse move event
-         * 
-         */
-        private Shapes m_shapesStorage = new Shapes();      // Storage of all the drawing data
-        private bool m_isDrawing = false;                   // Is the mouse currently down, used in MouseMove
-        private bool m_isErasing = false;                   // Is the mouse currently down, used in MouseMove
-        private Point m_lastPosition = new Point(0, 0);     // Last Position, used to cut down on repetative data
-        private Color m_currentDrawColor = Color.Black;     // Current drawing color
-        private float m_currentPenWidth = 2;                // Current pen width
-        private int m_shapeNumber = 0;                      // Record the shape numbers so they can be drawn separately
-        private Point m_drawStartPoint = new Point(0, 0);   // Start point of arrow or line
-        private Point m_drawEndPoint = new Point(0, 0);     // End point of arrow or line
-        private Point m_arrowLeftSide = new Point(0, 0);    // Left side of the arrow (dynamic), used in MouseMove
-        private Point m_arrowRightSide = new Point(0, 0);   // Right side of the arrow (dynamic), used in MouseMove
-        private Int32 m_arrowFarPoint = 0; // compares the x and y points and selects and uses the farthest point from the
-                                            // starting point, used in diagonal arrow, updated in MouseMove and read in MouseUp
+        private ShapeContainer m_shapesStorage = new ShapeContainer();      // Storage of all the drawing data
+        private bool m_isDrawing = false;                                   // Is the mouse currently down, used in MouseMove
+        private bool m_isErasing = false;                                   // Is the mouse currently down, used in MouseMove
+        private Point m_lastPosition = new Point(0, 0);                     // Last Position, used to cut down on repetative data
+        private Color m_currentDrawColor = Color.Black;                     // Current drawing color
+        private float m_currentPenWidth = 1;                                // Current pen width
+        private int m_shapeNumber = 0;                                      // Record the shape numbers so they can be drawn separately
 
+        private Point m_drawStartPoint = new Point(0, 0);                   // Start point of arrow or line
+        private Point m_drawEndPoint = new Point(0, 0);                     // End point of arrow or line
+        private Point m_arrowLeftSide = new Point(0, 0);                    // Left side of the arrow (dynamic), used in MouseMove
+        private Point m_arrowRightSide = new Point(0, 0);                   // Right side of the arrow (dynamic), used in MouseMove
+        private Int32 m_arrowFarPoint = 0;                                  // Used in diagonal arrow, updated in MouseMove and read in MouseUp
+        private Graphics transparentPanelGraphics;                          // Used to reduce repetitive data creation (init in Constuctor)
+        private Pen transparentPanelPen;                                    // Used to reduce repetitive data creation (init in Constuctor)
+
+        // This region contains all methods and event handlers
+        // of the richTextBox, which is the main text box
         #region richTextBoxMethods
         /*
          * 3/11/15 8:44am
@@ -58,12 +57,15 @@ namespace My_Note
         }
         #endregion
 
-        #region transparentPanelMethods
+        // This region contains event handler methods of the
+        // transparentPanel, which is the main drawing panel
+        #region transparentPanelEventMethods
 
-        /* When textControl is selected, this method will pass down the click coordinates
-         * from transparent panel on top to the richTextBox below so that the cursor is positioned
-         * accordingly. Coordinate modifications were created because transparentPanel and
-         * richTextBox do not have the same origin. 12:47pm 3/7/15
+        /*  When textControl is selected, this method will pass down the click coordinates
+         *  from transparent panel on top to the richTextBox below so that the cursor is positioned
+         *  accordingly. Coordinate modifications were created because transparentPanel and
+         *  richTextBox do not have the same origin. 
+         *  Murat Zazi 12:47pm 3/7/15
          */
         private void transparentPanel_Click(object sender, System.EventArgs e)
         {
@@ -77,38 +79,37 @@ namespace My_Note
                 richTextBox.SelectionStart = charIndex;
                 richTextBox.Select();
             }
-        }
+        } /*private void transparentPanel_Click(object sender, System.EventArgs e)*/
 
         /*
-         * If tool is selected, start drawing or erasing
-         * Murat Zazi 3/10/15 9:01am
-         * 
-         * WARNING: should I just use a switch statement?
-         * or I can use: if(m_currentSelectedControl > 2 && < 11)
+         *  Prepare to draw shapes by initializing or resetting values of member
+         *  variable that will be used in MouseMove event handler
+         *  
+         *  Murat Zazi 3/10/15 9:01am
          */
         private void transparentPanel_MouseDown(object sender, MouseEventArgs e)
         {
             // Prepare to draw using pencil
-            if (m_currentSelectedControl == e_SelectedControl.PENCIL)
+            if (m_currentSelectedControl == e_SelectedControl.PENCIL) // DONE
             {
                 m_isDrawing = true;
                 m_shapeNumber++;
                 m_lastPosition = new Point(0, 0);  // This needs to be here to prevent duplicate points
             }
             // Prepare to erase anything that is not text
-            if (m_currentSelectedControl == e_SelectedControl.ERASER)
+            if (m_currentSelectedControl == e_SelectedControl.ERASER) // DONE
             {
                 m_isErasing = true;
             }
             // Prepare to draw arrow, west direction only
-            if (m_currentSelectedControl == e_SelectedControl.WARROW)
+            if (m_currentSelectedControl == e_SelectedControl.WARROW) // DONE
             {
                 m_isDrawing = true;
                 m_drawStartPoint = e.Location;
                 m_lastPosition = new Point(0, 0);  // This needs to be here to prevent duplicate points
             }
             // Prepare to draw arrow, north west direction only
-            if (m_currentSelectedControl == e_SelectedControl.NWARROW)
+            if (m_currentSelectedControl == e_SelectedControl.NWARROW) // DONE
             {
                 m_isDrawing = true;
                 m_drawStartPoint = e.Location;
@@ -158,15 +159,20 @@ namespace My_Note
                 m_lastPosition = new Point(0, 0);  // This needs to be here to prevent duplicate points
             }
             // Prepare to draw a solid line
-            if (m_currentSelectedControl == e_SelectedControl.SOLID)
+            if (m_currentSelectedControl == e_SelectedControl.SOLID) // NOT SAVING
             {
                 m_isDrawing = true;
                 m_drawStartPoint = e.Location;
                 //m_lastPosition = new Point(0, 0);
             }
-        }
+        } /* private void transparentPanel_MouseDown(object sender, MouseEventArgs e) */
+
         /*
-         * If tool is selected, continue to draw or erase 3/10/15 9:01AM
+         *  Based on the tool selected start drawing, saving, or erasing. Some of the shapes are drawn
+         *  and saved in this method. Other shapes, like lines, arrow, ovals, rectangles, are only drawn
+         *  here to display to the user a dynamic response; they are saved on MouseUp event.
+         *  
+         *  Murat Zazi 3/10/15 9:01AM
          */
         private void transparentPanel_MouseMove(object sender, MouseEventArgs e)
         {
@@ -174,22 +180,20 @@ namespace My_Note
             {
                 if (m_isDrawing)
                 {
-                    // Free hand draw any shape in any direction, drawing and saving occurs here
+                    // Free hand draw any shape in any direction, DRAWING and SAVING occurs here
                     if (m_lastPosition != e.Location)
                     {
-                        //set this position as the last positon
                         m_lastPosition = e.Location;
-                        //store the position, width, colour and shape relation data
-                        m_shapesStorage.NewShape(m_lastPosition, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
+                        m_shapesStorage.AddShape(m_lastPosition, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
                     }
                     transparentPanel.Refresh();
                 }
             }
             if (m_currentSelectedControl == e_SelectedControl.ERASER)
-            { // call the separate method (eraseShapes())
+            {
                 if (m_isErasing)
                 {
-                    // Remove any point within a certain distance of the mouse, saving occurs here
+                    // Remove any point within a certain distance of the mouse, SAVING occurs here
                     m_shapesStorage.RemoveShape(e.Location, 10);
 
                     transparentPanel.Invalidate();
@@ -198,35 +202,14 @@ namespace My_Note
                 }
             }
             if (m_currentSelectedControl == e_SelectedControl.WARROW)
-            { // call the separate method (drawWARROW())
+            {
                 if (m_isDrawing)
                 { 
                     // Draw an arrow pointing West, in real time (as user has MouseDown and dragging)
-                    // Saving does not occur in the code below, only on MouseUp event
+                    // SAVING does NOT occur in the code below, it occurs on MouseUp event
                     if (m_lastPosition != e.Location && e.Location.X < m_drawStartPoint.X)
                     {
-                        m_lastPosition.X = e.Location.X;  // Restrict drawing direction (add this comment in the separate method)
-                        m_lastPosition.Y = m_drawStartPoint.Y;  // Restrict vertical movement
-                        
-                        // Draw the line part of the arrow
-                        Graphics g = this.transparentPanel.CreateGraphics();
-                        Pen pen = new Pen(m_currentDrawColor);
-                        g.DrawLine(pen, m_drawStartPoint, m_lastPosition);
-
-                        // Draw the arrowhead part of the arrow
-                        m_arrowRightSide.X = e.Location.X + 5;
-                        m_arrowRightSide.Y = m_drawStartPoint.Y - 5;
-                        g.DrawLine(pen, m_arrowRightSide, m_lastPosition);
-                        m_arrowLeftSide.X = m_arrowRightSide.X;
-                        m_arrowLeftSide.Y = m_drawStartPoint.Y + 5;
-                        g.DrawLine(pen, m_lastPosition, m_arrowLeftSide);
-
-                        pen.Dispose();
-                        g.Dispose();
-
-                        transparentPanel.Invalidate();
-                        richTextBox.Invalidate();
-                        backPanel.Invalidate();                    
+                        drawWestArrow(e);
                     }
                 }
             }
@@ -235,45 +218,12 @@ namespace My_Note
                 if (m_isDrawing)
                 {
                     // Draw an arrow pointing North West, in real time (as user has MouseDown and dragging)
-                    // Saving does not occur in the code below, only on MouseUp event
+                    // SAVING does NOT occur in the code below, only on MouseUp event
                     if (m_lastPosition != e.Location &&
                         e.Location.X < m_drawStartPoint.X &&
                         e.Location.Y < m_drawStartPoint.Y)
                     {
-                        if ( (m_drawStartPoint.X - e.Location.X) > (m_drawStartPoint.Y - e.Location.Y) )
-                        {
-                            m_arrowFarPoint = m_drawStartPoint.X - e.Location.X;
-                        }
-                        else
-                        {
-                            m_arrowFarPoint = m_drawStartPoint.Y - e.Location.Y;
-                        }
-                       // m_arrowFarPoint = m_drawStartPoint.X - e.Location.X;
-
-                        m_lastPosition.X = m_drawStartPoint.X - m_arrowFarPoint;
-                        m_lastPosition.Y = m_drawStartPoint.Y - m_arrowFarPoint;
-
-                        // Draw the line part of the arrow
-                        Graphics g = this.transparentPanel.CreateGraphics();
-                        Pen pen = new Pen(m_currentDrawColor);
-                        g.DrawLine(pen, m_drawStartPoint, m_lastPosition);
-
-                        // Draw the arrowhead part of the arrow
-                        /*
-                        m_arrowRightSide.X = e.Location.X + 5;
-                        m_arrowRightSide.Y = m_drawStartPoint.Y - 5;
-                        g.DrawLine(pen, m_arrowRightSide, m_lastPosition);
-                        m_arrowLeftSide.X = m_arrowRightSide.X;
-                        m_arrowLeftSide.Y = m_drawStartPoint.Y + 5;
-                        g.DrawLine(pen, m_lastPosition, m_arrowLeftSide);
-                        */
-                        //mslog("(1)m_arrowFarPoint = " + m_arrowFarPoint);
-                        pen.Dispose();
-                        g.Dispose();
-
-                        transparentPanel.Invalidate();
-                        richTextBox.Invalidate();
-                        backPanel.Invalidate();
+                        drawNorthWestArrow(e);
                     }
                 }
             }
@@ -294,11 +244,14 @@ namespace My_Note
                     backPanel.Invalidate(); 
                 }
             }
-        }
+        } /* private void transparentPanel_MouseMove(object sender, MouseEventArgs e) */
 
         /*
-         * Reset values, save values, and redraw transparentPanel and richTexbox 3/10/15 9:49am
-         * add the reason why all the points get saved for the arrows in here? or in its own methods
+         *  Reset values, save values, redraw transparentPanel and richTexbox. Points for all shapes are saved
+         *  one point at a time instead of having a start point and end point. This is because the eraser tool
+         *  targets individual points on the panel and must be able to erase, for example, the middle of a line.
+         *  
+         *  Murat Zazi 3/10/15 9:49am
          */
         private void transparentPanel_MouseUp(object sender, MouseEventArgs e)
         {
@@ -307,7 +260,6 @@ namespace My_Note
                 if (m_isDrawing)
                 {
                     m_isDrawing = false;
-                    //mslog("MouseUp pencil lastPos = " + m_lastPosition);
                 }
                 transparentPanel.Invalidate();
                 richTextBox.Invalidate();
@@ -323,8 +275,8 @@ namespace My_Note
             }
             if (m_currentSelectedControl == e_SelectedControl.WARROW)
             {
-                m_drawEndPoint = e.Location; // this needs to be called here
-
+                //m_drawEndPoint = e.Location; // this needs to be called here
+                m_drawEndPoint = m_lastPosition;
                 // Draw and save all the points that form an arrow not just begining and end
                 // this is so that it works in erase funcitonality
                 if (m_isDrawing && (m_drawEndPoint.X < m_drawStartPoint.X))
@@ -335,7 +287,7 @@ namespace My_Note
                     {
                         m_lastPosition.X = i;
                         m_lastPosition.Y = m_drawStartPoint.Y;
-                        m_shapesStorage.NewShape(m_lastPosition, m_currentPenWidth, 
+                        m_shapesStorage.AddShape(m_lastPosition, m_currentPenWidth, 
                             m_currentDrawColor, m_shapeNumber);
                     }
 
@@ -347,7 +299,7 @@ namespace My_Note
                     {
                         m_arrowRightSide.X++;
                         m_arrowRightSide.Y--;
-                        m_shapesStorage.NewShape(m_arrowRightSide, m_currentPenWidth, 
+                        m_shapesStorage.AddShape(m_arrowRightSide, m_currentPenWidth, 
                             m_currentDrawColor, m_shapeNumber);
                     }
 
@@ -358,8 +310,7 @@ namespace My_Note
                     {
                         m_arrowLeftSide.X++;
                         m_arrowLeftSide.Y++;
-                        m_shapesStorage.NewShape(m_arrowLeftSide, m_currentPenWidth, 
-                            m_currentDrawColor, m_shapeNumber);
+                        m_shapesStorage.AddShape(m_arrowLeftSide, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
                     }
 
                     m_isDrawing = false;
@@ -376,31 +327,51 @@ namespace My_Note
             {
                 if (m_isDrawing)
                 {
+                    // Add points to draw and save the line part of the arrow
                     m_shapeNumber++;
-                    //mslog("(2)m_arrowFarPoint = " + m_arrowFarPoint);
                     for (int i = 0; i < m_arrowFarPoint; i++)
                     {
                         m_lastPosition.X = m_drawStartPoint.X - i;
                         m_lastPosition.Y = m_drawStartPoint.Y - i;
-                        m_shapesStorage.NewShape(m_lastPosition, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
+                        m_shapesStorage.AddShape(m_lastPosition, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
                     }
-                    m_isDrawing = false;
+
+                    // Add points to draw and save the arrowhead of the arrow
+                    m_shapeNumber++;
+
+                    for (int i = 0; i < 8; i++)
+                    {
+                        m_arrowRightSide.X--;
+                        m_shapesStorage.AddShape(m_arrowRightSide, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
+                        //m_arrowRightSide.X--;
+                    }
+
+                    m_shapeNumber++;
+                    for (int i = 0; i < 8; i++)
+                    {
+                        m_arrowLeftSide.Y--;
+                        m_shapesStorage.AddShape(m_arrowLeftSide, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
+                        //m_arrowLeftSide.Y--;
+                    }
+
+                        m_isDrawing = false;
                     transparentPanel.Refresh();
                 }
             }
             if( m_currentSelectedControl == e_SelectedControl.SOLID)
-//WARNING saving needs to be implemented
             {
                 if(m_isDrawing)
                 {
                     m_isDrawing = false;
                 }
             }
-        }
+        } /* private void transparentPanel_MouseUp(object sender, MouseEventArgs e) */
 
-        /* Change the cursor style while it is hovering over the panels,based
-         * on the selection of the tool
-         * 3/17/15 12:38pm
+        /*  
+         *  Change the cursor style while it is hovering over the panel,
+         *  based on the current selected tool.
+         *  
+         *  Murat Zazi 3/17/15 12:38pm
          */
         private void transparentPanel_MouseHover(object sender, EventArgs e)
         {
@@ -417,10 +388,13 @@ namespace My_Note
             {
                 transparentPanel.Cursor = Cursors.Cross;
             }
-        }
-        
+        } /* private void transparentPanel_MouseHover(object sender, EventArgs e) */
+
         /*
-         * Paint and update the panel graphics 3/10/15 9:52am
+         *  Paint and update the panel graphics. This method is triggered from
+         *  the OnPaint() method in the transparentPanel class implementation.
+         *  
+         *  Murat Zazi 3/10/15 9:52am
          */
         private void transparentPanel_Paint(object sender, PaintEventArgs e)
         {
@@ -440,129 +414,74 @@ namespace My_Note
                     p.Dispose();
                 }
             }
-        }
+        } /* private void transparentPanel_Paint(object sender, PaintEventArgs e) */
+
         #endregion
-    }
 
-    /*
-     * 3/10/2015/ 9:13am
-     */
-    public class Shape
-    {
-        private Point m_pointLocation;          // position of the point
-        private float m_lineWidth;              // width of the line
-        private Color m_lineColor;              // color of the line
-        private int m_shapeNumber;              // part of which shape it belongs to
+        // This region contains methods used in transparentPanel,
+        // also contains helper methods for event handler methods.
+        #region transparentPanelMethods
 
-        // Position of the point
-        public Point PointLocation
+        /*
+         *  This method is called from the MouseMove event handler. It takes
+         *  an argument of type MouseEventArgs to get the current position.
+         *  Murat Zazi 3/20/15 9:20am
+         */
+        private void drawWestArrow(MouseEventArgs e)
         {
-            get
-            {
-                return m_pointLocation;
-            }
-            set
-            {
-                m_pointLocation = value;
-            }
-        }
+            // Draw the line part of the arrow
+            m_lastPosition.X = e.Location.X;  // Restrict drawing direction (West)
+            m_lastPosition.Y = m_drawStartPoint.Y;  // Restrict vertical movement
+            transparentPanelGraphics.DrawLine(transparentPanelPen, m_drawStartPoint, m_lastPosition);
 
-        // Width of the line
-        public float LineWidth
-        {
-            get
-            {
-                return m_lineWidth;
-            }
-            set
-            {
-                m_lineWidth = value;
-            }
-        }
+            // Draw the arrowhead part of the arrow
+            m_arrowRightSide.X = e.Location.X + 5;
+            m_arrowRightSide.Y = m_drawStartPoint.Y - 5;
+            transparentPanelGraphics.DrawLine(transparentPanelPen, m_arrowRightSide, m_lastPosition);
+            m_arrowLeftSide.X = m_arrowRightSide.X;
+            m_arrowLeftSide.Y = m_drawStartPoint.Y + 5;
+            transparentPanelGraphics.DrawLine(transparentPanelPen, m_lastPosition, m_arrowLeftSide);
 
-        // Color of the line
-        public Color LineColor
-        {
-            get
-            {
-                return m_lineColor;
-            }
-            set
-            {
-                m_lineColor = value;
-            }
-        }
+            transparentPanel.Invalidate();
+            richTextBox.Invalidate();
+            backPanel.Invalidate(); 
+        } /* private void drawWestArrow(MouseEventArgs e) */
 
-        // Part of which shape it belongs to
-        public int ShapeNumber
+        /*  This method is called from the MouseMove event handler. It takes
+         *  an argument of type MouseEventArgs to get the current position.
+         *  Murat Zazi 3/20/15 9:38am
+         */
+        private void drawNorthWestArrow(MouseEventArgs e)
         {
-            get
+            // Draw the line part of the arrow
+            // Get the longest distance from the starting point and use that as the limit of diagonal line
+            if ((m_drawStartPoint.X - e.Location.X) > (m_drawStartPoint.Y - e.Location.Y))
             {
-                return m_shapeNumber;
+                m_arrowFarPoint = m_drawStartPoint.X - e.Location.X;
             }
-            set
+            else
             {
-                m_shapeNumber = value;
+                m_arrowFarPoint = m_drawStartPoint.Y - e.Location.Y;
             }
-        }
 
-        // Constructor 
-        public Shape(Point a_pointLocation, float a_lineWidth, Color a_lineColor, int a_shapeNumber)
-        {
-            PointLocation = a_pointLocation;    // stores the line location
-            LineWidth = a_lineWidth;            // stores the line width
-            LineColor = a_lineColor;            // stores the line color
-            ShapeNumber = a_shapeNumber;        // stores the shape number
-        }
-    }
+            m_lastPosition.X = m_drawStartPoint.X - m_arrowFarPoint;
+            m_lastPosition.Y = m_drawStartPoint.Y - m_arrowFarPoint;
 
-    /*
-     * 3/10/2015/ 9:13am
-     */
-    public class Shapes
-    {
-        private List<Shape> m_shapes;    //Stores all the shapes
+            transparentPanelGraphics.DrawLine(transparentPanelPen, m_drawStartPoint, m_lastPosition);
 
-        public Shapes()
-        {
-            m_shapes = new List<Shape>();
-        }
-        //Returns the number of shapes being stored.
-        public int NumberOfShapes()
-        {
-            return m_shapes.Count;
-        }
-        //Add a shape to the database, recording its position, width, colour and shape relation information
-        public void NewShape(Point a_pointLocation, float a_lineWidth, Color a_lineColor, int a_shapeNumber)
-        {
-            m_shapes.Add(new Shape(a_pointLocation, a_lineWidth, a_lineColor, a_shapeNumber));
-        }
-        //returns a shape of the requested data.
-        public Shape GetShape(int a_index)
-        {
-            return m_shapes[a_index];
-        }
-        //Removes any point data within a certain threshold of a point.
-        public void RemoveShape(Point a_pointLocation, float a_threshold)
-        {
-            for (int i = 0; i < m_shapes.Count; i++)
-            {
-                //Finds if a point is within a certain distance of the point to remove.
-                if ((Math.Abs(a_pointLocation.X - m_shapes[i].PointLocation.X) < a_threshold) &&
-                    (Math.Abs(a_pointLocation.Y - m_shapes[i].PointLocation.Y) < a_threshold))
-                {
-                    //removes all data for that number
-                    m_shapes.RemoveAt(i);
+            // Draw the arrowhead part of the arrow
+            m_arrowRightSide.X = m_lastPosition.X + 8;
+            m_arrowRightSide.Y = m_lastPosition.Y;
+            transparentPanelGraphics.DrawLine(transparentPanelPen, m_arrowRightSide, m_lastPosition);
+            m_arrowLeftSide.X = m_lastPosition.X;
+            m_arrowLeftSide.Y = m_lastPosition.Y + 8;
+            transparentPanelGraphics.DrawLine(transparentPanelPen, m_arrowLeftSide, m_lastPosition);
 
-                    //goes through the rest of the data and adds an extra 1 to defined them as a seprate shape and shuffles on the effect.
-                    for (int n = i; n < m_shapes.Count; n++)
-                    {
-                        m_shapes[n].ShapeNumber += 1;
-                    }
-                    //Go back a step so we dont miss a point.
-                    i -= 1;
-                }
-            }
-        }
+            transparentPanel.Invalidate();
+            richTextBox.Invalidate();
+            backPanel.Invalidate(); 
+        } /* private void drawNorthWestArrow(MouseEventArgs e) */
+
+        #endregion
     }
 }
