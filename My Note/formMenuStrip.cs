@@ -26,6 +26,26 @@ namespace My_Note
 {
     public partial class MainForm : Form
     {
+        /*
+         * NAME
+         *  function() - performs something
+         * 
+         * SYNOPSIS
+         *  void function(argument);
+         *      argument -> does nothing
+         *      
+         * DESCRIPTION
+         *  Does something
+         * 
+         * RETURNS
+         *  Something
+         * 
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  time day
+         */
 
     }
 }

@@ -12,6 +12,26 @@ namespace My_Note
      */
     public class ShapeContainer
     {
+        /*
+         * NAME
+         *  function() - performs something
+         * 
+         * SYNOPSIS
+         *  void function(argument);
+         *      argument -> does nothing
+         *      
+         * DESCRIPTION
+         *  Does something
+         * 
+         * RETURNS
+         *  Something
+         * 
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  time day
+         */
         private List<Shape> m_shapes;    //Stores all the shapes
 
         public ShapeContainer()

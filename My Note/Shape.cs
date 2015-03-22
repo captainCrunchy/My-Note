@@ -12,6 +12,26 @@ namespace My_Note
      */
     public class Shape
     {
+        /*
+         * NAME
+         *  function() - performs something
+         * 
+         * SYNOPSIS
+         *  void function(argument);
+         *      argument -> does nothing
+         *      
+         * DESCRIPTION
+         *  Does something
+         * 
+         * RETURNS
+         *  Something
+         * 
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  time day
+         */
         private Point m_pointLocation;          // position of the point
         private float m_lineWidth;              // width of the line
         private Color m_lineColor;              // color of the line

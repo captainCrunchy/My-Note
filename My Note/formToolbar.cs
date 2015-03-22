@@ -28,10 +28,31 @@ namespace My_Note
     public partial class MainForm : Form
     {
         /*
+         * NAME
+         *  function() - performs something
+         * 
+         * SYNOPSIS
+         *  void function(argument);
+         *      argument -> does nothing
+         *      
+         * DESCRIPTION
+         *  Does something
+         * 
+         * RETURNS
+         *  Something
+         * 
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  time day
+         */
+        /*
          * 3/17/15 12:12pm
          */
         private void textSelectButton_Click(object sender, EventArgs e)
         {
+            transparentPanel.Cursor = Cursors.IBeam;
             m_currentSelectedControl = e_SelectedControl.TEXT;
             setDefaultBackColorForControls();
             textSelectButton.BackColor = m_selectedControlButtonColor;
@@ -42,6 +63,7 @@ namespace My_Note
          */
         private void pencilSelectButton_Click(object sender, EventArgs e)
         {
+            transparentPanel.Cursor = Cursors.Cross;
             m_currentSelectedControl = e_SelectedControl.PENCIL;
             setDefaultBackColorForControls();
             pencilSelectButton.BackColor = m_selectedControlButtonColor;
@@ -53,6 +75,7 @@ namespace My_Note
          */
         private void eraserSelectButton_Click(object sender, EventArgs e)
         {
+            transparentPanel.Cursor = Cursors.Hand;
             m_currentSelectedControl = e_SelectedControl.ERASER;
             setDefaultBackColorForControls();
             eraserSelectButton.BackColor = m_selectedControlButtonColor;
@@ -64,6 +87,7 @@ namespace My_Note
          */
         private void WarrowButton_Click(object sender, EventArgs e)
         {
+            transparentPanel.Cursor = Cursors.Cross;
             m_currentSelectedControl = e_SelectedControl.WARROW;
             setDefaultBackColorForControls();
             WarrowButton.BackColor = m_selectedControlButtonColor;
@@ -74,6 +98,7 @@ namespace My_Note
          */
         private void NWarrowButton_Click(object sender, EventArgs e)
         {
+            transparentPanel.Cursor = Cursors.Cross;
             m_currentSelectedControl = e_SelectedControl.NWARROW;
             setDefaultBackColorForControls();
             NWarrowButton.BackColor = m_selectedControlButtonColor;
@@ -84,6 +109,7 @@ namespace My_Note
          */
         private void NarrowButton_Click(object sender, EventArgs e)
         {
+            transparentPanel.Cursor = Cursors.Cross;
             m_currentSelectedControl = e_SelectedControl.NARROW;
             setDefaultBackColorForControls();
             NarrowButton.BackColor = m_selectedControlButtonColor;
@@ -94,6 +120,7 @@ namespace My_Note
          */
         private void NEarrowButton_Click(object sender, EventArgs e)
         {
+            transparentPanel.Cursor = Cursors.Cross;
             m_currentSelectedControl = e_SelectedControl.NEARROW;
             setDefaultBackColorForControls();
             NEarrowButton.BackColor = m_selectedControlButtonColor;
@@ -103,6 +130,7 @@ namespace My_Note
          */
         private void EarrowButton_Click(object sender, EventArgs e)
         {
+            transparentPanel.Cursor = Cursors.Cross;
             m_currentSelectedControl = e_SelectedControl.EARROW;
             setDefaultBackColorForControls();
             EarrowButton.BackColor = m_selectedControlButtonColor;
@@ -113,6 +141,7 @@ namespace My_Note
          */
         private void SEarrowButton_Click(object sender, EventArgs e)
         {
+            transparentPanel.Cursor = Cursors.Cross;
             m_currentSelectedControl = e_SelectedControl.SEARROW;
             setDefaultBackColorForControls();
             SEarrowButton.BackColor = m_selectedControlButtonColor;
@@ -123,6 +152,7 @@ namespace My_Note
          */
         private void SarrowButton_Click(object sender, EventArgs e)
         {
+            transparentPanel.Cursor = Cursors.Cross;
             m_currentSelectedControl = e_SelectedControl.SARROW;
             setDefaultBackColorForControls();
             SarrowButton.BackColor = m_selectedControlButtonColor;
@@ -133,6 +163,7 @@ namespace My_Note
          */
         private void SWarrowButton_Click(object sender, EventArgs e)
         {
+            transparentPanel.Cursor = Cursors.Cross;
             m_currentSelectedControl = e_SelectedControl.SWARROW;
             setDefaultBackColorForControls();
             SWarrowButton.BackColor = m_selectedControlButtonColor;
@@ -143,6 +174,7 @@ namespace My_Note
          */
         private void rectangleSelectButton_Click(object sender, EventArgs e)
         {
+            transparentPanel.Cursor = Cursors.Cross;
             m_currentSelectedControl = e_SelectedControl.RECTANGLE;
             setDefaultBackColorForControls();
             rectangleSelectButton.BackColor = m_selectedControlButtonColor;
@@ -153,6 +185,7 @@ namespace My_Note
          */
         private void ovalSelectButton_Click(object sender, EventArgs e)
         {
+            transparentPanel.Cursor = Cursors.Cross;
             m_currentSelectedControl = e_SelectedControl.OVAL;
             setDefaultBackColorForControls();
             ovalSelectButton.BackColor = m_selectedControlButtonColor;
@@ -163,6 +196,7 @@ namespace My_Note
          */
         private void solidSelectButton_Click(object sender, EventArgs e)
         {
+            transparentPanel.Cursor = Cursors.Cross;
             m_currentSelectedControl = e_SelectedControl.SOLID;
             setDefaultBackColorForControls();
             solidSelectButton.BackColor = m_selectedControlButtonColor;
@@ -173,6 +207,7 @@ namespace My_Note
          */
         private void dashedSelectButton_Click(object sender, EventArgs e)
         {
+            transparentPanel.Cursor = Cursors.Cross;
             m_currentSelectedControl = e_SelectedControl.DASHED;
             setDefaultBackColorForControls();
             dashedSelectButton.BackColor = m_selectedControlButtonColor;
@@ -183,6 +218,7 @@ namespace My_Note
          */
         private void dottedSelectButton_Click(object sender, EventArgs e)
         {
+            transparentPanel.Cursor = Cursors.Cross;
             m_currentSelectedControl = e_SelectedControl.DOTTED;
             setDefaultBackColorForControls();
             dottedSelectButton.BackColor = m_selectedControlButtonColor;
@@ -193,6 +229,7 @@ namespace My_Note
          */
         private void vertTextButton_Click(object sender, EventArgs e)
         {
+            transparentPanel.Cursor = Cursors.Cross;
             m_currentSelectedControl = e_SelectedControl.VERTTEXT;
             setDefaultBackColorForControls();
             vertTextButton.BackColor = m_selectedControlButtonColor;
@@ -210,6 +247,7 @@ namespace My_Note
             {
                 // Apply new color
                 m_currentDrawColor = drawColorDialog.Color;
+                m_transparentPanelPen.Color = m_currentDrawColor;
                 drawColorButton.BackColor = m_currentDrawColor;
                 mslog("selected color = " + drawColorDialog.Color);
             }
@@ -223,6 +261,7 @@ namespace My_Note
         private void blackColorButton_Click(object sender, EventArgs e)
         {
             m_currentDrawColor = blackColorButton.BackColor;
+            m_transparentPanelPen.Color = m_currentDrawColor;
             drawColorButton.BackColor = m_currentDrawColor;
         }
 
@@ -234,6 +273,7 @@ namespace My_Note
         private void whiteColorButton_Click(object sender, EventArgs e)
         {
             m_currentDrawColor = whiteColorButton.BackColor;
+            m_transparentPanelPen.Color = m_currentDrawColor;
             drawColorButton.BackColor = m_currentDrawColor;
         }
 
@@ -245,6 +285,7 @@ namespace My_Note
         private void grayColorButton_Click(object sender, EventArgs e)
         {
             m_currentDrawColor = grayColorButton.BackColor;
+            m_transparentPanelPen.Color = m_currentDrawColor;
             drawColorButton.BackColor = m_currentDrawColor;
         }
 
@@ -256,6 +297,7 @@ namespace My_Note
         private void greenColorButton_Click(object sender, EventArgs e)
         {
             m_currentDrawColor = greenColorButton.BackColor;
+            m_transparentPanelPen.Color = m_currentDrawColor;
             drawColorButton.BackColor = m_currentDrawColor;
         }
 
@@ -267,6 +309,7 @@ namespace My_Note
         private void redColorButton_Click(object sender, EventArgs e)
         {
             m_currentDrawColor = redColorButton.BackColor;
+            m_transparentPanelPen.Color = m_currentDrawColor;
             drawColorButton.BackColor = m_currentDrawColor;
         }
 
@@ -278,6 +321,7 @@ namespace My_Note
         private void tealColorButton_Click(object sender, EventArgs e)
         {
             m_currentDrawColor = tealColorButton.BackColor;
+            m_transparentPanelPen.Color = m_currentDrawColor;
             drawColorButton.BackColor = m_currentDrawColor;
         }
 
@@ -289,6 +333,7 @@ namespace My_Note
         private void orangeColorButton_Click(object sender, EventArgs e)
         {
             m_currentDrawColor = orangeColorButton.BackColor;
+            m_transparentPanelPen.Color = m_currentDrawColor;
             drawColorButton.BackColor = m_currentDrawColor;
         }
 
@@ -300,6 +345,7 @@ namespace My_Note
         private void blueColorButton_Click(object sender, EventArgs e)
         {
             m_currentDrawColor = blueColorButton.BackColor;
+            m_transparentPanelPen.Color = m_currentDrawColor;
             drawColorButton.BackColor = m_currentDrawColor;
         }
 
@@ -311,6 +357,7 @@ namespace My_Note
         private void yellowColorButton_Click(object sender, EventArgs e)
         {
             m_currentDrawColor = yellowColorButton.BackColor;
+            m_transparentPanelPen.Color = m_currentDrawColor;
             drawColorButton.BackColor = m_currentDrawColor;
         }
 
@@ -322,6 +369,7 @@ namespace My_Note
         private void purpleColorButton_Click(object sender, EventArgs e)
         {
             m_currentDrawColor = purpleColorButton.BackColor;
+            m_transparentPanelPen.Color = m_currentDrawColor;
             drawColorButton.BackColor = m_currentDrawColor;
         }
 

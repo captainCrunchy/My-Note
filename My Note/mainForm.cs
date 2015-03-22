@@ -52,8 +52,8 @@ namespace My_Note
             textSelectButton.BackColor = m_selectedControlButtonColor;
             fontComboBox.Text = "Microsoft Sans Serif";
             richTextBox.Font = new Font("Microsoft Sans Serif", 12);
-            transparentPanelGraphics = this.transparentPanel.CreateGraphics();
-            transparentPanelPen = new Pen(m_currentDrawColor);
+            m_transparentPanelGraphics = this.transparentPanel.CreateGraphics();
+            m_transparentPanelPen = new Pen(m_currentDrawColor);
         }
 
         private void MainForm_Load(object sender, System.EventArgs e)

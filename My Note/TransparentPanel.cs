@@ -9,6 +9,26 @@ namespace My_Note
 {
     class TransparentPanel : Panel
     {
+        /*
+         * NAME
+         *  function() - performs something
+         * 
+         * SYNOPSIS
+         *  void function(argument);
+         *      argument -> does nothing
+         *      
+         * DESCRIPTION
+         *  Does something
+         * 
+         * RETURNS
+         *  Something
+         * 
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  time day
+         */
         public struct lineSpaceForFont
         {
             public const float MICROSOFT_SANS_SERIF = 20;
