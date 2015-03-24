@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using System.Windows.Forms;
 using System.Drawing;
+using System.Collections;
 
 /*
  * This is one of several 'partial' classes of the MainForm class. It is responsible
@@ -416,6 +417,20 @@ namespace My_Note
                 if (m_isDrawing)
                 {
                     saveRectangle(e);
+                }
+            }
+            if (m_currentSelectedControl == e_SelectedControl.ELLIPSE)
+            {
+                if (m_isDrawing)
+                {
+                    saveEllipse(e);
+                }
+            }
+            if (m_currentSelectedControl == e_SelectedControl.SOLID)
+            {
+                if (m_isDrawing)
+                {
+                    saveSolidLine(e);
                 }
             }
             if (m_isDrawing)
@@ -1510,6 +1525,16 @@ namespace My_Note
         } /* private void drawEllipse(MouseEventArgs e) */
 
         /*
+         * 9:00am 3/24/15
+         */
+        private void saveEllipse(MouseEventArgs e)
+        {
+            mslog("Ellipse");
+            mslog("start point = " + m_drawStartPoint);
+            mslog("end point = " + e.Location + "\r\n");
+        } /* private void saveEllipse(MouseEventArgs e) */
+
+        /*
          * NAME
          *  drawSolidLine() - draws a solid line in any direction
          * 
@@ -1540,6 +1565,79 @@ namespace My_Note
             backPanel.Invalidate();
         } /* private void drawSolidLine(MouseEventArgs e) */
 
+        /*
+         * 9:05am 3/24/15
+         */
+        private void saveSolidLine(MouseEventArgs e)
+        {
+            // Logging results
+            Int32 coordWidth = Math.Abs(m_drawStartPoint.X - e.Location.X);
+            Int32 coordHeight = Math.Abs(m_drawStartPoint.Y - e.Location.Y);
+            double hypotenuse = Math.Sqrt(coordWidth * coordWidth + coordHeight * coordHeight);
+            mslog("Solid line");
+            mslog("width = " + coordWidth);
+            mslog("height = " + coordHeight);
+            mslog("hypotenuse = " + hypotenuse);
+            mslog("m = " + coordHeight + "/" + coordWidth);
+            mslog("start point = " + m_drawStartPoint);
+            mslog("end point = " + e.Location + "\r\n");
+
+            m_shapeNumber++;
+            IEnumerable<Point> points = GetPointsOnLine(m_drawStartPoint.X, m_drawStartPoint.Y, e.Location.X, e.Location.Y);
+            List<Point> pointList = points.ToList();
+            for (int i = 0; i < pointList.Count; i++)
+            {
+                m_shapesStorage.AddShape(pointList[i], m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
+            }
+
+            // Refreshing
+            transparentPanel.Refresh();
+            //transparentPanel.Invalidate();
+            //richTextBox.Invalidate();
+            //backPanel.Invalidate();
+        } /* private void saveSolidLine(MouseEventArgs e) */
+        
         #endregion
+        /* http://ericw.ca/notes/bresenhams-line-algorithm-in-csharp.html // 3/24/15 */
+        public static IEnumerable<Point> GetPointsOnLine(int x0, int y0, int x1, int y1)
+        {
+            bool steep = Math.Abs(y1 - y0) > Math.Abs(x1 - x0);
+            if (steep)
+            {
+                int t;
+                t = x0; // swap x0 and y0
+                x0 = y0;
+                y0 = t;
+                t = x1; // swap x1 and y1
+                x1 = y1;
+                y1 = t;
+            }
+            if (x0 > x1)
+            {
+                int t;
+                t = x0; // swap x0 and x1
+                x0 = x1;
+                x1 = t;
+                t = y0; // swap y0 and y1
+                y0 = y1;
+                y1 = t;
+            }
+            int dx = x1 - x0;
+            int dy = Math.Abs(y1 - y0);
+            int error = dx / 2;
+            int ystep = (y0 < y1) ? 1 : -1;
+            int y = y0;
+            for (int x = x0; x <= x1; x++)
+            {
+                yield return new Point((steep ? y : x), (steep ? x : y));
+                error = error - dy;
+                if (error < 0)
+                {
+                    y += ystep;
+                    error += dx;
+                }
+            }
+            yield break;
+        }
     }
 }
