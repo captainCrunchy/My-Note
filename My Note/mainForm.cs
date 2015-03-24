@@ -34,7 +34,7 @@ namespace My_Note
         {
             TEXT, PENCIL, ERASER, WARROW, NWARROW, NARROW,
             NEARROW, EARROW, SEARROW, SARROW, SWARROW,
-            RECTANGLE, OVAL, SOLID, DASHED, DOTTED, VERTTEXT
+            RECTANGLE, ELLIPSE, SOLID, DASHED, DOTTED, VERTTEXT
         }
 
         private e_SelectedControl m_currentSelectedControl;

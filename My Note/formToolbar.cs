@@ -186,7 +186,7 @@ namespace My_Note
         private void ovalSelectButton_Click(object sender, EventArgs e)
         {
             transparentPanel.Cursor = Cursors.Cross;
-            m_currentSelectedControl = e_SelectedControl.OVAL;
+            m_currentSelectedControl = e_SelectedControl.ELLIPSE;
             setDefaultBackColorForControls();
             ovalSelectButton.BackColor = m_selectedControlButtonColor;
         }

@@ -201,6 +201,11 @@ namespace My_Note
                 m_isDrawing = true;
                 m_drawStartPoint = e.Location;
             }
+            if (m_currentSelectedControl == e_SelectedControl.ELLIPSE)
+            {
+                m_isDrawing = true;
+                m_drawStartPoint = e.Location;
+            }
             if (m_currentSelectedControl == e_SelectedControl.SOLID)
             {
                 m_isDrawing = true;
@@ -302,6 +307,11 @@ namespace My_Note
             {
                 drawRectangle(e);
             }
+
+            if ( m_isDrawing && (m_currentSelectedControl == e_SelectedControl.ELLIPSE) )
+            {
+                drawEllipse(e);
+            }
             if ( m_isDrawing && (m_currentSelectedControl == e_SelectedControl.SOLID) )
             {
                 drawSolidLine(e);
@@ -338,6 +348,7 @@ namespace My_Note
             {
                 transparentPanel.Invalidate();
                 richTextBox.Invalidate();
+                backPanel.Invalidate();
             }
             if (m_currentSelectedControl == e_SelectedControl.ERASER)
             {
@@ -398,6 +409,13 @@ namespace My_Note
                 if ( m_isDrawing && (e.Location.X < m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y) )
                 {
                     saveSouthWestArrow(e);
+                }
+            }
+            if (m_currentSelectedControl == e_SelectedControl.RECTANGLE)
+            {
+                if (m_isDrawing)
+                {
+                    saveRectangle(e);
                 }
             }
             if (m_isDrawing)
@@ -1367,16 +1385,17 @@ namespace My_Note
 
         /*
          * NAME
-         *  drawSolidLine() - draws a solid line in any direction
+         *  drawRectangle() - draws a rectangle in any direction
          * 
          * SYNOPSIS
-         *  private void drawSolidLine(MouseEventArgs e);
+         *  private void drawRectangle(MouseEventArgs e);
          *      e       -> used to get the current location of the cursor
          *      
          * DESCRIPTION
-         *  Draws a solid line in any direction with user desired length. This method is optimized and used by
-         *  the MouseMove event handler when the user has a mouse button down and is dragging the line to desired
-         *  length. Drawing is very dynamic in order to respond to user input.so saving does not occur here
+         *  Draws a rectangle in any direction with user desired size. This method is optimized and used by the
+         *  MouseMove event handler when the user has a mouse button down and is dragging it to desired length.
+         *  Drawing is very dynamic in order to respond to user input, so saving does not occur here. Rectangle
+         *  constructor uses complex Math methods in order to allow the user to draw the rectangle in any direction.
          * 
          * RETURNS
          *  Nothing
@@ -1389,15 +1408,106 @@ namespace My_Note
          */
         private void drawRectangle(MouseEventArgs e)
         {
-            Int32 rectWidth = m_drawStartPoint.X - e.Location.X;
-            Int32 rectHeight = m_drawStartPoint.Y - e.Location.Y;
-            Rectangle currentRect = new Rectangle(m_drawStartPoint.X, m_drawStartPoint.Y, rectWidth, rectHeight);
+            Int32 rectWidth = e.Location.X - m_drawStartPoint.X;
+            Int32 rectHeight = e.Location.Y - m_drawStartPoint.Y;
+
+            Rectangle currentRect = new Rectangle(Math.Min(e.X, m_drawStartPoint.X), Math.Min(e.Y, m_drawStartPoint.Y), Math.Abs(e.X - m_drawStartPoint.X), Math.Abs(e.Y - m_drawStartPoint.Y));
+            
             m_transparentPanelGraphics.DrawRectangle(m_transparentPanelPen, currentRect);
 
             transparentPanel.Invalidate();
             richTextBox.Invalidate();
             backPanel.Invalidate();
-        }
+        } /* private void drawRectangle(MouseEventArgs e) */
+
+        /*
+         * NAME
+         *  saveRectangle() - saves a rectangle drawn by the user
+         * 
+         * SYNOPSIS
+         *  private void saveRectangle(MouseEventArgs e);
+         *      e       -> used to get the current location of the cursor
+         *      
+         * DESCRIPTION
+         *  Saves a rectangle drawn by the user. This method saves all the points that form the rectangle
+         *  not just origin + size. Such functionality is necessary in order to accomodate the erase
+         *  functionality, where a user can erase only the desired points of the rectangle. finalStartPoint
+         *  variable gets coordinates that are the most upper left part of the rectangle. This method is 
+         *  called by MouseUp event handler, rectangle is saved as one shape.
+         * 
+         * RETURNS
+         *  Nothing
+         * 
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  7:38pm 3/23/15
+         */
+        private void saveRectangle(MouseEventArgs e)
+        {
+            Point finalStartPoint = new Point(Math.Min(m_drawStartPoint.X, e.Location.X), Math.Min(m_drawStartPoint.Y, e.Location.Y));
+            Int32 rectLength = Math.Abs(m_drawStartPoint.X - e.Location.X);
+            Int32 rectWidth = Math.Abs(m_drawStartPoint.Y - e.Location.Y);
+            m_shapeNumber++;
+            for (int i = 0; i < rectLength; i++)
+            {
+                finalStartPoint.X++;
+                m_shapesStorage.AddShape(finalStartPoint, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
+            }
+            for (int i = 0; i < rectWidth; i++)
+            {
+                finalStartPoint.Y++;
+                m_shapesStorage.AddShape(finalStartPoint, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
+            }
+            for (int i = 0; i < rectLength; i++)
+            {
+                finalStartPoint.X--;
+                m_shapesStorage.AddShape(finalStartPoint, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
+            }
+            for (int i = 0; i < rectWidth; i++)
+            {
+                finalStartPoint.Y--;
+                m_shapesStorage.AddShape(finalStartPoint, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
+            }
+            
+            transparentPanel.Refresh();
+        } /* private void saveRectangle(MouseEventArgs e) */
+
+        /*
+         * NAME
+         *  drawEllipse() - draws an ellipse
+         * 
+         * SYNOPSIS
+         *  private void drawEllipse(MouseEventArgs e);
+         *      e       -> used to get the current location of the cursor
+         *      
+         * DESCRIPTION
+         *  Draws an ellipse in any direction with user desired size. This method is optimized and used by the
+         *  MouseMove event handler when the user has a mouse button down and is dragging it to desired length.
+         *  Drawing is very dynamic in order to respond to user input, so saving does not occur here.
+         * 
+         * RETURNS
+         *  Nothing
+         * 
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  6:27pm 3/23/15
+         */
+        private void drawEllipse(MouseEventArgs e)
+        {
+            Int32 rectWidth = e.Location.X - m_drawStartPoint.X;
+            Int32 rectHeight = e.Location.Y - m_drawStartPoint.Y;
+
+            Rectangle currentEllipse = new Rectangle(m_drawStartPoint.X, m_drawStartPoint.Y, rectWidth, rectHeight);
+            m_transparentPanelGraphics.DrawEllipse(m_transparentPanelPen, currentEllipse);
+
+            transparentPanel.Invalidate();
+            richTextBox.Invalidate();
+            backPanel.Invalidate();
+        } /* private void drawEllipse(MouseEventArgs e) */
 
         /*
          * NAME
@@ -1428,7 +1538,7 @@ namespace My_Note
             transparentPanel.Invalidate();
             richTextBox.Invalidate();
             backPanel.Invalidate();
-        }
+        } /* private void drawSolidLine(MouseEventArgs e) */
 
         #endregion
     }
