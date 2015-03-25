@@ -1544,23 +1544,39 @@ namespace My_Note
             ellipsePath.AddEllipse(origin.X, origin.Y, width, height);
             m_transparentPanelGraphics.DrawPath(m_transparentPanelPen, ellipsePath);
             PointF[] ellipsePoints = ellipsePath.PathPoints;
-
-            Matrix translateMatrix = new Matrix();
-            translateMatrix.Translate(0, 10);
-            ellipsePath.Flatten(translateMatrix, 10f);
-
+            ellipsePath.Flatten();
             Int32 pointCount = ellipsePoints.Length;
             mslog("point count = " + pointCount);
-            //m_shapeNumber++;
-            for (int i = 0; i < ellipsePoints.Length; i++)
+
+            GraphicsPathIterator iterator = new GraphicsPathIterator(ellipsePath);
+            int pathCount = iterator.Count;
+            int subPathCount = iterator.SubpathCount;
+            mslog("pathCount = " + pathCount);
+            mslog("subPathCount = " + subPathCount);
+
+            PointF[] points = new PointF[iterator.Count];
+            byte[] types = new byte[iterator.Count];
+            int numPoints = iterator.Enumerate(ref points, ref types);
+
+            m_shapeNumber++;
+            for (int i = 0; i < points.Length; i++)
             {
-                mslog("point = " + ellipsePoints[i]);
-                //Point nextPoint = Point.Round(ellipsePoints[i]);
-                //Point nextPoint = new Point(0, 0);
-                //nextPoint.X = (int)ellipsePoints[i].X;
-                //nextPoint.Y = (int)ellipsePoints[i].Y;
-                //m_shapesStorage.AddShape(nextPoint, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
+                //mslog("it point = " + points[i]);
+                Point newPoint = new Point(Convert.ToInt32(points[i].X), Convert.ToInt32(points[i].Y));
+                //mslog("now point = " + newPoint);
+                m_shapesStorage.AddShape(newPoint, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
             }
+
+                //m_shapeNumber++;
+                for (int i = 0; i < ellipsePoints.Length; i++)
+                {
+                    //mslog("point = " + ellipsePoints[i]);
+                    //Point nextPoint = Point.Round(ellipsePoints[i]);
+                    //Point nextPoint = new Point(0, 0);
+                    //nextPoint.X = (int)ellipsePoints[i].X;
+                    //nextPoint.Y = (int)ellipsePoints[i].Y;
+                    //m_shapesStorage.AddShape(nextPoint, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
+                }
 
         } /* private void saveEllipse(MouseEventArgs e) */
 
