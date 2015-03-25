@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Collections;
+using System.Drawing.Drawing2D;
 
 /*
  * This is one of several 'partial' classes of the MainForm class. It is responsible
@@ -1446,7 +1447,7 @@ namespace My_Note
          * DESCRIPTION
          *  Saves a rectangle drawn by the user. This method saves all the points that form the rectangle
          *  not just origin + size. Such functionality is necessary in order to accomodate the erase
-         *  functionality, where a user can erase only the desired points of the rectangle. finalStartPoint
+         *  functionality, where a user can erase only the desired points of the rectangle. rectOrigin
          *  variable gets coordinates that are the most upper left part of the rectangle. This method is 
          *  called by MouseUp event handler, rectangle is saved as one shape.
          * 
@@ -1461,29 +1462,29 @@ namespace My_Note
          */
         private void saveRectangle(MouseEventArgs e)
         {
-            Point finalStartPoint = new Point(Math.Min(m_drawStartPoint.X, e.Location.X), Math.Min(m_drawStartPoint.Y, e.Location.Y));
+            Point rectOrigin = new Point(Math.Min(m_drawStartPoint.X, e.Location.X), Math.Min(m_drawStartPoint.Y, e.Location.Y));
             Int32 rectLength = Math.Abs(m_drawStartPoint.X - e.Location.X);
             Int32 rectWidth = Math.Abs(m_drawStartPoint.Y - e.Location.Y);
             m_shapeNumber++;
             for (int i = 0; i < rectLength; i++)
             {
-                finalStartPoint.X++;
-                m_shapesStorage.AddShape(finalStartPoint, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
+                rectOrigin.X++;
+                m_shapesStorage.AddShape(rectOrigin, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
             }
             for (int i = 0; i < rectWidth; i++)
             {
-                finalStartPoint.Y++;
-                m_shapesStorage.AddShape(finalStartPoint, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
+                rectOrigin.Y++;
+                m_shapesStorage.AddShape(rectOrigin, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
             }
             for (int i = 0; i < rectLength; i++)
             {
-                finalStartPoint.X--;
-                m_shapesStorage.AddShape(finalStartPoint, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
+                rectOrigin.X--;
+                m_shapesStorage.AddShape(rectOrigin, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
             }
             for (int i = 0; i < rectWidth; i++)
             {
-                finalStartPoint.Y--;
-                m_shapesStorage.AddShape(finalStartPoint, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
+                rectOrigin.Y--;
+                m_shapesStorage.AddShape(rectOrigin, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
             }
             
             transparentPanel.Refresh();
@@ -1532,6 +1533,35 @@ namespace My_Note
             mslog("Ellipse");
             mslog("start point = " + m_drawStartPoint);
             mslog("end point = " + e.Location + "\r\n");
+
+            Point origin = new Point(0, 0);
+            origin.X = Math.Min(m_drawStartPoint.X, e.Location.X);
+            origin.Y = Math.Min(m_drawStartPoint.Y, e.Location.Y);
+            Int32 width = Math.Abs(m_drawStartPoint.X - e.Location.X);
+            Int32 height = Math.Abs(m_drawStartPoint.Y - e.Location.Y);
+
+            GraphicsPath ellipsePath = new GraphicsPath();
+            ellipsePath.AddEllipse(origin.X, origin.Y, width, height);
+            m_transparentPanelGraphics.DrawPath(m_transparentPanelPen, ellipsePath);
+            PointF[] ellipsePoints = ellipsePath.PathPoints;
+
+            Matrix translateMatrix = new Matrix();
+            translateMatrix.Translate(0, 10);
+            ellipsePath.Flatten(translateMatrix, 10f);
+
+            Int32 pointCount = ellipsePoints.Length;
+            mslog("point count = " + pointCount);
+            //m_shapeNumber++;
+            for (int i = 0; i < ellipsePoints.Length; i++)
+            {
+                mslog("point = " + ellipsePoints[i]);
+                //Point nextPoint = Point.Round(ellipsePoints[i]);
+                //Point nextPoint = new Point(0, 0);
+                //nextPoint.X = (int)ellipsePoints[i].X;
+                //nextPoint.Y = (int)ellipsePoints[i].Y;
+                //m_shapesStorage.AddShape(nextPoint, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
+            }
+
         } /* private void saveEllipse(MouseEventArgs e) */
 
         /*
