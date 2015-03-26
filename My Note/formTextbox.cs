@@ -213,6 +213,14 @@ namespace My_Note
                 m_isDrawing = true;
                 m_drawStartPoint = e.Location;
             }
+            if (m_currentSelectedControl == e_SelectedControl.VERTTEXT)
+            {
+                TextBox txtBox = new TextBox();
+                txtBox.Text = "Enter text";
+                txtBox.Location = e.Location;
+                txtBox.Size = new System.Drawing.Size(110, 30);
+                transparentPanel.Controls.Add(txtBox);
+            }
         } /* private void transparentPanel_MouseDown(object sender, MouseEventArgs e) */
 
         /*
