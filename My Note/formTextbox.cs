@@ -48,6 +48,9 @@ namespace My_Note
         private Int32 m_arrowFarPoint = 0;                                  // Used in the diagonal arrows
         private Graphics m_transparentPanelGraphics;                        // Used to reduce repetitive data creation
         private Pen m_transparentPanelPen;                                  // Used to reduce repetitive data creation
+        
+        // Temp
+        private VerticalText tempText = new VerticalText();
 
         // This region contains all methods and event handlers
         // of the richTextBox, which is the main text box
@@ -246,6 +249,10 @@ namespace My_Note
          *  
          * DATE
          *  9:01am 3/10/15
+         *  
+         *  This method can probably be improved by testing m_isDrawing only once in an if() method
+         *  then adding the rest of the commands within it. This will reduce the number of cases tested
+         *  and organize the code a little more
          */
         private void transparentPanel_MouseMove(object sender, MouseEventArgs e)
         {
@@ -495,6 +502,13 @@ namespace My_Note
                     p.Dispose();
                 }
             }
+            mslog("transparentPanel_paint");
+            //e.Graphics.RotateTransform(45);
+            //Font the_font = new Font("Times New Roman", 16);
+            //SolidBrush m_textBrush = new SolidBrush(Color.Blue);
+            //e.Graphics.DrawString("Rotated 45", the_font, m_textBrush, 100, 60);
+            //e.Graphics.ResetTransform();
+            tempText.drawVerticalText(e);
         } /* private void transparentPanel_Paint(object sender, PaintEventArgs e) */
 
         #endregion

@@ -66,6 +66,7 @@
     <Compile Include="TransparentPanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="VerticalText.cs" />
     <EmbeddedResource Include="mainForm.resx">
       <DependentUpon>mainForm.cs</DependentUpon>
     </EmbeddedResource>
