@@ -80,6 +80,7 @@
             this.backPanel = new System.Windows.Forms.Panel();
             this.logTextBox = new System.Windows.Forms.TextBox();
             this.transparentPanel = new My_Note.TransparentPanel();
+            this.button1 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.toolbarPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox18)).BeginInit();
@@ -636,11 +637,22 @@
             this.transparentPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseMove);
             this.transparentPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseUp);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(12, 158);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 6;
+            this.button1.Text = "Clear log";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(975, 739);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.logTextBox);
             this.Controls.Add(this.transparentPanel);
             this.Controls.Add(this.richTextBox);
@@ -716,6 +728,7 @@
         private System.Windows.Forms.Panel backPanel;
         private My_Note.TransparentPanel transparentPanel;
         private System.Windows.Forms.TextBox logTextBox;
+        private System.Windows.Forms.Button button1;
     }
 }
 

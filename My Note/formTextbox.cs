@@ -48,9 +48,12 @@ namespace My_Note
         private Int32 m_arrowFarPoint = 0;                                  // Used in the diagonal arrows
         private Graphics m_transparentPanelGraphics;                        // Used to reduce repetitive data creation
         private Pen m_transparentPanelPen;                                  // Used to reduce repetitive data creation
+
+        private bool m_canDash;
         
         // Temp
-        private VerticalText tempText = new VerticalText();
+        //private VerticalText tempText = new VerticalText();
+        private List<VerticalText> m_verticalTextList = new List<VerticalText>();
 
         // This region contains all methods and event handlers
         // of the richTextBox, which is the main text box
@@ -216,13 +219,25 @@ namespace My_Note
                 m_isDrawing = true;
                 m_drawStartPoint = e.Location;
             }
+            if (m_currentSelectedControl == e_SelectedControl.DASHED)
+            {
+                m_isDrawing = true;
+                m_drawStartPoint = e.Location;
+                m_canDash = true;
+            }
+            if (m_currentSelectedControl == e_SelectedControl.DOTTED)
+            {
+                m_isDrawing = true;
+                m_drawStartPoint = e.Location;
+                m_canDash = true;
+            }
             if (m_currentSelectedControl == e_SelectedControl.VERTTEXT)
             {
-                TextBox txtBox = new TextBox();
-                txtBox.Text = "Enter text";
-                txtBox.Location = e.Location;
-                txtBox.Size = new System.Drawing.Size(110, 30);
-                transparentPanel.Controls.Add(txtBox);
+                //TextBox txtBox = new TextBox();
+                //txtBox.Text = "Enter text";
+                //txtBox.Location = e.Location;
+                //txtBox.Size = new System.Drawing.Size(110, 30);
+                //transparentPanel.Controls.Add(txtBox);
             }
         } /* private void transparentPanel_MouseDown(object sender, MouseEventArgs e) */
 
@@ -332,6 +347,14 @@ namespace My_Note
             if ( m_isDrawing && (m_currentSelectedControl == e_SelectedControl.SOLID) )
             {
                 drawSolidLine(e);
+            }
+            if ( m_isDrawing && (m_currentSelectedControl == e_SelectedControl.DASHED))
+            {
+                drawDashedLine(e);
+            }
+            if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.DOTTED))
+            {
+                drawDottedLine(e);
             }
         } /* private void transparentPanel_MouseMove(object sender, MouseEventArgs e) */
 
@@ -449,6 +472,35 @@ namespace My_Note
                     saveSolidLine(e);
                 }
             }
+            if (m_currentSelectedControl == e_SelectedControl.DASHED)
+            {
+                if (m_isDrawing)
+                {
+                    saveDashedLine(e);
+                    m_canDash = false;
+                }
+            }
+            if (m_currentSelectedControl == e_SelectedControl.DOTTED)
+            {
+                if (m_isDrawing)
+                {
+                    saveDottedLine(e);
+                    m_canDash = false;
+                }
+            }
+            if (m_currentSelectedControl == e_SelectedControl.VERTTEXT)
+            {
+                VerticalText nextText = new VerticalText(e);
+                
+                mslog("adding vert text at " + e.Location);
+                //nextText.addVerticalText(e);
+
+                m_verticalTextList.Add(nextText);
+                transparentPanel.Invalidate();
+                richTextBox.Invalidate();
+                backPanel.Invalidate();
+                //transparentPanel.Refresh();
+            }
             if (m_isDrawing)
             {
                 m_isDrawing = false;
@@ -502,13 +554,13 @@ namespace My_Note
                     p.Dispose();
                 }
             }
-            mslog("transparentPanel_paint");
-            //e.Graphics.RotateTransform(45);
-            //Font the_font = new Font("Times New Roman", 16);
-            //SolidBrush m_textBrush = new SolidBrush(Color.Blue);
-            //e.Graphics.DrawString("Rotated 45", the_font, m_textBrush, 100, 60);
-            //e.Graphics.ResetTransform();
-            tempText.drawVerticalText(e);
+            //tempText.drawVerticalText(e);
+            for (int i = 0; i < m_verticalTextList.Count; i++)
+            {
+                m_verticalTextList[i].drawVerticalText(e);
+                //VerticalText nextText = m_verticalTextList.ElementAt<i>;
+                //nextText.drawVerticalText(e);
+            }
         } /* private void transparentPanel_Paint(object sender, PaintEventArgs e) */
 
         #endregion
@@ -1638,6 +1690,7 @@ namespace My_Note
          */
         private void saveSolidLine(MouseEventArgs e)
         {
+            /*
             // Logging results
             Int32 coordWidth = Math.Abs(m_drawStartPoint.X - e.Location.X);
             Int32 coordHeight = Math.Abs(m_drawStartPoint.Y - e.Location.Y);
@@ -1649,7 +1702,7 @@ namespace My_Note
             mslog("m = " + coordHeight + "/" + coordWidth);
             mslog("start point = " + m_drawStartPoint);
             mslog("end point = " + e.Location + "\r\n");
-
+            */
             m_shapeNumber++;
             IEnumerable<Point> points = GetPointsOnLine(m_drawStartPoint.X, m_drawStartPoint.Y, e.Location.X, e.Location.Y);
             List<Point> pointList = points.ToList();
@@ -1664,6 +1717,106 @@ namespace My_Note
             //richTextBox.Invalidate();
             //backPanel.Invalidate();
         } /* private void saveSolidLine(MouseEventArgs e) */
+
+        /*
+         * 8:40am 3/30/15
+         * 
+         */
+
+        private void drawDashedLine(MouseEventArgs e)
+        {
+            float[] dashValues = { 5, 5 };
+
+            Pen dashPen = new Pen(m_currentDrawColor, m_currentPenWidth);
+            dashPen.DashPattern = dashValues;
+            //dashPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+            
+            m_transparentPanelGraphics.DrawLine(dashPen, m_drawStartPoint, e.Location);
+
+            transparentPanel.Invalidate();
+            richTextBox.Invalidate();
+            backPanel.Invalidate();
+        }
+
+        /*
+         * 8:58am 3/30/15
+         */
+        private void saveDashedLine(MouseEventArgs e)
+        {
+           // m_shapeNumber++;
+            IEnumerable<Point> points = GetPointsOnLine(m_drawStartPoint.X, m_drawStartPoint.Y, e.Location.X, e.Location.Y);
+            List<Point> pointList = points.ToList();
+            for (int i = 0; i < pointList.Count; i++)
+            {
+                if (i % 5 == 0)
+                {
+                    m_canDash = false;
+                    //mslog("false i = " + i);
+                }
+                if (i % 10 == 0)
+                {
+                    m_canDash = true;
+                    m_shapeNumber++;
+                    //mslog("true i = " + i);
+                }
+                if (m_canDash)
+                {
+                    m_shapesStorage.AddShape(pointList[i], m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
+                    //mslog("i = " + i);
+                }
+            }
+
+            // Refreshing
+            transparentPanel.Refresh();
+        }
+        /*
+         *  6:09pm 3/30/15
+         */
+        private void drawDottedLine(MouseEventArgs e)
+        {
+            float[] dashValues = { 2, 2 };
+
+            Pen dashPen = new Pen(m_currentDrawColor, m_currentPenWidth);
+            dashPen.DashPattern = dashValues;
+            //dashPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+
+            m_transparentPanelGraphics.DrawLine(dashPen, m_drawStartPoint, e.Location);
+
+            transparentPanel.Invalidate();
+            richTextBox.Invalidate();
+            backPanel.Invalidate();
+        }
+        /*
+         * 6:13pm 3/30/15
+         */
+        private void saveDottedLine(MouseEventArgs e)
+        {
+            // m_shapeNumber++;
+            IEnumerable<Point> points = GetPointsOnLine(m_drawStartPoint.X, m_drawStartPoint.Y, e.Location.X, e.Location.Y);
+            List<Point> pointList = points.ToList();
+            for (int i = 0; i < pointList.Count; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    m_canDash = false;
+                    //mslog("false i = " + i);
+                }
+                if (i % 4 == 0)
+                {
+                    m_canDash = true;
+                    m_shapeNumber++;
+                    //mslog("true i = " + i);
+                }
+                if (m_canDash)
+                {
+                    m_shapesStorage.AddShape(pointList[i], m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
+                    //mslog("i = " + i);
+                }
+            }
+
+            // Refreshing
+            transparentPanel.Refresh();
+        }
         
         #endregion
         /* http://ericw.ca/notes/bresenhams-line-algorithm-in-csharp.html // 3/24/15 */

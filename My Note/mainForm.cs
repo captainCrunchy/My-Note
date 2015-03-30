@@ -98,5 +98,10 @@ namespace My_Note
             logTextBox.Text += a_str + "\r\n";
             moveLogCursor();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            logTextBox.Text = "";
+        }
     }
 }
