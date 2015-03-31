@@ -153,6 +153,7 @@ namespace My_Note
          */
         private void transparentPanel_MouseDown(object sender, MouseEventArgs e)
         {
+            //mslog("mouse down transp");
             if (m_currentSelectedControl == e_SelectedControl.PENCIL)
             {
                 m_isDrawing = true;
@@ -271,6 +272,7 @@ namespace My_Note
          */
         private void transparentPanel_MouseMove(object sender, MouseEventArgs e)
         {
+            //mslog("transp move");
             if ( m_isDrawing && (m_currentSelectedControl == e_SelectedControl.PENCIL) )
             {
                 drawWithPencil(e);
@@ -496,10 +498,11 @@ namespace My_Note
                 //nextText.addVerticalText(e);
 
                 m_verticalTextList.Add(nextText);
+                transparentPanel.Controls.Add(nextText.moveButton);
                 transparentPanel.Invalidate();
                 richTextBox.Invalidate();
                 backPanel.Invalidate();
-                //transparentPanel.Refresh();
+                transparentPanel.Refresh();
             }
             if (m_isDrawing)
             {
@@ -540,6 +543,7 @@ namespace My_Note
          */
         private void transparentPanel_Paint(object sender, PaintEventArgs e)
         {
+            mslog("transp Paint");
             // Apply a smoothing mode to smooth out the line.
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             // Begin drawing
@@ -558,6 +562,8 @@ namespace My_Note
             for (int i = 0; i < m_verticalTextList.Count; i++)
             {
                 m_verticalTextList[i].drawVerticalText(e);
+                //mslog(m_verticalTextList[i].logString);
+                
                 //VerticalText nextText = m_verticalTextList.ElementAt<i>;
                 //nextText.drawVerticalText(e);
             }

@@ -103,5 +103,10 @@ namespace My_Note
         {
             logTextBox.Text = "";
         }
+
+        private void MainForm_MouseMove(object sender, MouseEventArgs e)
+        {
+            //mslog("form move");
+        }
     }
 }
