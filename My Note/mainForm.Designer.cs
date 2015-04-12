@@ -643,6 +643,7 @@
             this.transparentPanel.TabIndex = 4;
             this.transparentPanel.Click += new System.EventHandler(this.transparentPanel_Click);
             this.transparentPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.transparentPanel_Paint);
+            this.transparentPanel.Layout += new System.Windows.Forms.LayoutEventHandler(this.transparentPanel_Layout);
             this.transparentPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseDown);
             this.transparentPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseMove);
             this.transparentPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseUp);

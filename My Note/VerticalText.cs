@@ -24,16 +24,24 @@ namespace My_Note
         private Font m_textFont = new Font("Times New Roman", 16);
         private SolidBrush m_textBrush = new SolidBrush(Color.Blue);
         private Point m_textOrigin = new Point(0,0);
-        public Button moveButton = new Button();
+        //public Button moveButton = new Button();
+        
         private Button optionButton = new Button();
         public string logString = "";
-        private bool canMove = false;
-        private Point startPoint = new Point(0, 0);
-        private Point endPointButton = new Point(0, 0);
-        private Point endPointText = new Point(0, 0);
+        //private bool canMove = false;
+        private Point srcPtMoveButton = new Point(0, 0);
+        private Point destPtMoveButton = new Point(0, 0);
+        private Point destPtText = new Point(0, 0);
 
         bool isDragged = false;
-        Point ptOffset;
+
+        public Button moveButton = new Button();
+        // currentMovePoint helps translate location captured from screen to location within panel
+        private Point currentMovePoint = new Point();
+
+        public Button rotateButton = new Button();
+        private Point rotateButtonOrigin = new Point();
+
         /*
          * 3/31/15 7:15am
          */
@@ -47,6 +55,11 @@ namespace My_Note
             moveButton.MouseMove += moveButton_MouseMove;
             moveButton.MouseUp += moveButton_MouseUp;
 
+            rotateButton.Text = "r";
+            rotateButton.BackColor = Color.Green;
+            rotateButton.Location = new Point(e.Location.X + 80, e.Location.Y - 5);
+            rotateButton.Size = new Size(15, 15);
+
             m_textOrigin = e.Location;
         }
 
@@ -58,10 +71,13 @@ namespace My_Note
             if (e.Button == MouseButtons.Left)
             {
                 isDragged = true;
+                /* translate the point offset from main screen to location on panel
+                 * 
+                 */
                 Point ptStartPosition = moveButton.PointToScreen(new Point(e.X, e.Y));
-                ptOffset = new Point();
-                ptOffset.X = moveButton.Location.X - ptStartPosition.X;
-                ptOffset.Y = moveButton.Location.Y - ptStartPosition.Y;
+                //currentMovePoint = new Point();
+                currentMovePoint.X = moveButton.Location.X - ptStartPosition.X;
+                currentMovePoint.Y = moveButton.Location.Y - ptStartPosition.Y;
             }
             else
             {
@@ -77,11 +93,17 @@ namespace My_Note
             if (isDragged)
             {
                 Point newPoint = moveButton.PointToScreen(new Point(e.X, e.Y));
-                newPoint.Offset(ptOffset);
+                newPoint.Offset(currentMovePoint);
                 moveButton.Location = newPoint;
-                endPointText.X = newPoint.X + 5;
-                endPointText.Y = newPoint.Y + 5;
-                m_textOrigin = endPointText;
+                
+                rotateButtonOrigin = newPoint;
+                rotateButtonOrigin.X += 80;
+                rotateButton.Location = rotateButtonOrigin;
+                //rotateButton.Refresh();
+
+                destPtText.X = newPoint.X + 5;
+                destPtText.Y = newPoint.Y + 5;
+                m_textOrigin = destPtText;
             }
         }
 
@@ -90,7 +112,11 @@ namespace My_Note
          */
         private void moveButton_MouseUp(object sender, MouseEventArgs e)
         {
-            isDragged = false;
+            if (isDragged)
+            {
+                isDragged = false;
+                rotateButton.Refresh();
+            }
         }
 
         /*

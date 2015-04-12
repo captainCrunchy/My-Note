@@ -108,5 +108,17 @@ namespace My_Note
         {
             //mslog("form move");
         }
+        /*
+         * 4/12/15 3:02pm
+         */
+        private void transparentPanel_Layout(object sender, LayoutEventArgs e)
+        {
+            if (m_currentSelectedControl == e_SelectedControl.VERTTEXT)
+            {
+                transparentPanel.Invalidate();
+                richTextBox.Invalidate();
+                backPanel.Invalidate();
+            }
+        }
     }
 }

@@ -492,6 +492,7 @@ namespace My_Note
             }
             if (m_currentSelectedControl == e_SelectedControl.VERTTEXT)
             {
+                // sending the MouseEventArg via constructor to assign location
                 VerticalText nextText = new VerticalText(e);
                 
                 mslog("adding vert text at " + e.Location);
@@ -499,6 +500,7 @@ namespace My_Note
 
                 m_verticalTextList.Add(nextText);
                 transparentPanel.Controls.Add(nextText.moveButton);
+                transparentPanel.Controls.Add(nextText.rotateButton);
                 transparentPanel.Invalidate();
                 richTextBox.Invalidate();
                 backPanel.Invalidate();
