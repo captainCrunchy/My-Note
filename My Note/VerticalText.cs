@@ -40,7 +40,9 @@ namespace My_Note
         private Point currentMovePoint = new Point();
 
         public Button rotateButton = new Button();
-        private Point rotateButtonOrigin = new Point();
+        //private Point rotateButtonOrigin = new Point();
+
+        // NEED TO: make the button offsets global variables
 
         /*
          * 3/31/15 7:15am
@@ -57,8 +59,11 @@ namespace My_Note
 
             rotateButton.Text = "r";
             rotateButton.BackColor = Color.Green;
-            rotateButton.Location = new Point(e.Location.X + 80, e.Location.Y - 5);
+            rotateButton.Location = new Point(moveButton.Location.X + 100, moveButton.Location.Y);
             rotateButton.Size = new Size(15, 15);
+            rotateButton.MouseDown += rotateButton_MouseDown;
+            rotateButton.MouseMove += rotateButton_MouseMove;
+            rotateButton.MouseUp += rotateButton_MouseUp;
 
             m_textOrigin = e.Location;
         }
@@ -78,6 +83,8 @@ namespace My_Note
                 //currentMovePoint = new Point();
                 currentMovePoint.X = moveButton.Location.X - ptStartPosition.X;
                 currentMovePoint.Y = moveButton.Location.Y - ptStartPosition.Y;
+                //moveButton.Visible = false;
+                rotateButton.Visible = false;
             }
             else
             {
@@ -95,11 +102,6 @@ namespace My_Note
                 Point newPoint = moveButton.PointToScreen(new Point(e.X, e.Y));
                 newPoint.Offset(currentMovePoint);
                 moveButton.Location = newPoint;
-                
-                rotateButtonOrigin = newPoint;
-                rotateButtonOrigin.X += 80;
-                rotateButton.Location = rotateButtonOrigin;
-                //rotateButton.Refresh();
 
                 destPtText.X = newPoint.X + 5;
                 destPtText.Y = newPoint.Y + 5;
@@ -116,6 +118,59 @@ namespace My_Note
             {
                 isDragged = false;
                 rotateButton.Refresh();
+                rotateButton.Location = new Point(moveButton.Location.X + 100, moveButton.Location.Y);
+                rotateButton.Visible = true;
+            }
+        }
+
+        /*
+         * 4/13/15 6:36pm
+         */
+        private void rotateButton_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                isDragged = true;
+                // translate the point offset from main screen to location on panel
+                Point ptStartPosition = rotateButton.PointToScreen(new Point(e.X, e.Y));
+                currentMovePoint.X = rotateButton.Location.X - ptStartPosition.X;
+                currentMovePoint.Y = rotateButton.Location.Y - ptStartPosition.Y;
+                moveButton.Visible = false;
+            }
+            else
+            {
+                isDragged = false;
+            }
+        }
+
+        /*
+         * 4/13/15 6:37pm
+         */
+        private void rotateButton_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isDragged)
+            {
+                Point newPoint = rotateButton.PointToScreen(new Point(e.X, e.Y));
+                newPoint.Offset(currentMovePoint);
+                rotateButton.Location = newPoint;
+
+                //destPtText.X = newPoint.X + 5;
+                //destPtText.Y = newPoint.Y + 5;
+                //m_textOrigin = destPtText;
+            }
+        }
+
+        /*
+         * 4/13/15 6:38pm
+         */
+        private void rotateButton_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (isDragged)
+            {
+                isDragged = false;
+                moveButton.Refresh();
+                moveButton.Location = new Point(rotateButton.Location.X - 100, rotateButton.Location.Y);
+                moveButton.Visible = true;
             }
         }
 

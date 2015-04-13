@@ -545,7 +545,7 @@ namespace My_Note
          */
         private void transparentPanel_Paint(object sender, PaintEventArgs e)
         {
-            mslog("transp Paint");
+            //mslog("transp Paint");
             // Apply a smoothing mode to smooth out the line.
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             // Begin drawing
@@ -564,6 +564,8 @@ namespace My_Note
             for (int i = 0; i < m_verticalTextList.Count; i++)
             {
                 m_verticalTextList[i].drawVerticalText(e);
+                string toPrint = m_verticalTextList[i].logString;
+                mslog(toPrint);
                 //mslog(m_verticalTextList[i].logString);
                 
                 //VerticalText nextText = m_verticalTextList.ElementAt<i>;
