@@ -23,11 +23,11 @@ namespace My_Note
         private Int32 m_textAngle = 0;
         private Font m_textFont = new Font("Times New Roman", 16);
         private SolidBrush m_textBrush = new SolidBrush(Color.Blue);
-        private Point m_textOrigin = new Point(0,0);
+        private Point m_textOrigin;// = new Point(0,0);
         //public Button moveButton = new Button();
         
         private Button optionButton = new Button();
-        public string logString = "";
+        public string logString = "logString empty";
         //private bool canMove = false;
         private Point srcPtMoveButton = new Point(0, 0);
         private Point destPtMoveButton = new Point(0, 0);
@@ -41,6 +41,10 @@ namespace My_Note
 
         public Button rotateButton = new Button();
         //private Point rotateButtonOrigin = new Point();
+        private bool isRotating = false;
+        private float StartAngle = 0;
+        private float CurrentAngle = 0;
+        private float TotalAngle = 0;
 
         // NEED TO: make the button offsets global variables
 
@@ -56,6 +60,8 @@ namespace My_Note
             moveButton.MouseDown += moveButton_MouseDown;
             moveButton.MouseMove += moveButton_MouseMove;
             moveButton.MouseUp += moveButton_MouseUp;
+
+            //m_textOrigin = moveButton.Location;
 
             rotateButton.Text = "r";
             rotateButton.BackColor = Color.Green;
@@ -130,6 +136,22 @@ namespace My_Note
         {
             if (e.Button == MouseButtons.Left)
             {
+                isRotating = true;
+                //logString = "moveButton location = " + moveButton.Location;
+                float dx = moveButton.Location.X;
+                float dy = moveButton.Location.Y;
+                StartAngle = (float)Math.Atan2(dy, dx);
+                //logString += "\r\nStartAngle = " + StartAngle;
+                //logString += "\r\nrotateButton.location = " + rotateButton.Location;
+
+                // translate the point offset from main screen to location on panel
+                Point ptStartPosition = rotateButton.PointToScreen(new Point(e.X, e.Y));
+                currentMovePoint.X = rotateButton.Location.X - ptStartPosition.X;
+                currentMovePoint.Y = rotateButton.Location.Y - ptStartPosition.Y;
+            }
+            /*
+            if (e.Button == MouseButtons.Left)
+            {
                 isDragged = true;
                 // translate the point offset from main screen to location on panel
                 Point ptStartPosition = rotateButton.PointToScreen(new Point(e.X, e.Y));
@@ -140,7 +162,7 @@ namespace My_Note
             else
             {
                 isDragged = false;
-            }
+            }*/
         }
 
         /*
@@ -148,6 +170,34 @@ namespace My_Note
          */
         private void rotateButton_MouseMove(object sender, MouseEventArgs e)
         {
+            if (isRotating)
+            {
+
+                //logString = "\r\ne.Location = " + e.Location + "\r\n";
+                float dx = rotateButton.Location.X - moveButton.Location.X;
+                float dy = rotateButton.Location.Y - moveButton.Location.Y;
+
+                //float new_angle = (float)Math.Atan2(dy, dx);
+                float new_angle = (float) (Math.Atan2(dy, dx) * 180 / Math.PI);
+                //logString += "new_angle = " + new_angle + "\r\n";
+                m_textAngle = (Int32)new_angle;
+                /*
+                CurrentAngle = new_angle - StartAngle;
+                logString += "CurrentAngle = " + CurrentAngle + " radians\r\n";
+
+                CurrentAngle = CurrentAngle * 180 / (float)Math.PI;
+                logString += "CurrentAngle = " + CurrentAngle + " degrees\r\n";
+                */
+                
+                Point newPoint = rotateButton.PointToScreen(new Point(e.X, e.Y));
+                newPoint.Offset(currentMovePoint);
+                rotateButton.Location = newPoint;
+                //logString += "rorateButton.Location = " + rotateButton.Location;
+
+
+                //logString = CurrentAngle.ToString("0.00") + " deg";
+            }
+            /*
             if (isDragged)
             {
                 Point newPoint = rotateButton.PointToScreen(new Point(e.X, e.Y));
@@ -157,7 +207,7 @@ namespace My_Note
                 //destPtText.X = newPoint.X + 5;
                 //destPtText.Y = newPoint.Y + 5;
                 //m_textOrigin = destPtText;
-            }
+            }*/
         }
 
         /*
@@ -165,13 +215,20 @@ namespace My_Note
          */
         private void rotateButton_MouseUp(object sender, MouseEventArgs e)
         {
+            if (isRotating)
+            {
+                isRotating = false;
+                //logString = "rotateButton_MouseUP";
+                //logString = "logString empty";
+            }
+            /*
             if (isDragged)
             {
                 isDragged = false;
                 moveButton.Refresh();
                 moveButton.Location = new Point(rotateButton.Location.X - 100, rotateButton.Location.Y);
                 moveButton.Visible = true;
-            }
+            }*/
         }
 
         /*
@@ -179,7 +236,11 @@ namespace My_Note
          */
         public void drawVerticalText(PaintEventArgs e)
         {
+            e.Graphics.TranslateTransform(moveButton.Location.X, moveButton.Location.Y);
             e.Graphics.RotateTransform(m_textAngle);
+            e.Graphics.TranslateTransform(-moveButton.Location.X, -moveButton.Location.Y);
+            
+            logString = "m_textOrigin = " + m_textOrigin;
             e.Graphics.DrawString(m_textString, m_textFont, m_textBrush, m_textOrigin);
             e.Graphics.ResetTransform();
         }
