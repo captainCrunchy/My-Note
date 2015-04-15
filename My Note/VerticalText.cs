@@ -18,60 +18,78 @@ namespace My_Note
 {
     class VerticalText
     {
-        private String m_textString = "Rotated 45";
-        //private Int32 m_textAngle = 45;
-        private Int32 m_textAngle = 0;
-        private Font m_textFont = new Font("Times New Roman", 16);
-        private SolidBrush m_textBrush = new SolidBrush(Color.Blue);
-        private Point m_textOrigin;// = new Point(0,0);
-        //public Button moveButton = new Button();
+        /*
+         *  Many variables were created and initialized here for reusability and to avoid repetition
+         *  in order to increase performance. Some variables are initialized in the constructor.
+         */
+        public string logString = "logString empty"; // TEMP
+
+        private String m_textString = "Enter Text";                     // Actual text of vertical text
+        private Int32 m_textAngle = 0;                                  // The angle of vertical text
+        private Font m_textFont = new Font("Times New Roman", 16);      // The font of vertical text
+        private SolidBrush m_textBrush = new SolidBrush(Color.Blue);    // The brush use on vertical text
+        private Point m_textOrigin;                                     // Origin of vertical text
+        private Point m_textDestPt = new Point(0, 0);                   // Updated origin of vertical text after move
         
-        private Button optionButton = new Button();
-        public string logString = "logString empty";
-        //private bool canMove = false;
-        private Point srcPtMoveButton = new Point(0, 0);
-        private Point destPtMoveButton = new Point(0, 0);
-        private Point destPtText = new Point(0, 0);
+        private Button m_moveButton = new Button();                     // Move the text around the panel
+        private bool m_isMoving = false;                                // Indicates whether the text is being moved
+        private Point m_currentMovePoint = new Point();                 // Translates mouse location captured from entire screen to panel 
 
-        bool isDragged = false;
+        private Button m_optionsButton = new Button();                  // Brings up options window to modify vertical text
+        private VertTextOptionsBox m_optionsBox = new VertTextOptionsBox();  // Options windows that allows modification of vertical text attibutes
 
-        public Button moveButton = new Button();
-        // currentMovePoint helps translate location captured from screen to location within panel
-        private Point currentMovePoint = new Point();
+        private Button m_rotateButton = new Button();                   // Rotates the vertical text to use desired angles
+        private bool m_isRotating = false;                              // Indicates whether the text is being rotated
 
-        public Button rotateButton = new Button();
-        //private Point rotateButtonOrigin = new Point();
-        private bool isRotating = false;
-        private float StartAngle = 0;
-        private float CurrentAngle = 0;
-        private float TotalAngle = 0;
-
-        // NEED TO: make the button offsets global variables
+        // NEED TO: make the button offsets global variables, make the buttons round, update the button click to be on left side
 
         /*
          * 3/31/15 7:15am
+         * (MouseEventArgs e) is passed from the owner object (transparentPanel_MouseUp) method
          */
         public VerticalText(MouseEventArgs e)
         {
-            moveButton.Text = "m";
-            moveButton.BackColor = Color.Yellow;
-            moveButton.Location = new Point(e.Location.X-5, e.Location.Y-5);
-            moveButton.Size = new Size(15, 15);
-            moveButton.MouseDown += moveButton_MouseDown;
-            moveButton.MouseMove += moveButton_MouseMove;
-            moveButton.MouseUp += moveButton_MouseUp;
-
-            //m_textOrigin = moveButton.Location;
-
-            rotateButton.Text = "r";
-            rotateButton.BackColor = Color.Green;
-            rotateButton.Location = new Point(moveButton.Location.X + 100, moveButton.Location.Y);
-            rotateButton.Size = new Size(15, 15);
-            rotateButton.MouseDown += rotateButton_MouseDown;
-            rotateButton.MouseMove += rotateButton_MouseMove;
-            rotateButton.MouseUp += rotateButton_MouseUp;
-
             m_textOrigin = e.Location;
+
+            m_moveButton.Text = "m";
+            m_moveButton.BackColor = Color.Yellow;
+            m_moveButton.Location = new Point(e.Location.X-5, e.Location.Y-5);
+            m_moveButton.Size = new Size(16, 16);
+            m_moveButton.MouseDown += moveButton_MouseDown;
+            m_moveButton.MouseMove += moveButton_MouseMove;
+            m_moveButton.MouseUp += moveButton_MouseUp;
+
+            m_optionsButton.Text = "o";
+            m_optionsButton.BackColor = Color.Blue;
+            m_optionsButton.Location = new Point(m_moveButton.Location.X + 50, m_moveButton.Location.Y);
+            m_optionsButton.Size = new Size(16, 16);
+            m_optionsButton.MouseDown += optionsButton_MouseDown;
+            m_optionsButton.MouseMove += optionsButton_MouseMove;
+            m_optionsButton.MouseUp += optionsButton_MouseUp;
+
+            m_rotateButton.Text = "r";
+            m_rotateButton.BackColor = Color.Green;
+            m_rotateButton.Location = new Point(m_moveButton.Location.X + 100, m_moveButton.Location.Y);
+            m_rotateButton.Size = new Size(16, 16);
+            m_rotateButton.MouseDown += rotateButton_MouseDown;
+            m_rotateButton.MouseMove += rotateButton_MouseMove;
+            m_rotateButton.MouseUp += rotateButton_MouseUp;
+
+        }
+
+        // This region contains m_moveButton Property and Event Handlers
+        #region m_moveButton methods
+
+        public Button MoveButton
+        {
+            get
+            {
+                return m_moveButton;
+            }
+            set
+            {
+                m_moveButton = value;
+            }
         }
 
         /*
@@ -81,20 +99,16 @@ namespace My_Note
         {
             if (e.Button == MouseButtons.Left)
             {
-                isDragged = true;
-                /* translate the point offset from main screen to location on panel
-                 * 
-                 */
-                Point ptStartPosition = moveButton.PointToScreen(new Point(e.X, e.Y));
-                //currentMovePoint = new Point();
-                currentMovePoint.X = moveButton.Location.X - ptStartPosition.X;
-                currentMovePoint.Y = moveButton.Location.Y - ptStartPosition.Y;
-                //moveButton.Visible = false;
-                rotateButton.Visible = false;
+                m_isMoving = true;
+                // translate the point offset from main screen to location on panel
+                Point ptStartPosition = m_moveButton.PointToScreen(new Point(e.X, e.Y));
+                m_currentMovePoint.X = m_moveButton.Location.X - ptStartPosition.X;
+                m_currentMovePoint.Y = m_moveButton.Location.Y - ptStartPosition.Y;
+                m_rotateButton.Visible = false;
             }
             else
             {
-                isDragged = false;
+                m_isMoving = false;
             }
         }
         
@@ -103,15 +117,15 @@ namespace My_Note
          */
         private void moveButton_MouseMove(object sender, MouseEventArgs e)
         {
-            if (isDragged)
+            if (m_isMoving)
             {
-                Point newPoint = moveButton.PointToScreen(new Point(e.X, e.Y));
-                newPoint.Offset(currentMovePoint);
-                moveButton.Location = newPoint;
+                Point newPoint = m_moveButton.PointToScreen(new Point(e.X, e.Y));
+                newPoint.Offset(m_currentMovePoint);
+                m_moveButton.Location = newPoint;
 
-                destPtText.X = newPoint.X + 5;
-                destPtText.Y = newPoint.Y + 5;
-                m_textOrigin = destPtText;
+                m_textDestPt.X = newPoint.X + 5;
+                m_textDestPt.Y = newPoint.Y + 5;
+                m_textOrigin = m_textDestPt;
             }
         }
 
@@ -120,12 +134,70 @@ namespace My_Note
          */
         private void moveButton_MouseUp(object sender, MouseEventArgs e)
         {
-            if (isDragged)
+            if (m_isMoving)
             {
-                isDragged = false;
-                rotateButton.Refresh();
-                rotateButton.Location = new Point(moveButton.Location.X + 100, moveButton.Location.Y);
-                rotateButton.Visible = true;
+                m_isMoving = false;
+                m_rotateButton.Refresh();
+                m_rotateButton.Location = new Point(m_moveButton.Location.X + 100, m_moveButton.Location.Y);
+                m_rotateButton.Visible = true;
+            }
+        }
+
+        #endregion
+
+        // This region contains m_optionsButton Event Handlers and Properties
+        #region m_optionsButton methods
+
+        public Button OptionsButton
+        {
+            get
+            {
+                return m_optionsButton;
+            }
+            set
+            {
+                m_optionsButton = value;
+            }
+        }
+
+        /*
+         * 7:56am 4/15/15
+         */
+        void optionsButton_MouseDown(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        /*
+         * 7:57am 4/15/15
+         */
+        void optionsButton_MouseMove(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        /*
+         * 7:58am 4/15/15
+         */
+        void optionsButton_MouseUp(object sender, MouseEventArgs e)
+        {
+            m_optionsBox.ShowDialog();
+        }
+
+        #endregion
+
+        // This region contains m_rotateButton Property and Event Handlers
+        #region m_rotateButton methos
+
+        public Button RotateButton
+        {
+            get
+            {
+                return m_rotateButton;
+            }
+            set
+            {
+                m_rotateButton = value;
             }
         }
 
@@ -136,33 +208,13 @@ namespace My_Note
         {
             if (e.Button == MouseButtons.Left)
             {
-                isRotating = true;
-                //logString = "moveButton location = " + moveButton.Location;
-                float dx = moveButton.Location.X;
-                float dy = moveButton.Location.Y;
-                StartAngle = (float)Math.Atan2(dy, dx);
-                //logString += "\r\nStartAngle = " + StartAngle;
-                //logString += "\r\nrotateButton.location = " + rotateButton.Location;
+                m_isRotating = true;
 
                 // translate the point offset from main screen to location on panel
-                Point ptStartPosition = rotateButton.PointToScreen(new Point(e.X, e.Y));
-                currentMovePoint.X = rotateButton.Location.X - ptStartPosition.X;
-                currentMovePoint.Y = rotateButton.Location.Y - ptStartPosition.Y;
+                Point ptStartPosition = m_rotateButton.PointToScreen(new Point(e.X, e.Y));
+                m_currentMovePoint.X = m_rotateButton.Location.X - ptStartPosition.X;
+                m_currentMovePoint.Y = m_rotateButton.Location.Y - ptStartPosition.Y;
             }
-            /*
-            if (e.Button == MouseButtons.Left)
-            {
-                isDragged = true;
-                // translate the point offset from main screen to location on panel
-                Point ptStartPosition = rotateButton.PointToScreen(new Point(e.X, e.Y));
-                currentMovePoint.X = rotateButton.Location.X - ptStartPosition.X;
-                currentMovePoint.Y = rotateButton.Location.Y - ptStartPosition.Y;
-                moveButton.Visible = false;
-            }
-            else
-            {
-                isDragged = false;
-            }*/
         }
 
         /*
@@ -170,44 +222,19 @@ namespace My_Note
          */
         private void rotateButton_MouseMove(object sender, MouseEventArgs e)
         {
-            if (isRotating)
+            if (m_isRotating)
             {
 
-                //logString = "\r\ne.Location = " + e.Location + "\r\n";
-                float dx = rotateButton.Location.X - moveButton.Location.X;
-                float dy = rotateButton.Location.Y - moveButton.Location.Y;
+                float dx = m_rotateButton.Location.X - m_moveButton.Location.X;
+                float dy = m_rotateButton.Location.Y - m_moveButton.Location.Y;
 
-                //float new_angle = (float)Math.Atan2(dy, dx);
                 float new_angle = (float) (Math.Atan2(dy, dx) * 180 / Math.PI);
-                //logString += "new_angle = " + new_angle + "\r\n";
                 m_textAngle = (Int32)new_angle;
-                /*
-                CurrentAngle = new_angle - StartAngle;
-                logString += "CurrentAngle = " + CurrentAngle + " radians\r\n";
-
-                CurrentAngle = CurrentAngle * 180 / (float)Math.PI;
-                logString += "CurrentAngle = " + CurrentAngle + " degrees\r\n";
-                */
                 
-                Point newPoint = rotateButton.PointToScreen(new Point(e.X, e.Y));
-                newPoint.Offset(currentMovePoint);
-                rotateButton.Location = newPoint;
-                //logString += "rorateButton.Location = " + rotateButton.Location;
-
-
-                //logString = CurrentAngle.ToString("0.00") + " deg";
+                Point newPoint = m_rotateButton.PointToScreen(new Point(e.X, e.Y));
+                newPoint.Offset(m_currentMovePoint);
+                m_rotateButton.Location = newPoint;
             }
-            /*
-            if (isDragged)
-            {
-                Point newPoint = rotateButton.PointToScreen(new Point(e.X, e.Y));
-                newPoint.Offset(currentMovePoint);
-                rotateButton.Location = newPoint;
-
-                //destPtText.X = newPoint.X + 5;
-                //destPtText.Y = newPoint.Y + 5;
-                //m_textOrigin = destPtText;
-            }*/
         }
 
         /*
@@ -215,34 +242,46 @@ namespace My_Note
          */
         private void rotateButton_MouseUp(object sender, MouseEventArgs e)
         {
-            if (isRotating)
+            if (m_isRotating)
             {
-                isRotating = false;
-                //logString = "rotateButton_MouseUP";
-                //logString = "logString empty";
+                m_isRotating = false;
             }
-            /*
-            if (isDragged)
-            {
-                isDragged = false;
-                moveButton.Refresh();
-                moveButton.Location = new Point(rotateButton.Location.X - 100, rotateButton.Location.Y);
-                moveButton.Visible = true;
-            }*/
         }
+
+        #endregion
+
+        // This region contains 'helper' methods
+        #region Helper Methods
 
         /*
          * 3/31/15 7:35am
          */
         public void drawVerticalText(PaintEventArgs e)
         {
-            e.Graphics.TranslateTransform(moveButton.Location.X, moveButton.Location.Y);
+            e.Graphics.TranslateTransform(m_moveButton.Location.X, m_moveButton.Location.Y);
             e.Graphics.RotateTransform(m_textAngle);
-            e.Graphics.TranslateTransform(-moveButton.Location.X, -moveButton.Location.Y);
+            e.Graphics.TranslateTransform(-m_moveButton.Location.X, -m_moveButton.Location.Y);
             
             logString = "m_textOrigin = " + m_textOrigin;
             e.Graphics.DrawString(m_textString, m_textFont, m_textBrush, m_textOrigin);
             e.Graphics.ResetTransform();
+
+            SizeF currentStringWidth = getStringWidth(e);
+            logString += "\r\ncurrentStringWidth = " + currentStringWidth;
         }
+
+        /*
+         * 7:29am 4/15/2015
+         */
+        private SizeF getStringWidth(PaintEventArgs e)
+        {
+            int maxWidth = 200;
+            SizeF retWidth = new SizeF();
+            retWidth = e.Graphics.MeasureString(m_textString, m_textFont, maxWidth);
+
+            return retWidth;
+        }
+
+        #endregion
     }
 }

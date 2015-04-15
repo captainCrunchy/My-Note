@@ -26,7 +26,7 @@ using System.Windows.Forms;
  * formTextbox.cs - This file is responsible for appearance and events of the
  *                  richTextBox and its layers
  */
-namespace My_Note
+namespace My_Note  // Ctrl + m + o (expand),   Ctrl + m + l (collapse)
 {
     public partial class MainForm : Form
     {

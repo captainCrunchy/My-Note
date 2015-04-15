@@ -32,7 +32,7 @@ namespace My_Note
     {
         /*
          *  Many variables were created and initialized here for reusability and to avoid repetition
-         *  in order to increse performance. Some variables are initialized in the MainForm() constructor.
+         *  in order to increase performance. Some variables are initialized in the MainForm() constructor.
          */
         private ShapeContainer m_shapesStorage = new ShapeContainer();      // Storage of all the drawing data
         private bool m_isDrawing = false;                                   // Is the mouse currently down (transparentPanel_Mouse...)
@@ -50,6 +50,8 @@ namespace My_Note
         private Pen m_transparentPanelPen;                                  // Used to reduce repetitive data creation
 
         private bool m_canDash;
+
+        // NEED TO: update the button click to be on the left side
         
         // Temp
         //private VerticalText tempText = new VerticalText();
@@ -231,14 +233,6 @@ namespace My_Note
                 m_isDrawing = true;
                 m_drawStartPoint = e.Location;
                 m_canDash = true;
-            }
-            if (m_currentSelectedControl == e_SelectedControl.VERTTEXT)
-            {
-                //TextBox txtBox = new TextBox();
-                //txtBox.Text = "Enter text";
-                //txtBox.Location = e.Location;
-                //txtBox.Size = new System.Drawing.Size(110, 30);
-                //transparentPanel.Controls.Add(txtBox);
             }
         } /* private void transparentPanel_MouseDown(object sender, MouseEventArgs e) */
 
@@ -494,13 +488,12 @@ namespace My_Note
             {
                 // sending the MouseEventArg via constructor to assign location
                 VerticalText nextText = new VerticalText(e);
-                
-                mslog("adding vert text at " + e.Location);
-                //nextText.addVerticalText(e);
 
                 m_verticalTextList.Add(nextText);
-                transparentPanel.Controls.Add(nextText.moveButton);
-                transparentPanel.Controls.Add(nextText.rotateButton);
+                transparentPanel.Controls.Add(nextText.MoveButton);
+                transparentPanel.Controls.Add(nextText.OptionsButton);
+                transparentPanel.Controls.Add(nextText.RotateButton);
+
                 transparentPanel.Invalidate();
                 richTextBox.Invalidate();
                 backPanel.Invalidate();
@@ -560,16 +553,10 @@ namespace My_Note
                     p.Dispose();
                 }
             }
-            //tempText.drawVerticalText(e);
             for (int i = 0; i < m_verticalTextList.Count; i++)
             {
                 m_verticalTextList[i].drawVerticalText(e);
-                string toPrint = m_verticalTextList[i].logString;
-                mslog(toPrint);
                 //mslog(m_verticalTextList[i].logString);
-                
-                //VerticalText nextText = m_verticalTextList.ElementAt<i>;
-                //nextText.drawVerticalText(e);
             }
         } /* private void transparentPanel_Paint(object sender, PaintEventArgs e) */
 
@@ -704,7 +691,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  7:37 am 3/22/15
+         *  7:37am 3/22/15
          */
         private void saveWestArrow(MouseEventArgs e)
         {
@@ -1829,6 +1816,10 @@ namespace My_Note
         }
         
         #endregion
+
+        // This region contains 'helper' methods
+        #region Helper Methods
+        
         /* http://ericw.ca/notes/bresenhams-line-algorithm-in-csharp.html // 3/24/15 */
         public static IEnumerable<Point> GetPointsOnLine(int x0, int y0, int x1, int y1)
         {
@@ -1870,5 +1861,7 @@ namespace My_Note
             }
             yield break;
         }
+
+        #endregion
     }
 }

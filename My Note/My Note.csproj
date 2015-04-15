@@ -67,6 +67,12 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="VerticalText.cs" />
+    <Compile Include="VertTextOptionsBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VertTextOptionsBox.Designer.cs">
+      <DependentUpon>VertTextOptionsBox.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="mainForm.resx">
       <DependentUpon>mainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -79,6 +85,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="VertTextOptionsBox.resx">
+      <DependentUpon>VertTextOptionsBox.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
