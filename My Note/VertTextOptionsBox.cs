@@ -8,6 +8,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+/*
+ *  TITLE:
+ *      VertTextOptionsBox : Form
+ *      
+ *  DESCRIPTION:
+ *      The purpose of this class is to accomodate the attributes of VertText box.
+ * 
+ *  STRUCTURE:
+ *      None yet
+ */
+
 namespace My_Note
 {
     public partial class VertTextOptionsBox : Form

@@ -7,28 +7,27 @@ using System.Drawing;
 using System.Windows.Forms;
 
 /*
+ *  TITLE:
+ *      VerticalText
+ * 
  *  DESCRIPTION:
  *      The purpose of this class is to provide the capacity to draw a string that can be rotated to any angle, using
- *      several fonts and font sizes. This verticalText class comes with three buttons located just above it and
- *      spaced: one on each end and one in the middle. The left button is to allow the user to move the text around
- *      the screen. The middle button is to allow the user to enter an options pop-up window where they can change
- *      the text and its properties. The button on the right side is to allow the user to rotate the text and set
+ *      several fonts and font sizes. Each instance of this VerticalText class comes with three buttons located just
+ *      above it and spaced: one on each end and one in the middle. The left button is to allow the user to move the
+ *      text around the screen. The middle button is to allow the user to enter an options pop-up window where they
+ *      set the text and its properties. The button on the right side is to allow the user to rotate the text and set
  *      it to a desired angle.
  *      
  *  STRUCTURE:
  *      Variables were created and initialized immediately in the declaration section for reusability, to avoid
  *      repetion of creation in order to increase drawing performance. Some variables are initialized in the custom
- *      constructor. Other components have been separated into regions each with appropriate commenting.
+ *      constructor. Other components have been separated into regions each with appropriate comments.
  */
 
 namespace My_Note
 {
     class VerticalText
     {
-        /*
-         *  Many variables were created and initialized here for reusability and to avoid repetition
-         *  in order to increase performance. Some variables are initialized in the constructor.
-         */
         public string logString = "logString empty"; // TEMP
 
         private String m_textString = "Enter Text";                     // Actual text of vertical text
@@ -51,11 +50,12 @@ namespace My_Note
 
         // TODO: finish rotate functionality, probably in the rotateButton_MouseUp event
         // TODO: implement vertText options box
-        // TODO: add hidden method
+        // TODO: enable hidden methods
+        // TODO: handle the spacing of buttons based on text size
 
         /*
          * NAME
-         *  VerticalText() - constructor for VerticalText object
+         *  VerticalText() - custom constructor for VerticalText object
          *  
          * SYNOPSIS
          *  public VerticalText(MouseEventArgs e);
@@ -105,6 +105,7 @@ namespace My_Note
 
         // This region contains m_moveButton Property and Event Handlers
         #region m_moveButton methods
+
         public Button MoveButton
         {
             get
@@ -238,7 +239,7 @@ namespace My_Note
 
         #endregion
 
-        // This region contains m_optionsButton Event Handlers and Properties
+        // This region contains m_optionsButton Property and Event Handlers
         #region m_optionsButton methods
 
         public Button OptionsButton
@@ -286,7 +287,7 @@ namespace My_Note
         #endregion
 
         // This region contains m_rotateButton Property and Event Handlers
-        #region m_rotateButton methos
+        #region m_rotateButton methods
 
         public Button RotateButton
         {
