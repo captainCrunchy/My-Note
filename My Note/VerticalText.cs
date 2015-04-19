@@ -52,6 +52,7 @@ namespace My_Note
         // TODO: implement vertText options box
         // TODO: enable hidden methods
         // TODO: handle the spacing of buttons based on text size
+        // TODO: double check all comments
 
         /*
          * NAME
@@ -489,7 +490,7 @@ namespace My_Note
          *  None yet
          * 
          * RETURNS
-         *  Size of the string as a float point structure SizeF
+         *  Nothing
          *  
          * AUTHOR
          *  Murat Zazi
@@ -518,7 +519,7 @@ namespace My_Note
          *  None yet
          * 
          * RETURNS
-         *  Size of the string as a float point structure SizeF
+         *  Nothing
          *  
          * AUTHOR
          *  Murat Zazi

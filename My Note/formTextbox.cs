@@ -43,10 +43,6 @@ namespace My_Note
 {
     public partial class MainForm : Form
     {
-        /*
-         *  Many variables were created and initialized here for reusability and to avoid repetition
-         *  in order to increase performance. Some variables are initialized in the MainForm() constructor.
-         */
         private ShapeContainer m_shapesStorage = new ShapeContainer();      // Storage of all the drawing data
         private bool m_isDrawing = false;                                   // Is the mouse currently down (transparentPanel_Mouse...)
         private bool m_isErasing = false;                                   // Is the mouse currently down (transparentPanel_Mouse...)
@@ -61,12 +57,9 @@ namespace My_Note
         private Int32 m_arrowFarPoint = 0;                                  // Used in the diagonal arrows
         private Graphics m_transparentPanelGraphics;                        // Used to reduce repetitive data creation
         private Pen m_transparentPanelPen;                                  // Used to reduce repetitive data creation
+        private bool m_canDash = false;                                     // Used when saving dashed or dotted lines
 
         // TODO: update left mouse click, comments
-        private bool m_canDash;
-
-        // NEED TO: update the button click to be on the left side
-        
         // Temp
         //private VerticalText tempText = new VerticalText();
         private List<VerticalText> m_verticalTextList = new List<VerticalText>();
@@ -95,13 +88,14 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  8:44am 3/11/15
+         *  8:44am 3/11/2015
          */
         private void richTextBox_TextChanged(object sender, EventArgs e)
         {
             richTextBox.Invalidate();
             transparentPanel.Invalidate();
         }
+
         #endregion
 
         // This region contains event handler methods of the
@@ -130,7 +124,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  12:47pm 3/7/15
+         *  12:47pm 3/7/2015
          */
         private void transparentPanel_Click(object sender, System.EventArgs e)
         {
@@ -165,7 +159,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  9:01 am 3/10/15
+         *  9:01 am 3/10/2015
          */
         private void transparentPanel_MouseDown(object sender, MouseEventArgs e)
         {
@@ -272,7 +266,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  9:01am 3/10/15
+         *  9:01am 3/10/2015
          *  
          *  This method can probably be improved by testing m_isDrawing only once in an if() method
          *  then adding the rest of the commands within it. This will reduce the number of cases tested
@@ -390,7 +384,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  9:49am 3/10/15
+         *  9:49am 3/10/2015
          */
         private void transparentPanel_MouseUp(object sender, MouseEventArgs e)
         {
@@ -525,6 +519,39 @@ namespace My_Note
 
         /*
          * NAME
+         *  transparentPanel_Layout() - triggers _Paint event method
+         *  
+         * SYNOPSIS
+         *  private void transparentPanel_Layout(object sender, LayoutEventArgs e);
+         *      sender  -> does nothing
+         *      e       -> does nothing
+         * 
+         * DESCRIPTION
+         *  This method gets called automatically whenever any element within the transparent panel
+         *  makes any kind of change. It is declared to accomodate the behavior of verticalTextBox
+         *  by repainting itself and updating the view.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  3:02pm 4/12/2015
+         */
+        private void transparentPanel_Layout(object sender, LayoutEventArgs e)
+        {
+            if (m_currentSelectedControl == e_SelectedControl.VERTTEXT)
+            {
+                transparentPanel.Invalidate();
+                richTextBox.Invalidate();
+                backPanel.Invalidate();
+            }
+        } /* private void transparentPanel_Layout(object sender, LayoutEventArgs e) */
+
+        /*
+         * NAME
          *  transparentPanel_Paint() - updates the graphics drawn on the transparent panel
          * 
          * SYNOPSIS
@@ -548,7 +575,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  9:52am 3/10/15
+         *  9:52am 3/10/2015
          */
         private void transparentPanel_Paint(object sender, PaintEventArgs e)
         {
@@ -598,7 +625,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  2:44pm 3/22/15
+         *  2:44pm 3/22/2015
          */
         private void drawWithPencil(MouseEventArgs e)
         {
@@ -630,7 +657,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  2:49pm 3/22/15
+         *  2:49pm 3/22/2015
          */
         private void startErasing(MouseEventArgs e)
         {
@@ -661,7 +688,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  9:20am 3/20/15
+         *  9:20am 3/20/2015
          */
         private void drawWestArrow(MouseEventArgs e)
         {
@@ -705,7 +732,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  7:37am 3/22/15
+         *  7:37am 3/22/2015
          */
         private void saveWestArrow(MouseEventArgs e)
         {
@@ -763,7 +790,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  9:38am 3/20/15
+         *  9:38am 3/20/2015
          */
         private void drawNorthWestArrow(MouseEventArgs e)
         {
@@ -818,7 +845,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  7:52am 3/22/15
+         *  7:52am 3/22/2015
          */
         private void saveNorthWestArrow(MouseEventArgs e)
         {
@@ -872,7 +899,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  6:51pm 3/21/15
+         *  6:51pm 3/21/2015
          */
         private void drawNorthArrow(MouseEventArgs e)
         {
@@ -916,7 +943,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  8:07am 3/22/15
+         *  8:07am 3/22/2015
          */
         private void saveNorthArrow(MouseEventArgs e)
         {
@@ -974,7 +1001,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  12:19pm 3/22/15
+         *  12:19pm 3/22/2015
          */
         private void drawNorthEastArrow(MouseEventArgs e)
         {
@@ -1029,7 +1056,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  12:44pm 3/22/15
+         *  12:44pm 3/22/2015
          */
         private void saveNorthEastArrow(MouseEventArgs e)
         {
@@ -1083,7 +1110,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  1:01pm 3/22/15
+         *  1:01pm 3/22/2015
          */
         private void drawEastArrow(MouseEventArgs e)
         {
@@ -1127,7 +1154,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  1:12pm 3/22/15
+         *  1:12pm 3/22/2015
          */
         private void saveEastArrow(MouseEventArgs e)
         {
@@ -1185,7 +1212,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  1:31pm 3/22/15
+         *  1:31pm 3/22/2015
          */
         private void drawSouthEastArrow(MouseEventArgs e)
         {
@@ -1240,7 +1267,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  1:42pm 3/22/15
+         *  1:42pm 3/22/2015
          */
         private void saveSouthEastArrow(MouseEventArgs e)
         {
@@ -1294,7 +1321,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  1:54pm 3/22/15
+         *  1:54pm 3/22/2015
          */
         private void drawSouthArrow(MouseEventArgs e)
         {
@@ -1338,7 +1365,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  2:00pm 3/22/15
+         *  2:00pm 3/22/2015
          */
         private void saveSouthArrow(MouseEventArgs e)
         {
@@ -1396,7 +1423,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  2:08pm 3/22/15
+         *  2:08pm 3/22/2015
          */
         private void drawSouthWestArrow(MouseEventArgs e)
         {
@@ -1451,7 +1478,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  2:14pm 3/22/15
+         *  2:14pm 3/22/2015
          */
         private void saveSouthWestArrow(MouseEventArgs e)
         {
@@ -1505,7 +1532,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  3:19pm 3/22/15
+         *  3:19pm 3/22/2015
          */
         private void drawRectangle(MouseEventArgs e)
         {
@@ -1543,7 +1570,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  7:38pm 3/23/15
+         *  7:38pm 3/23/2015
          */
         private void saveRectangle(MouseEventArgs e)
         {
@@ -1595,7 +1622,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  6:27pm 3/23/15
+         *  6:27pm 3/23/2015
          */
         private void drawEllipse(MouseEventArgs e)
         {
@@ -1611,14 +1638,32 @@ namespace My_Note
         } /* private void drawEllipse(MouseEventArgs e) */
 
         /*
-         * 9:00am 3/24/15
+         * NAME
+         *  saveEllipse() - saves points generated by an ellipse shape
+         *  
+         * SYNOPSIS
+         *  private void saveEllipse(MouseEventArgs e);
+         *      e       -> used to get the current location of the cursor
+         * 
+         * DESCRIPTION
+         *  Saves points generated by an ellipse shape. First calculate the absolute width and height of
+         *  the ellipse based on m_drawStartPoint and e.Location (current point) variables. Second, use a
+         *  GraphicsPath object to plot a set of points on the panel based on generated origin and size.
+         *  Third, use GraphicsPathIterator object to extract a set of points from GraphicsPant object, this
+         *  technique seems to be best for extracting the most points. Finally, save the generated points
+         *  in the m_shapesStorage object. The reason for savig a set of points is to accomodate erase functionality.
+         * 
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi (proudly)
+         *  
+         * DATE
+         *  9:00am 3/24/2015
          */
         private void saveEllipse(MouseEventArgs e)
         {
-            mslog("Ellipse");
-            mslog("start point = " + m_drawStartPoint);
-            mslog("end point = " + e.Location + "\r\n");
-
             Point origin = new Point(0, 0);
             origin.X = Math.Min(m_drawStartPoint.X, e.Location.X);
             origin.Y = Math.Min(m_drawStartPoint.Y, e.Location.Y);
@@ -1631,14 +1676,8 @@ namespace My_Note
             PointF[] ellipsePoints = ellipsePath.PathPoints;
             ellipsePath.Flatten();
             Int32 pointCount = ellipsePoints.Length;
-            mslog("point count = " + pointCount);
 
             GraphicsPathIterator iterator = new GraphicsPathIterator(ellipsePath);
-            int pathCount = iterator.Count;
-            int subPathCount = iterator.SubpathCount;
-            mslog("pathCount = " + pathCount);
-            mslog("subPathCount = " + subPathCount);
-
             PointF[] points = new PointF[iterator.Count];
             byte[] types = new byte[iterator.Count];
             int numPoints = iterator.Enumerate(ref points, ref types);
@@ -1646,23 +1685,9 @@ namespace My_Note
             m_shapeNumber++;
             for (int i = 0; i < points.Length; i++)
             {
-                //mslog("it point = " + points[i]);
                 Point newPoint = new Point(Convert.ToInt32(points[i].X), Convert.ToInt32(points[i].Y));
-                //mslog("now point = " + newPoint);
                 m_shapesStorage.AddShape(newPoint, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
             }
-
-                //m_shapeNumber++;
-                for (int i = 0; i < ellipsePoints.Length; i++)
-                {
-                    //mslog("point = " + ellipsePoints[i]);
-                    //Point nextPoint = Point.Round(ellipsePoints[i]);
-                    //Point nextPoint = new Point(0, 0);
-                    //nextPoint.X = (int)ellipsePoints[i].X;
-                    //nextPoint.Y = (int)ellipsePoints[i].Y;
-                    //m_shapesStorage.AddShape(nextPoint, m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
-                }
-
         } /* private void saveEllipse(MouseEventArgs e) */
 
         /*
@@ -1676,7 +1701,7 @@ namespace My_Note
          * DESCRIPTION
          *  Draws a solid line in any direction with user desired length. This method is optimized and used by
          *  the MouseMove event handler when the user has a mouse button down and is dragging the line to desired
-         *  length. Drawing is very dynamic in order to respond to user input.so saving does not occur here
+         *  length. Drawing is very dynamic in order to respond to user input, so saving does not occur here.
          * 
          * RETURNS
          *  Nothing
@@ -1685,7 +1710,7 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  2:39pm 3/22/15
+         *  2:39pm 3/22/2015
          */
         private void drawSolidLine(MouseEventArgs e)
         {
@@ -1697,23 +1722,29 @@ namespace My_Note
         } /* private void drawSolidLine(MouseEventArgs e) */
 
         /*
-         * 9:05am 3/24/15
+         * NAME
+         *  saveSolidLine() - saves points generated by a solid line
+         *  
+         * SYNOPSIS
+         *  private void saveSolidLine(MouseEventArgs e);
+         *      e       -> used to get the current location of the cursor
+         * 
+         * DESCRIPTION
+         *  Saves points generated by a solid line. This methods uses a 'helper' method GetPointsOnLine to
+         *  generate a set of points based on start and end points and saves these points in a m_shapesStorage
+         *  object. The reason for savig a set of points is to accomodate erase functionality.
+         * 
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  9:05am 3/24/2015
          */
         private void saveSolidLine(MouseEventArgs e)
         {
-            /*
-            // Logging results
-            Int32 coordWidth = Math.Abs(m_drawStartPoint.X - e.Location.X);
-            Int32 coordHeight = Math.Abs(m_drawStartPoint.Y - e.Location.Y);
-            double hypotenuse = Math.Sqrt(coordWidth * coordWidth + coordHeight * coordHeight);
-            mslog("Solid line");
-            mslog("width = " + coordWidth);
-            mslog("height = " + coordHeight);
-            mslog("hypotenuse = " + hypotenuse);
-            mslog("m = " + coordHeight + "/" + coordWidth);
-            mslog("start point = " + m_drawStartPoint);
-            mslog("end point = " + e.Location + "\r\n");
-            */
             m_shapeNumber++;
             IEnumerable<Point> points = GetPointsOnLine(m_drawStartPoint.X, m_drawStartPoint.Y, e.Location.X, e.Location.Y);
             List<Point> pointList = points.ToList();
@@ -1721,40 +1752,68 @@ namespace My_Note
             {
                 m_shapesStorage.AddShape(pointList[i], m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
             }
-
-            // Refreshing
             transparentPanel.Refresh();
-            //transparentPanel.Invalidate();
-            //richTextBox.Invalidate();
-            //backPanel.Invalidate();
         } /* private void saveSolidLine(MouseEventArgs e) */
 
         /*
-         * 8:40am 3/30/15
+         * NAME
+         *  drawDashedLine() - draws a dashed line in any direction
          * 
+         * SYNOPSIS
+         *  private void drawDashedLine(MouseEventArgs e);
+         *      e       -> used to get the current location of the cursor
+         *      
+         * DESCRIPTION
+         *  Draws a dashed line in any direction with user desired length. This method is optimized and used by
+         *  the MouseMove event handler when the user has a mouse button down and is dragging the line to desired
+         *  length. Drawing is very dynamic in order to respond to user input, so saving does not occur here.
+         * 
+         * RETURNS
+         *  Nothing
+         * 
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  8:40am 3/30/2015
          */
-
         private void drawDashedLine(MouseEventArgs e)
         {
             float[] dashValues = { 5, 5 };
-
             Pen dashPen = new Pen(m_currentDrawColor, m_currentPenWidth);
             dashPen.DashPattern = dashValues;
-            //dashPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
-            
             m_transparentPanelGraphics.DrawLine(dashPen, m_drawStartPoint, e.Location);
 
             transparentPanel.Invalidate();
             richTextBox.Invalidate();
             backPanel.Invalidate();
-        }
+        } /* private void drawDashedLine(MouseEventArgs e) */
 
         /*
-         * 8:58am 3/30/15
+         * NAME
+         *  saveDashedLine() - saves points generated by a dashed line
+         *  
+         * SYNOPSIS
+         *  private void saveDashedLine(MouseEventArgs e);
+         *      e       -> used to get the current location of the cursor
+         * 
+         * DESCRIPTION
+         *  Saves points generated by a dashed line. This methods uses a 'helper' method GetPointsOnLine to
+         *  generate a set of points based on start and end points. A for-loop iterates over the newly generated
+         *  set of points to selectively save only those points that form a dashed line. The newly selected points
+         *  are saved in m_shapesStorage object. The reason for savig a set of points is to accomodate erase functionality.
+         * 
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  8:58am 3/30/2015
          */
         private void saveDashedLine(MouseEventArgs e)
         {
-           // m_shapeNumber++;
             IEnumerable<Point> points = GetPointsOnLine(m_drawStartPoint.X, m_drawStartPoint.Y, e.Location.X, e.Location.Y);
             List<Point> pointList = points.ToList();
             for (int i = 0; i < pointList.Count; i++)
@@ -1762,47 +1821,79 @@ namespace My_Note
                 if (i % 5 == 0)
                 {
                     m_canDash = false;
-                    //mslog("false i = " + i);
                 }
                 if (i % 10 == 0)
                 {
                     m_canDash = true;
                     m_shapeNumber++;
-                    //mslog("true i = " + i);
                 }
                 if (m_canDash)
                 {
                     m_shapesStorage.AddShape(pointList[i], m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
-                    //mslog("i = " + i);
                 }
             }
-
-            // Refreshing
             transparentPanel.Refresh();
-        }
+        } /* private void saveDashedLine(MouseEventArgs e) */
+
         /*
-         *  6:09pm 3/30/15
+         * NAME
+         *  drawDottedLine() - draws a dotted line in any direction
+         * 
+         * SYNOPSIS
+         *  private void drawDashedLine(MouseEventArgs e);
+         *      e       -> used to get the current location of the cursor
+         *      
+         * DESCRIPTION
+         *  Draws a dotted line in any direction with user desired length. This method is optimized and used by
+         *  the MouseMove event handler when the user has a mouse button down and is dragging the line to desired
+         *  length. Drawing is very dynamic in order to respond to user input, so saving does not occur here.
+         * 
+         * RETURNS
+         *  Nothing
+         * 
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  6:09pm 3/30/2015
          */
         private void drawDottedLine(MouseEventArgs e)
         {
             float[] dashValues = { 2, 2 };
-
             Pen dashPen = new Pen(m_currentDrawColor, m_currentPenWidth);
             dashPen.DashPattern = dashValues;
-            //dashPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
-
             m_transparentPanelGraphics.DrawLine(dashPen, m_drawStartPoint, e.Location);
 
             transparentPanel.Invalidate();
             richTextBox.Invalidate();
             backPanel.Invalidate();
-        }
+        } /* private void drawDottedLine(MouseEventArgs e) */
+
         /*
-         * 6:13pm 3/30/15
+         * NAME
+         *  saveDottedLine() - saves points generated by a dashed line
+         *  
+         * SYNOPSIS
+         *  private void saveDottedLine(MouseEventArgs e);
+         *      e       -> used to get the current location of the cursor
+         * 
+         * DESCRIPTION
+         *  Saves points generated by a dotted line. This methods uses a 'helper' method GetPointsOnLine to
+         *  generate a set of points based on start and end points. A for-loop iterates over the newly generated
+         *  set of points to selectively save only those points that form a dotted line. The newly selected points
+         *  are saved in m_shapesStorage object. The reason for savig a set of points is to accomodate erase functionality.
+         * 
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  6:13pm 3/30/2015
          */
         private void saveDottedLine(MouseEventArgs e)
         {
-            // m_shapeNumber++;
             IEnumerable<Point> points = GetPointsOnLine(m_drawStartPoint.X, m_drawStartPoint.Y, e.Location.X, e.Location.Y);
             List<Point> pointList = points.ToList();
             for (int i = 0; i < pointList.Count; i++)
@@ -1810,22 +1901,17 @@ namespace My_Note
                 if (i % 2 == 0)
                 {
                     m_canDash = false;
-                    //mslog("false i = " + i);
                 }
                 if (i % 4 == 0)
                 {
                     m_canDash = true;
                     m_shapeNumber++;
-                    //mslog("true i = " + i);
                 }
                 if (m_canDash)
                 {
                     m_shapesStorage.AddShape(pointList[i], m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
-                    //mslog("i = " + i);
                 }
             }
-
-            // Refreshing
             transparentPanel.Refresh();
         }
         
@@ -1833,8 +1919,36 @@ namespace My_Note
 
         // This region contains 'helper' methods
         #region Helper Methods
-        
-        /* http://ericw.ca/notes/bresenhams-line-algorithm-in-csharp.html // 3/24/15 */
+
+        /*
+         * NAME
+         *  GetPointsOnLine() - calculates and returns a set of points between two points
+         *  
+         * SYNOPSIS
+         *  public static IEnumerable<Point> GetPointsOnLine(int x0, int y0, int x1, int y1);
+         *      x0      -> x-coordinate of starting point
+         *      y0      -> y-coordinate of starting point
+         *      x1      -> x-coordinate of end point
+         *      y1      -> y-coordinate of end point
+         * 
+         * DESCRIPTION
+         *  This method utilizes the famous Bresenham's line algorithms to calculate and return
+         *  a set of points between a start point and end point. This method is used by several
+         *  methods that save solid, dashed, and solid lines by using a set of points. The reason
+         *  for saving individual points is to accomodate erase functionality. This method was
+         *  taken from an author who customized this algorithm specifically for C#, the author's
+         *  credits are documented.
+         *  
+         * RETURNS
+         *  IEnumerable<Point> type, which is a list of Point structures
+         *  
+         * AUTHOR
+         *  Geoff Samuel, May 23, 2011
+         *  http://ericw.ca/notes/bresenhams-line-algorithm-in-csharp.html
+         *  
+         * DATE
+         *  10:00am 3/24/2015
+         */
         public static IEnumerable<Point> GetPointsOnLine(int x0, int y0, int x1, int y1)
         {
             bool steep = Math.Abs(y1 - y0) > Math.Abs(x1 - x0);
@@ -1874,7 +1988,7 @@ namespace My_Note
                 }
             }
             yield break;
-        }
+        } /* public static IEnumerable<Point> GetPointsOnLine(int x0, int y0, int x1, int y1) */
 
         #endregion
     }

@@ -16,8 +16,8 @@ using System.Windows.Forms;
  *      any graphics or drawing. It is currently used as a layer on top of a rich text box. It draws
  *      lines to resemble those of a notebook and also allows user to 'freehand' draw custom shapes
  *      anywhere on the panel. Initial code for this class was taken from a website and slightly modified
- *      to accomodate the needs of this application. These modifications are updates to member variables
- *      to match the naming conventions of this application and an additional 'struct'.
+ *      to accomodate the needs of this application. These modifications are new member variables, new
+ *      struct, update to original methods, and update to match naming conventions of this application.
  *      A link to the author and site is provided below:
  *      Patrick Bailey, February 5, 2014
  *      http://www.whiteboardcoder.com/2014/02/visual-studio-2012-c-transparent.html
@@ -30,18 +30,21 @@ namespace My_Note
 {
     class TransparentPanel : Panel
     {
-        // Adjusts line spacing based on user selected font
+        // Used to adjust line spacing based on user selected font
         private struct lineSpaceForFont
         {
             public const float MICROSOFT_SANS_SERIF = 20;
         }
 
-        private float m_thisWidth;
-        private float m_thisHeight;
-        private float m_lineBegin;
-        private float m_lineEnd;
-        private float m_nextLine;
+        private float m_thisWidth;                      // Width of this panel
+        private float m_thisHeight;                     // Height of this panel
+        private float m_lineBegin;                      // X-coordinate of the line beginning
+        private float m_lineEnd;                        // X-coordinate of the line end
+        private float m_nextLine;                       // Y-coordinate of the line (dynamic)
+        private Pen m_bluePen = new Pen(Color.Blue);    // Used to draw horizontal lines
+        private Pen m_redPen = new Pen(Color.Red);      // Used to draw vertical lines
 
+        // The modification to make the panel 'transparent'
         protected override CreateParams CreateParams
         {
             get
@@ -52,6 +55,7 @@ namespace My_Note
             }
         }
         
+        // Updated by objects using this class
         protected override void OnPaintBackground(PaintEventArgs e)
         {
             m_thisWidth = this.Size.Width;
@@ -61,20 +65,17 @@ namespace My_Note
             m_nextLine = 55;
         }
         
+        // Draws a set of lines to resemble a page in a notebook
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);  // This draws the shapes by 'owner' object
             // The rest draws lines
-            Graphics g = e.Graphics;
-            Pen bluePen = new Pen(Color.Blue);
             for (int i = 0; i < 30; i++)
             {
-                e.Graphics.DrawLine(bluePen, m_lineBegin, m_nextLine, m_lineEnd, m_nextLine);
+                e.Graphics.DrawLine(m_bluePen, m_lineBegin, m_nextLine, m_lineEnd, m_nextLine);
                 m_nextLine += lineSpaceForFont.MICROSOFT_SANS_SERIF;
             }
-
-            Pen redPen = new Pen(Color.Red);
-            e.Graphics.DrawLine(redPen, 35, 5, 35, m_thisHeight - 5);
+            e.Graphics.DrawLine(m_redPen, 35, 5, 35, m_thisHeight - 5);
         }
     }
 }

@@ -19,7 +19,7 @@ using System.Drawing;
  *      made to member variables and arguments in methods by udpating the naming conventions to match this application.
  *      Public member variables were converted to private and assigned properties.
  *      A link to the author and site is provided below:
- *      Geoff Samuel,  23 May 2011
+ *      Geoff Samuel, May 23, 2011
  *      http://www.codeproject.com/Articles/198419/Painting-on-a-panel
  * 
  *  STRUCTURE:

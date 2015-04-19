@@ -43,6 +43,7 @@ namespace My_Note
 {
     public partial class MainForm : Form
     {
+        // The types of text and drawing controls available to the user
         private enum e_SelectedControl
         {
             TEXT, PENCIL, ERASER, WARROW, NWARROW, NARROW,
@@ -50,18 +51,14 @@ namespace My_Note
             RECTANGLE, ELLIPSE, SOLID, DASHED, DOTTED, VERTTEXT
         }
 
-        private e_SelectedControl m_currentSelectedControl;
-        private Color m_selectedControlButtonColor;
+        private e_SelectedControl m_currentSelectedControl;     // Used to indicate the type of control the user selected
+        private Color m_selectedControlButtonColor;             // Used to indicate the current color to be used by a control
 
         public MainForm()
         {
             InitializeComponent();
-
-            // Initialize variables and values of controls
             m_currentSelectedControl = e_SelectedControl.TEXT;
             m_selectedControlButtonColor = Color.SandyBrown;
-
-            // Set default values
             textSelectButton.BackColor = m_selectedControlButtonColor;
             fontComboBox.Text = "Microsoft Sans Serif";
             richTextBox.Font = new Font("Microsoft Sans Serif", 12);
@@ -69,16 +66,60 @@ namespace My_Note
             m_transparentPanelPen = new Pen(m_currentDrawColor);
         }
 
+        /*
+         * NAME
+         *  private void MainForm_Load() - prepares elements before the form is shown on screen
+         *  
+         * SYNOPSIS
+         *  private void MainForm_Load(object sender, System.EventArgs e);
+         *      sender  -> does nothing
+         *      e       -> does nothing
+         * 
+         * DESCRIPTION
+         *  This method gets called before elements are shown on screen. It is used to update and
+         *  assign properties to elements before they are shown on screen. This is done here because
+         *  it could not be accomplished in the constructor.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  10:28am 3/17/2015
+         */
         private void MainForm_Load(object sender, System.EventArgs e)
         {
             textSelectButton.Select();
-        }
-
-        private void MainForm_Shown(object sender, System.EventArgs e)
-        {
-
-        }
-
+        } /* private void MainForm_Load(object sender, System.EventArgs e) */
+        
+        /*
+         * NAME
+         *  fontComboBox_SelectedIndexChanged() - changes the text font
+         *  
+         * SYNOPSIS
+         *  private void fontComboBox_SelectedIndexChanged(object sender, System.EventArgs e);
+         *      sender  -> does nothing
+         *      e       -> does nothing
+         * 
+         * DESCRIPTION
+         *  This method gets called upon selecting a choice of font style from a combo box. This will
+         *  only happen before the user types anything in the text box. This is because each font has
+         *  specific line spacing assigned to it. Furthermore, text has to stay coordinated with any
+         *  drawing on the panel. Modifying text font will change its size and spacing relative to any
+         *  drawing. After the user makes initial modification to the text box or the panel, the combo
+         *  box will be disabled and this method will no longer be called.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  10:30am 3/17/2015
+         */
         private void fontComboBox_SelectedIndexChanged(object sender, System.EventArgs e)
         {
             int selectedIndex = fontComboBox.SelectedIndex;
@@ -97,9 +138,9 @@ namespace My_Note
                     richTextBox.SelectionFont = new Font("Times New Roman", 12);
                     break;
             }
-        }
+        } /* private void fontComboBox_SelectedIndexChanged(object sender, System.EventArgs e) */
 
-        // Temp
+        // Temp (Begin)
         private void moveLogCursor()
         {
             logTextBox.SelectionStart = logTextBox.Text.Length;
@@ -111,27 +152,10 @@ namespace My_Note
             logTextBox.Text += a_str + "\r\n";
             moveLogCursor();
         }
-
-        private void button1_Click(object sender, EventArgs e)
+        private void clearLogButton_Click(object sender, EventArgs e)
         {
             logTextBox.Text = "";
         }
-
-        private void MainForm_MouseMove(object sender, MouseEventArgs e)
-        {
-            //mslog("form move");
-        }
-        /*
-         * 4/12/15 3:02pm
-         */
-        private void transparentPanel_Layout(object sender, LayoutEventArgs e)
-        {
-            if (m_currentSelectedControl == e_SelectedControl.VERTTEXT)
-            {
-                transparentPanel.Invalidate();
-                richTextBox.Invalidate();
-                backPanel.Invalidate();
-            }
-        }
+        // Temp (End)
     }
 }

@@ -79,7 +79,7 @@
             this.richTextBox = new System.Windows.Forms.RichTextBox();
             this.backPanel = new System.Windows.Forms.Panel();
             this.logTextBox = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.clearLog = new System.Windows.Forms.Button();
             this.transparentPanel = new My_Note.TransparentPanel();
             this.menuStrip1.SuspendLayout();
             this.toolbarPanel.SuspendLayout();
@@ -625,15 +625,15 @@
             this.logTextBox.Size = new System.Drawing.Size(281, 605);
             this.logTextBox.TabIndex = 5;
             // 
-            // button1
+            // clearLog
             // 
-            this.button1.Location = new System.Drawing.Point(12, 158);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "Clear log";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.clearLog.Location = new System.Drawing.Point(12, 158);
+            this.clearLog.Name = "clearLog";
+            this.clearLog.Size = new System.Drawing.Size(75, 23);
+            this.clearLog.TabIndex = 6;
+            this.clearLog.Text = "Clear log";
+            this.clearLog.UseVisualStyleBackColor = true;
+            this.clearLog.Click += new System.EventHandler(this.clearLogButton_Click);
             // 
             // transparentPanel
             // 
@@ -653,7 +653,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(975, 739);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.clearLog);
             this.Controls.Add(this.logTextBox);
             this.Controls.Add(this.transparentPanel);
             this.Controls.Add(this.richTextBox);
@@ -664,8 +664,6 @@
             this.Name = "MainForm";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.MainForm_Load);
-            this.Shown += new System.EventHandler(this.MainForm_Shown);
-            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MainForm_MouseMove);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.toolbarPanel.ResumeLayout(false);
@@ -730,7 +728,7 @@
         private System.Windows.Forms.Panel backPanel;
         private My_Note.TransparentPanel transparentPanel;
         private System.Windows.Forms.TextBox logTextBox;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button clearLog;
     }
 }
 
