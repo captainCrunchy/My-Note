@@ -23,7 +23,7 @@ using System.Windows.Forms;
  *                    constructor and is responsible for coordinating interactions between
  *                    other parts of the class and the application.
  *               
- *      formMenuStrip.cs - (You are here) This file handles events that are triggered by
+ *      formMenuStrip.cs - (YOU ARE HERE) This file handles events that are triggered by
  *                         elements of the menu strip in the form. (Ex: File, Edit, ... Help)
  *                    
  *      formToolbar.cs - This file is responsible for controls in the toolbar and

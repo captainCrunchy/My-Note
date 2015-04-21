@@ -27,8 +27,10 @@ using System.Drawing;
  *      formMenuStrip.cs - This file handles events that are triggered by elements
  *                         of the menu strip in the form. (Ex: File, Edit, ... Help)
  *                    
- *      formToolbar.cs - (You are here) This file is responsible for controls in the toolbar
- *                       and their events in the main form. (Ex: Font, Text, Color, Line...)
+ *      formToolbar.cs - (YOU ARE HERE) This file is responsible for controls in the toolbar and their
+ *                       events in the main form. (Ex: Font, Text, Color, Line...). Due to the amount of
+ *                       event methods and simplicity of their functionality, not all methods are fully
+ *                       commented.
  *                  
  *      formTextbox.cs - This file is responsible for appearance and events of the richTextBox and its
  *                       layers. Variables were created and initialized immediately in the declaration
@@ -42,8 +44,12 @@ namespace My_Note
     // TODO: update left mouse click, comments
     public partial class MainForm : Form
     {
-        /*
-         * 3/17/15 12:12pm
+        /*  This method sets the current control to text editing. Updates the panel's cursor to match the
+         *  current control. Updates selection colors for controls.
+         *  
+         *  Murat Zazi
+         *  
+         *  12:12pm 3/17/2015
          */
         private void textSelectButton_Click(object sender, EventArgs e)
         {
@@ -53,8 +59,12 @@ namespace My_Note
             textSelectButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*
-         * 3/17/15 12:13pm
+        /*  This method sets the current control to pencil editing. Updates the panel's cursor to match the 
+         *  current control. Updates selection colors for controls.
+         *  
+         *  Murat Zazi
+         *  
+         *  12:13pm 3/17/2015
          */
         private void pencilSelectButton_Click(object sender, EventArgs e)
         {
@@ -62,11 +72,14 @@ namespace My_Note
             m_currentSelectedControl = e_SelectedControl.PENCIL;
             setDefaultBackColorForControls();
             pencilSelectButton.BackColor = m_selectedControlButtonColor;
-            //Brush = true;
         }
 
-        /*
-         * 3/17/15 12:14pm
+        /*  This method sets the current control to eraser. Updates the panel's cursor to match the
+         *  current control. Updates selection colors for controls.
+         *  
+         *  Murat Zazi
+         *  
+         *  12:14pm 3/17/2015
          */
         private void eraserSelectButton_Click(object sender, EventArgs e)
         {
@@ -74,11 +87,14 @@ namespace My_Note
             m_currentSelectedControl = e_SelectedControl.ERASER;
             setDefaultBackColorForControls();
             eraserSelectButton.BackColor = m_selectedControlButtonColor;
-            //Brush = false;
         }
-        
-        /*
-         * 3/17/15 12:15pm
+
+        /*  This method sets the current control to draw west arrow. Updates the panel's cursor
+         *  to match the current control. Updates selection colors for controls.
+         *  
+         *  Murat Zazi
+         *  
+         *  12:15pm 3/17/2015
          */
         private void WarrowButton_Click(object sender, EventArgs e)
         {
@@ -88,8 +104,12 @@ namespace My_Note
             WarrowButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*
-         * 3/19/15 7:27AM
+        /*  This method sets the current control to draw north west arrow. Updates the panel's cursor
+         *  to match the current control. Updates selection colors for controls.
+         *  
+         *  Murat Zazi
+         *
+         *  7:27am 3/19/2015
          */
         private void NWarrowButton_Click(object sender, EventArgs e)
         {
@@ -99,8 +119,12 @@ namespace My_Note
             NWarrowButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*
-         * 3/19/15 7:28AM
+        /*  This method sets the current control to draw north arrow. Updates the panel's cursor to
+         *  match the current control. Updates selection colors for controls.
+         *  
+         *  Murat Zazi
+         *  
+         *  7:28am 3/19/2015
          */
         private void NarrowButton_Click(object sender, EventArgs e)
         {
@@ -110,8 +134,12 @@ namespace My_Note
             NarrowButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*
-         * 3/19/15 7:29AM
+        /*  This method sets the current control to draw north east arrow. Updates the panel's cursor to
+         *  match the current control. Updates selection colors for controls.
+         *  
+         *  Murat Zazi
+         *  
+         *  7:29am 3/19/2015
          */
         private void NEarrowButton_Click(object sender, EventArgs e)
         {
@@ -120,8 +148,13 @@ namespace My_Note
             setDefaultBackColorForControls();
             NEarrowButton.BackColor = m_selectedControlButtonColor;
         }
-        /*
-         * 3/19/15 7:30AM
+
+        /*  This method sets the current control to draw east arrow. Updates the panel's cursor to
+         *  match the current control. Updates selection colors for controls.
+         *  
+         *  Murat Zazi
+         *
+         *  7:30am 3/19/2015
          */
         private void EarrowButton_Click(object sender, EventArgs e)
         {
@@ -131,8 +164,12 @@ namespace My_Note
             EarrowButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*
-         * 3/19/15 7:31AM
+        /*  This method sets the current control to draw south east arrow. Updates the panel's cursor to
+         *  match the current control. Updates selection colors for controls.
+         *  
+         *  Murat Zazi
+         *
+         *  7:31am 3/19/2015
          */
         private void SEarrowButton_Click(object sender, EventArgs e)
         {
@@ -142,8 +179,12 @@ namespace My_Note
             SEarrowButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*
-         * 3/19/15 7:32AM
+        /*  This method sets the current control to draw south arrow. Updates the panel's cursor to
+         *  match the current control. Updates selection colors for controls.
+         *  
+         *  Murat Zazi
+         *
+         *  7:32am 3/19/2015
          */
         private void SarrowButton_Click(object sender, EventArgs e)
         {
@@ -153,8 +194,12 @@ namespace My_Note
             SarrowButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*
-         * 3/19/15 7:33AM
+        /*  This method sets the current control to draw south west arrow. Updates the panel's cursor to
+         *  match the current control. Updates selection colors for controls.
+         *  
+         *  Murat Zazi
+         *
+         *  7:33am 3/19/2015
          */
         private void SWarrowButton_Click(object sender, EventArgs e)
         {
@@ -164,7 +209,10 @@ namespace My_Note
             SWarrowButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*
+        /*  This method sets the current control to draw rectangle. Updates the panel's cursor to
+         *  match the current control. Updates selection colors for controls.
+         *  
+         *  Murat Zazi
          * 3/19/15 7:34AM
          */
         private void rectangleSelectButton_Click(object sender, EventArgs e)

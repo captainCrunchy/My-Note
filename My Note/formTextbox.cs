@@ -32,7 +32,7 @@ using System.Drawing.Drawing2D;
  *      formToolbar.cs - This file is responsible for controls in the toolbar and
  *                       their events in the main form. (Ex: Font, Text, Color, Line...)
  * 
- *      formTextbox.cs - (You are here) This file is responsible for appearance and events of the richTextBox
+ *      formTextbox.cs - (YOU ARE HERE) This file is responsible for appearance and events of the richTextBox
  *                       and its layers. Variables were created and initialized immediately in the declaration
  *                       section for reusability, to avoid repetition of creation in order to increase
  *                       drawing performance. Some variables are initialized in the main constructor. Other
@@ -94,7 +94,7 @@ namespace My_Note
         {
             richTextBox.Invalidate();
             transparentPanel.Invalidate();
-        }
+        } /* private void richTextBox_TextChanged(object sender, EventArgs e) */
 
         #endregion
 
@@ -131,12 +131,15 @@ namespace My_Note
             // If currently in text editing mode
             if (m_currentSelectedControl == e_SelectedControl.TEXT)
             {
-                int charCount = richTextBox.TextLength;
                 var mouseEventArgs = e as MouseEventArgs;
-                Point newPoint = new Point(mouseEventArgs.X - 40, mouseEventArgs.Y - 35);
-                int charIndex = richTextBox.GetCharIndexFromPosition(newPoint);
-                richTextBox.SelectionStart = charIndex;
-                richTextBox.Select();
+                if (mouseEventArgs.Button == MouseButtons.Left)
+                {
+                    int charCount = richTextBox.TextLength;
+                    Point newPoint = new Point(mouseEventArgs.X - 40, mouseEventArgs.Y - 35);
+                    int charIndex = richTextBox.GetCharIndexFromPosition(newPoint);
+                    richTextBox.SelectionStart = charIndex;
+                    richTextBox.Select();
+                }
             }
         } /*private void transparentPanel_Click(object sender, System.EventArgs e)*/
 
@@ -147,7 +150,7 @@ namespace My_Note
          * SYNOPSIS
          *  private void transparentPanel_MouseDown(object sender, MouseEventArgs e);
          *      sender  -> does nothing
-         *      e       -> does nothing
+         *      e       -> used to get the location of the mouse and set it to m_drawStartPoint
          *      
          * DESCRIPTION
          *  Prepares drawing controls to be used by setting/updating member variables
@@ -163,84 +166,86 @@ namespace My_Note
          */
         private void transparentPanel_MouseDown(object sender, MouseEventArgs e)
         {
-            //mslog("mouse down transp");
-            if (m_currentSelectedControl == e_SelectedControl.PENCIL)
+            if (e.Button == MouseButtons.Left)
             {
-                m_isDrawing = true;
-                m_shapeNumber++;
-                m_lastPosition = new Point(0, 0);
-            }
-            if (m_currentSelectedControl == e_SelectedControl.ERASER)
-            {
-                m_isErasing = true;
-            }
-            if (m_currentSelectedControl == e_SelectedControl.WARROW)
-            {
-                m_isDrawing = true;
-                m_drawStartPoint = e.Location;
-            }
-            if (m_currentSelectedControl == e_SelectedControl.NWARROW)
-            {
-                m_isDrawing = true;
-                m_drawStartPoint = e.Location;
-                m_arrowFarPoint = 0;
-            }
-            if (m_currentSelectedControl == e_SelectedControl.NARROW)
-            {
-                m_isDrawing = true;
-                m_drawStartPoint = e.Location;
-            }
-            if (m_currentSelectedControl == e_SelectedControl.NEARROW)
-            {
-                m_isDrawing = true;
-                m_drawStartPoint = e.Location;
-            }
-            if (m_currentSelectedControl == e_SelectedControl.EARROW)
-            {
-                m_isDrawing = true;
-                m_drawStartPoint = e.Location;
-            }
-            if (m_currentSelectedControl == e_SelectedControl.SEARROW)
-            {
-                m_isDrawing = true;
-                m_drawStartPoint = e.Location;
-            }
-            if (m_currentSelectedControl == e_SelectedControl.SARROW)
-            {
-                m_isDrawing = true;
-                m_drawStartPoint = e.Location;
-            }
-            if (m_currentSelectedControl == e_SelectedControl.SWARROW)
-            {
-                m_isDrawing = true;
-                m_drawStartPoint = e.Location;
-            }
-            if (m_currentSelectedControl == e_SelectedControl.RECTANGLE)
-            {
-                m_isDrawing = true;
-                m_drawStartPoint = e.Location;
-            }
-            if (m_currentSelectedControl == e_SelectedControl.ELLIPSE)
-            {
-                m_isDrawing = true;
-                m_drawStartPoint = e.Location;
-            }
-            if (m_currentSelectedControl == e_SelectedControl.SOLID)
-            {
-                m_isDrawing = true;
-                m_drawStartPoint = e.Location;
-            }
-            if (m_currentSelectedControl == e_SelectedControl.DASHED)
-            {
-                m_isDrawing = true;
-                m_drawStartPoint = e.Location;
-                m_canDash = true;
-            }
-            if (m_currentSelectedControl == e_SelectedControl.DOTTED)
-            {
-                m_isDrawing = true;
-                m_drawStartPoint = e.Location;
-                m_canDash = true;
+                if (m_currentSelectedControl == e_SelectedControl.PENCIL)
+                {
+                    m_isDrawing = true;
+                    m_shapeNumber++;
+                    m_lastPosition = new Point(0, 0);
+                }
+                if (m_currentSelectedControl == e_SelectedControl.ERASER)
+                {
+                    m_isErasing = true;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.WARROW)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.NWARROW)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                    m_arrowFarPoint = 0;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.NARROW)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.NEARROW)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.EARROW)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.SEARROW)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.SARROW)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.SWARROW)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.RECTANGLE)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.ELLIPSE)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.SOLID)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.DASHED)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                    m_canDash = true;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.DOTTED)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                    m_canDash = true;
+                }
             }
         } /* private void transparentPanel_MouseDown(object sender, MouseEventArgs e) */
 
@@ -274,91 +279,93 @@ namespace My_Note
          */
         private void transparentPanel_MouseMove(object sender, MouseEventArgs e)
         {
-            //mslog("transp move");
-            if ( m_isDrawing && (m_currentSelectedControl == e_SelectedControl.PENCIL) )
+            if (e.Button == MouseButtons.Left)
             {
-                drawWithPencil(e);
-            }
-            if ( m_isErasing && (m_currentSelectedControl == e_SelectedControl.ERASER) )
-            {
-                startErasing(e);
-            }
-            if ( m_isDrawing && (m_currentSelectedControl == e_SelectedControl.WARROW) )
-            {
-                if ( (m_lastPosition != e.Location) && (e.Location.X < m_drawStartPoint.X) )
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.PENCIL))
                 {
-                    drawWestArrow(e);
+                    drawWithPencil(e);
                 }
-            }
-            if ( m_isDrawing && (m_currentSelectedControl == e_SelectedControl.NWARROW) )
-            {
-                if ( (m_lastPosition != e.Location) && (e.Location.X < m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y) )
+                if (m_isErasing && (m_currentSelectedControl == e_SelectedControl.ERASER))
                 {
-                    drawNorthWestArrow(e);
+                    startErasing(e);
                 }
-            }
-            if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.NARROW) )
-            {
-                if ( (m_lastPosition != e.Location) && (e.Location.Y < m_drawStartPoint.Y) )
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.WARROW))
                 {
-                    drawNorthArrow(e);
+                    if ((m_lastPosition != e.Location) && (e.Location.X < m_drawStartPoint.X))
+                    {
+                        drawWestArrow(e);
+                    }
                 }
-            }
-            if ( m_isDrawing && (m_currentSelectedControl == e_SelectedControl.NEARROW) )
-            {
-                if ( (m_lastPosition != e.Location) && (e.Location.X > m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y) )
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.NWARROW))
                 {
-                    drawNorthEastArrow(e);
+                    if ((m_lastPosition != e.Location) && (e.Location.X < m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y))
+                    {
+                        drawNorthWestArrow(e);
+                    }
                 }
-            }
-            if ( m_isDrawing && (m_currentSelectedControl == e_SelectedControl.EARROW) )
-            {
-                if ( (m_lastPosition != e.Location) && (e.Location.X > m_drawStartPoint.X) )
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.NARROW))
                 {
-                    drawEastArrow(e);
+                    if ((m_lastPosition != e.Location) && (e.Location.Y < m_drawStartPoint.Y))
+                    {
+                        drawNorthArrow(e);
+                    }
                 }
-            }
-            if ( m_isDrawing && (m_currentSelectedControl == e_SelectedControl.SEARROW) )
-            {
-                if ( (m_lastPosition != e.Location) && (e.Location.X > m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y) )
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.NEARROW))
                 {
-                    drawSouthEastArrow(e);
+                    if ((m_lastPosition != e.Location) && (e.Location.X > m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y))
+                    {
+                        drawNorthEastArrow(e);
+                    }
                 }
-            }
-            if ( m_isDrawing && (m_currentSelectedControl == e_SelectedControl.SARROW) )
-            {
-                if ( (m_lastPosition != e.Location) && (e.Location.Y > m_drawStartPoint.Y) )
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.EARROW))
                 {
-                    drawSouthArrow(e);
+                    if ((m_lastPosition != e.Location) && (e.Location.X > m_drawStartPoint.X))
+                    {
+                        drawEastArrow(e);
+                    }
                 }
-            }
-            if ( m_isDrawing & (m_currentSelectedControl == e_SelectedControl.SWARROW) )
-            {
-                if ( (m_lastPosition != e.Location) && (e.Location.X < m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y) )
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.SEARROW))
                 {
-                    drawSouthWestArrow(e);
+                    if ((m_lastPosition != e.Location) && (e.Location.X > m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y))
+                    {
+                        drawSouthEastArrow(e);
+                    }
                 }
-            }
-            if ( m_isDrawing && (m_currentSelectedControl == e_SelectedControl.RECTANGLE) )
-            {
-                drawRectangle(e);
-            }
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.SARROW))
+                {
+                    if ((m_lastPosition != e.Location) && (e.Location.Y > m_drawStartPoint.Y))
+                    {
+                        drawSouthArrow(e);
+                    }
+                }
+                if (m_isDrawing & (m_currentSelectedControl == e_SelectedControl.SWARROW))
+                {
+                    if ((m_lastPosition != e.Location) && (e.Location.X < m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y))
+                    {
+                        drawSouthWestArrow(e);
+                    }
+                }
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.RECTANGLE))
+                {
+                    drawRectangle(e);
+                }
 
-            if ( m_isDrawing && (m_currentSelectedControl == e_SelectedControl.ELLIPSE) )
-            {
-                drawEllipse(e);
-            }
-            if ( m_isDrawing && (m_currentSelectedControl == e_SelectedControl.SOLID) )
-            {
-                drawSolidLine(e);
-            }
-            if ( m_isDrawing && (m_currentSelectedControl == e_SelectedControl.DASHED))
-            {
-                drawDashedLine(e);
-            }
-            if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.DOTTED))
-            {
-                drawDottedLine(e);
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.ELLIPSE))
+                {
+                    drawEllipse(e);
+                }
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.SOLID))
+                {
+                    drawSolidLine(e);
+                }
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.DASHED))
+                {
+                    drawDashedLine(e);
+                }
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.DOTTED))
+                {
+                    drawDottedLine(e);
+                }
             }
         } /* private void transparentPanel_MouseMove(object sender, MouseEventArgs e) */
 
@@ -388,132 +395,135 @@ namespace My_Note
          */
         private void transparentPanel_MouseUp(object sender, MouseEventArgs e)
         {
-            if (m_currentSelectedControl == e_SelectedControl.PENCIL)
+            if (e.Button == MouseButtons.Left)
             {
-                transparentPanel.Invalidate();
-                richTextBox.Invalidate();
-                backPanel.Invalidate();
-            }
-            if (m_currentSelectedControl == e_SelectedControl.ERASER)
-            {
-                transparentPanel.Invalidate();
-                richTextBox.Invalidate();
-            }
-            if (m_currentSelectedControl == e_SelectedControl.WARROW)
-            {
-                if ( m_isDrawing && (e.Location.X < m_drawStartPoint.X) )
+                if (m_currentSelectedControl == e_SelectedControl.PENCIL)
                 {
-                    saveWestArrow(e);
+                    transparentPanel.Invalidate();
+                    richTextBox.Invalidate();
+                    backPanel.Invalidate();
                 }
-            }
-            if (m_currentSelectedControl == e_SelectedControl.NWARROW)
-            {
-                if ( (m_isDrawing) && (e.Location.X < m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y) )
+                if (m_currentSelectedControl == e_SelectedControl.ERASER)
                 {
-                    saveNorthWestArrow(e);
+                    transparentPanel.Invalidate();
+                    richTextBox.Invalidate();
                 }
-            }
-            if (m_currentSelectedControl == e_SelectedControl.NARROW)
-            {
-                if ( m_isDrawing && (e.Location.Y < m_drawStartPoint.Y) )
+                if (m_currentSelectedControl == e_SelectedControl.WARROW)
                 {
-                    saveNorthArrow(e);
+                    if (m_isDrawing && (e.Location.X < m_drawStartPoint.X))
+                    {
+                        saveWestArrow(e);
+                    }
                 }
-            }
-            if (m_currentSelectedControl == e_SelectedControl.NEARROW)
-            {
-                if ( m_isDrawing && (e.Location.X > m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y) )
+                if (m_currentSelectedControl == e_SelectedControl.NWARROW)
                 {
-                    saveNorthEastArrow(e);
+                    if ((m_isDrawing) && (e.Location.X < m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y))
+                    {
+                        saveNorthWestArrow(e);
+                    }
                 }
-            }
-            if (m_currentSelectedControl == e_SelectedControl.EARROW)
-            {
-                if ( m_isDrawing && (e.Location.X > m_drawStartPoint.X) )
+                if (m_currentSelectedControl == e_SelectedControl.NARROW)
                 {
-                    saveEastArrow(e);
+                    if (m_isDrawing && (e.Location.Y < m_drawStartPoint.Y))
+                    {
+                        saveNorthArrow(e);
+                    }
                 }
-            }
-            if (m_currentSelectedControl == e_SelectedControl.SEARROW)
-            {
-                if ( m_isDrawing && (e.Location.X > m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y) )
+                if (m_currentSelectedControl == e_SelectedControl.NEARROW)
                 {
-                    saveSouthEastArrow(e);
+                    if (m_isDrawing && (e.Location.X > m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y))
+                    {
+                        saveNorthEastArrow(e);
+                    }
                 }
-            }
-            if (m_currentSelectedControl == e_SelectedControl.SARROW)
-            {
-                if ( m_isDrawing && (e.Location.Y > m_drawStartPoint.Y) )
+                if (m_currentSelectedControl == e_SelectedControl.EARROW)
                 {
-                    saveSouthArrow(e);
+                    if (m_isDrawing && (e.Location.X > m_drawStartPoint.X))
+                    {
+                        saveEastArrow(e);
+                    }
                 }
-            }
-            if (m_currentSelectedControl == e_SelectedControl.SWARROW)
-            {
-                if ( m_isDrawing && (e.Location.X < m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y) )
+                if (m_currentSelectedControl == e_SelectedControl.SEARROW)
                 {
-                    saveSouthWestArrow(e);
+                    if (m_isDrawing && (e.Location.X > m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y))
+                    {
+                        saveSouthEastArrow(e);
+                    }
                 }
-            }
-            if (m_currentSelectedControl == e_SelectedControl.RECTANGLE)
-            {
-                if (m_isDrawing)
+                if (m_currentSelectedControl == e_SelectedControl.SARROW)
                 {
-                    saveRectangle(e);
+                    if (m_isDrawing && (e.Location.Y > m_drawStartPoint.Y))
+                    {
+                        saveSouthArrow(e);
+                    }
                 }
-            }
-            if (m_currentSelectedControl == e_SelectedControl.ELLIPSE)
-            {
-                if (m_isDrawing)
+                if (m_currentSelectedControl == e_SelectedControl.SWARROW)
                 {
-                    saveEllipse(e);
+                    if (m_isDrawing && (e.Location.X < m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y))
+                    {
+                        saveSouthWestArrow(e);
+                    }
                 }
-            }
-            if (m_currentSelectedControl == e_SelectedControl.SOLID)
-            {
-                if (m_isDrawing)
+                if (m_currentSelectedControl == e_SelectedControl.RECTANGLE)
                 {
-                    saveSolidLine(e);
+                    if (m_isDrawing)
+                    {
+                        saveRectangle(e);
+                    }
                 }
-            }
-            if (m_currentSelectedControl == e_SelectedControl.DASHED)
-            {
-                if (m_isDrawing)
+                if (m_currentSelectedControl == e_SelectedControl.ELLIPSE)
                 {
-                    saveDashedLine(e);
-                    m_canDash = false;
+                    if (m_isDrawing)
+                    {
+                        saveEllipse(e);
+                    }
                 }
-            }
-            if (m_currentSelectedControl == e_SelectedControl.DOTTED)
-            {
-                if (m_isDrawing)
+                if (m_currentSelectedControl == e_SelectedControl.SOLID)
                 {
-                    saveDottedLine(e);
-                    m_canDash = false;
+                    if (m_isDrawing)
+                    {
+                        saveSolidLine(e);
+                    }
                 }
-            }
-            if (m_currentSelectedControl == e_SelectedControl.VERTTEXT)
-            {
-                // sending the MouseEventArg via constructor to assign location
-                VerticalText nextText = new VerticalText(e);
+                if (m_currentSelectedControl == e_SelectedControl.DASHED)
+                {
+                    if (m_isDrawing)
+                    {
+                        saveDashedLine(e);
+                        m_canDash = false;
+                    }
+                }
+                if (m_currentSelectedControl == e_SelectedControl.DOTTED)
+                {
+                    if (m_isDrawing)
+                    {
+                        saveDottedLine(e);
+                        m_canDash = false;
+                    }
+                }
+                if (m_currentSelectedControl == e_SelectedControl.VERTTEXT)
+                {
+                    // sending the MouseEventArg via constructor to assign location
+                    VerticalText nextText = new VerticalText(e);
 
-                m_verticalTextList.Add(nextText);
-                transparentPanel.Controls.Add(nextText.MoveButton);
-                transparentPanel.Controls.Add(nextText.OptionsButton);
-                transparentPanel.Controls.Add(nextText.RotateButton);
+                    m_verticalTextList.Add(nextText);
+                    transparentPanel.Controls.Add(nextText.MoveButton);
+                    transparentPanel.Controls.Add(nextText.OptionsButton);
+                    transparentPanel.Controls.Add(nextText.RotateButton);
 
-                transparentPanel.Invalidate();
-                richTextBox.Invalidate();
-                backPanel.Invalidate();
-                transparentPanel.Refresh();
-            }
-            if (m_isDrawing)
-            {
-                m_isDrawing = false;
-            }
-            else
-            {
-                m_isErasing = false;
+                    transparentPanel.Invalidate();
+                    richTextBox.Invalidate();
+                    backPanel.Invalidate();
+                    transparentPanel.Refresh();
+                }
+                if (m_isDrawing)
+                {
+                    m_isDrawing = false;
+                }
+                else
+                {
+                    m_isErasing = false;
+                }
             }
         } /* private void transparentPanel_MouseUp(object sender, MouseEventArgs e) */
 
@@ -566,7 +576,8 @@ namespace My_Note
          *  accesses two points/shapes from the list at a time and if they share the same shape
          *  number, then they are connected to form a line. If the shape numbers are different,
          *  then a new shape begins to form. This method gets triggered by the OnPaint() method
-         *  of the TransparentPanel.cs subclass by the command: base.OnPaint(e);
+         *  of the TransparentPanel.cs subclass by the command: base.OnPaint(e);. Also, redraws
+         *  the verticalTextObjects by iterating over the container that holds them.
          * 
          * RETURNS
          *  Nothing
@@ -579,7 +590,6 @@ namespace My_Note
          */
         private void transparentPanel_Paint(object sender, PaintEventArgs e)
         {
-            //mslog("transp Paint");
             // Apply a smoothing mode to smooth out the line.
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             // Begin drawing
@@ -597,7 +607,6 @@ namespace My_Note
             for (int i = 0; i < m_verticalTextList.Count; i++)
             {
                 m_verticalTextList[i].drawVerticalText(e);
-                //mslog(m_verticalTextList[i].logString);
             }
         } /* private void transparentPanel_Paint(object sender, PaintEventArgs e) */
 
@@ -639,7 +648,7 @@ namespace My_Note
 
         /*
          * NAME
-         *  startErasing() - draws shapes using a pencil
+         *  startErasing() - erases contents on the panel
          * 
          * SYNOPSIS
          *  private void startErasing(MouseEventArgs e);
@@ -648,7 +657,7 @@ namespace My_Note
          * DESCRIPTION
          *  Erases shapes from the screen by first removing them from the m_shapesStorage container
          *  and redraws the panels to give the effect of erasing. Eraser removes anything that is
-         *  not text and saving occurs immediately.
+         *  not text and saving occurs immediately. Erases sets of points and not entire shapes.
          * 
          * RETURNS
          *  Nothing
@@ -1913,7 +1922,7 @@ namespace My_Note
                 }
             }
             transparentPanel.Refresh();
-        }
+        } /* private void saveDottedLine(MouseEventArgs e) */
         
         #endregion
 

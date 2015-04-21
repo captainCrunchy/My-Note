@@ -22,7 +22,7 @@ using System.Windows.Forms;
  *      task. The files are simply extensions of this class, i.e. '... partial class...'. Below is a
  *      description of each 'partial class' and its purpose.
  * 
- *      mainForm.cs - (You are here) This file is the starting point of the MainForm class. It
+ *      mainForm.cs - (YOU ARE HERE) This file is the starting point of the MainForm class. It
  *                    contains the constructor and is responsible for coordinating interactions
  *                    between other parts of the class and the application.
  *               
