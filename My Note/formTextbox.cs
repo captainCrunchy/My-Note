@@ -8,6 +8,8 @@ using System.Drawing;
 using System.Collections;
 using System.Drawing.Drawing2D;
 
+//  For readability: (Ctrl + m, Ctrl + o) to 'collapse', (Ctrl + m, Ctrl + l) to 'expand' defiitions
+
 /*
  *  TITLE:
  *      MainForm : Form
@@ -58,11 +60,7 @@ namespace My_Note
         private Graphics m_transparentPanelGraphics;                        // Used to reduce repetitive data creation
         private Pen m_transparentPanelPen;                                  // Used to reduce repetitive data creation
         private bool m_canDash = false;                                     // Used when saving dashed or dotted lines
-
-        // TODO: update left mouse click, comments
-        // Temp
-        //private VerticalText tempText = new VerticalText();
-        private List<VerticalText> m_verticalTextList = new List<VerticalText>();
+        private List<VerticalText> m_verticalTextList = new List<VerticalText>();   // Used to store VerticalText instances
 
         // This region contains all methods and event handlers
         // of the richTextBox, which is the main text box
@@ -272,10 +270,6 @@ namespace My_Note
          *  
          * DATE
          *  9:01am 3/10/2015
-         *  
-         *  This method can probably be improved by testing m_isDrawing only once in an if() method
-         *  then adding the rest of the commands within it. This will reduce the number of cases tested
-         *  and organize the code a little more
          */
         private void transparentPanel_MouseMove(object sender, MouseEventArgs e)
         {
@@ -520,10 +514,6 @@ namespace My_Note
                 {
                     m_isDrawing = false;
                 }
-                else
-                {
-                    m_isErasing = false;
-                }
             }
         } /* private void transparentPanel_MouseUp(object sender, MouseEventArgs e) */
 
@@ -607,6 +597,7 @@ namespace My_Note
             for (int i = 0; i < m_verticalTextList.Count; i++)
             {
                 m_verticalTextList[i].drawVerticalText(e);
+                //mslog(m_verticalTextList[i].logString);
             }
         } /* private void transparentPanel_Paint(object sender, PaintEventArgs e) */
 

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
 
+//  For readability: (Ctrl + m, Ctrl + o) to 'collapse', (Ctrl + m, Ctrl + l) to 'expand' defiitions
+
 /*
  *  TITLE:
  *      MainForm : Form
@@ -41,14 +43,12 @@ using System.Drawing;
 
 namespace My_Note
 {
-    // TODO: update left mouse click, comments
     public partial class MainForm : Form
     {
         /*  This method sets the current control to text editing. Updates the panel's cursor to match the
          *  current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
-         *  
          *  12:12pm 3/17/2015
          */
         private void textSelectButton_Click(object sender, EventArgs e)
@@ -63,7 +63,6 @@ namespace My_Note
          *  current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
-         *  
          *  12:13pm 3/17/2015
          */
         private void pencilSelectButton_Click(object sender, EventArgs e)
@@ -78,7 +77,6 @@ namespace My_Note
          *  current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
-         *  
          *  12:14pm 3/17/2015
          */
         private void eraserSelectButton_Click(object sender, EventArgs e)
@@ -108,7 +106,6 @@ namespace My_Note
          *  to match the current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
-         *
          *  7:27am 3/19/2015
          */
         private void NWarrowButton_Click(object sender, EventArgs e)
@@ -123,7 +120,6 @@ namespace My_Note
          *  match the current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
-         *  
          *  7:28am 3/19/2015
          */
         private void NarrowButton_Click(object sender, EventArgs e)
@@ -138,7 +134,6 @@ namespace My_Note
          *  match the current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
-         *  
          *  7:29am 3/19/2015
          */
         private void NEarrowButton_Click(object sender, EventArgs e)
@@ -153,7 +148,6 @@ namespace My_Note
          *  match the current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
-         *
          *  7:30am 3/19/2015
          */
         private void EarrowButton_Click(object sender, EventArgs e)
@@ -168,7 +162,6 @@ namespace My_Note
          *  match the current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
-         *
          *  7:31am 3/19/2015
          */
         private void SEarrowButton_Click(object sender, EventArgs e)
@@ -183,7 +176,6 @@ namespace My_Note
          *  match the current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
-         *
          *  7:32am 3/19/2015
          */
         private void SarrowButton_Click(object sender, EventArgs e)
@@ -198,7 +190,6 @@ namespace My_Note
          *  match the current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
-         *
          *  7:33am 3/19/2015
          */
         private void SWarrowButton_Click(object sender, EventArgs e)
@@ -213,7 +204,7 @@ namespace My_Note
          *  match the current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
-         * 3/19/15 7:34AM
+         *  7:34am 3/19/2015
          */
         private void rectangleSelectButton_Click(object sender, EventArgs e)
         {
@@ -223,8 +214,11 @@ namespace My_Note
             rectangleSelectButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*
-         * 3/19/15 7:35AM
+        /*  This method sets the current control to draw ellipse. Updates the panel's cursor to
+         *  match the current control. Updates selection colors for controls.
+         *  
+         *  Murat Zazi
+         *  7:35am 3/19/2015
          */
         private void ovalSelectButton_Click(object sender, EventArgs e)
         {
@@ -234,8 +228,11 @@ namespace My_Note
             ovalSelectButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*
-         * 3/18/15 11:23am
+        /*  This method sets the current control to draw solid line. Updates the panel's cursor
+         *  cursor to match the current control. Updates selection colors for controls.
+         *  
+         *  Murat Zazi
+         *  11:23am 3/18/2015
          */
         private void solidSelectButton_Click(object sender, EventArgs e)
         {
@@ -245,8 +242,11 @@ namespace My_Note
             solidSelectButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*
-         * 3/19/15 7:36AM
+        /*  This method sets the current control to draw dashed line. Updates the panel's cursor
+         *  cursor to match the current control. Updates selection colors for controls.
+         *  
+         *  Murat Zazi
+         *  7:36am 3/19/2015
          */
         private void dashedSelectButton_Click(object sender, EventArgs e)
         {
@@ -256,8 +256,11 @@ namespace My_Note
             dashedSelectButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*
-         * 3/19/15 7:37AM
+        /*  This method sets the current control to draw dotted line. Updates the panel's cursor
+         *  cursor to match the current control. Updates selection colors for controls.
+         *  
+         *  Murat Zazi
+         *  7:37am 3/19/2015
          */
         private void dottedSelectButton_Click(object sender, EventArgs e)
         {
@@ -267,8 +270,11 @@ namespace My_Note
             dottedSelectButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*
-         * 3/19/15 7:38AM
+        /*  This method sets the current control to draw rotatable text. Updates the panel's cursor
+         *  cursor to match the current control. Updates selection colors for controls.
+         *  
+         *  Murat Zazi
+         *  7:38am 3/19/2015
          */
         private void vertTextButton_Click(object sender, EventArgs e)
         {
@@ -278,13 +284,13 @@ namespace My_Note
             vertTextButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*
-         * Displays a color dialog to select drawing color
-         * 3/17/15 10:54am 
+        /*  This method brings up a color dialog box to select a color for current drawing tools
+         * 
+         *  Murat Zazi
+         *  10:54am 3/1/2015 
          */
         private void drawColorButton_Click(object sender, EventArgs e)
         {
-            mslog("drawColorButon_Click");
             DialogResult dr = drawColorDialog.ShowDialog();
             if (dr == DialogResult.OK)
             {
@@ -292,14 +298,14 @@ namespace My_Note
                 m_currentDrawColor = drawColorDialog.Color;
                 m_transparentPanelPen.Color = m_currentDrawColor;
                 drawColorButton.BackColor = m_currentDrawColor;
-                mslog("selected color = " + drawColorDialog.Color);
             }
         }
 
-        /*
-         * Set current drawing color to black and update it in the drawColorButton.BackColor
-         * to let the user know which color they selected.
-         * 3/17/15 11:13am
+        /*  Set current drawing color to black and update it in the drawColorButton.BackColor
+         *  to let the user know which color they selected.
+         * 
+         *  Murat Zazi
+         *  11:13am 3/17/2015
          */
         private void blackColorButton_Click(object sender, EventArgs e)
         {
@@ -308,10 +314,11 @@ namespace My_Note
             drawColorButton.BackColor = m_currentDrawColor;
         }
 
-        /*
-         * Set current drawing color to white and update it in the drawColorButton.BackColor
-         * to let the user know which color they selected.
-         * 3/17/15 11:14am
+        /*  Set current drawing color to white and update it in the drawColorButton.BackColor
+         *  to let the user know which color they selected.
+         *  
+         *  Murat Zazi
+         *  11:14am 3/17/2015
          */
         private void whiteColorButton_Click(object sender, EventArgs e)
         {
@@ -320,10 +327,11 @@ namespace My_Note
             drawColorButton.BackColor = m_currentDrawColor;
         }
 
-        /*
-         * Set current drawing color to gray and update it in the drawColorButton.BackColor
-         * to let the user know which color they selected.
-         * 3/17/15 11:15am
+        /*  Set current drawing color to gray and update it in the drawColorButton.BackColor
+         *  to let the user know which color they selected.
+         *  
+         *  Murat Zazi
+         *  11:15am 3/17/2015
          */
         private void grayColorButton_Click(object sender, EventArgs e)
         {
@@ -332,10 +340,11 @@ namespace My_Note
             drawColorButton.BackColor = m_currentDrawColor;
         }
 
-        /*
-         * Set current drawing color to greent and update it in the drawColorButton.BackColor
-         * to let the user know which color they selected.
-         * 3/17/15 11:16am
+        /*  Set current drawing color to greent and update it in the drawColorButton.BackColor
+         *  to let the user know which color they selected.
+         * 
+         *  Murat Zazi
+         *  11:16am 3/17/2015
          */
         private void greenColorButton_Click(object sender, EventArgs e)
         {
@@ -344,10 +353,11 @@ namespace My_Note
             drawColorButton.BackColor = m_currentDrawColor;
         }
 
-        /*
-         * Set current drawing color to red and update it in the drawColorButton.BackColor
-         * to let the user know which color they selected.
-         * 3/17/15 11:17am
+        /*  Set current drawing color to red and update it in the drawColorButton.BackColor
+         *  to let the user know which color they selected.
+         * 
+         *  Murat Zazi
+         *  11:17am 3/17/2015
          */
         private void redColorButton_Click(object sender, EventArgs e)
         {
@@ -356,10 +366,11 @@ namespace My_Note
             drawColorButton.BackColor = m_currentDrawColor;
         }
 
-        /*
-         * Set current drawing color to teal and update it in the drawColorButton.BackColor
-         * to let the user know which color they selected.
-         * 3/17/15 11:18am
+        /*  Set current drawing color to teal and update it in the drawColorButton.BackColor
+         *  to let the user know which color they selected.
+         *  
+         *  Murat Zazi
+         *  11:18am 3/17/2015
          */
         private void tealColorButton_Click(object sender, EventArgs e)
         {
@@ -368,10 +379,11 @@ namespace My_Note
             drawColorButton.BackColor = m_currentDrawColor;
         }
 
-        /*
-         * Set current drawing color to orange and update it in the drawColorButton.BackColor
-         * to let the user know which color they selected.
-         * 3/17/15 11:19am
+        /*  Set current drawing color to orange and update it in the drawColorButton.BackColor
+         *  to let the user know which color they selected.
+         * 
+         *  Murat Zazi
+         *  11:19am 3/17/2015
          */
         private void orangeColorButton_Click(object sender, EventArgs e)
         {
@@ -380,10 +392,11 @@ namespace My_Note
             drawColorButton.BackColor = m_currentDrawColor;
         }
 
-        /*
-         * Set current drawing color to blue and update it in the drawColorButton.BackColor
-         * to let the user know which color they selected.
-         * 3/17/15 11:20am
+        /*  Set current drawing color to blue and update it in the drawColorButton.BackColor
+         *  to let the user know which color they selected.
+         * 
+         *  Murat Zazi
+         *  11:20am 3/17/2015
          */
         private void blueColorButton_Click(object sender, EventArgs e)
         {
@@ -392,10 +405,11 @@ namespace My_Note
             drawColorButton.BackColor = m_currentDrawColor;
         }
 
-        /*
-         * Set current drawing color to yellow and update it in the drawColorButton.BackColor
-         * to let the user know which color they selected.
-         * 3/17/15 11:21am
+        /*  Set current drawing color to yellow and update it in the drawColorButton.BackColor
+         *  to let the user know which color they selected.
+         * 
+         *  Murat Zazi
+         *  11:21am 3/17/2015
          */
         private void yellowColorButton_Click(object sender, EventArgs e)
         {
@@ -404,10 +418,11 @@ namespace My_Note
             drawColorButton.BackColor = m_currentDrawColor;
         }
 
-        /*
-         * Set current drawing color to purple and update it in the drawColorButton.BackColor
-         * to let the user know which color they selected.
-         * 3/17/15 11:22am
+        /*  Set current drawing color to purple and update it in the drawColorButton.BackColor
+         *  to let the user know which color they selected.
+         * 
+         *  Murat Zazi
+         *  11:22am 3/17/2015
          */
         private void purpleColorButton_Click(object sender, EventArgs e)
         {
@@ -416,9 +431,12 @@ namespace My_Note
             drawColorButton.BackColor = m_currentDrawColor;
         }
 
-        /* This method gets called to reset the BackColor of all controls to default, it is
-         * called by any control before it sets its BackColor to a color that indicates
-         * that it has been selected  3/9/15 7:12pm */
+        /*  This method gets called to reset the BackColor of all controls to default, it
+         *  then sets the current control's BackColor to a selected color.
+         *  
+         *  Murat Zazi
+         *  7:12pm 3/9/2015
+         */
         private void setDefaultBackColorForControls()
         {
             textSelectButton.BackColor = Color.Transparent;

@@ -32,7 +32,7 @@ namespace My_Note
 
         private String m_textString = "Enter Text";                     // Actual text of vertical text
         private Int32 m_textAngle = 0;                                  // The angle of vertical text
-        private Font m_textFont = new Font("Times New Roman", 16);      // The font of vertical text
+        private Font m_textFont = new Font("Microsoft Sans Serif", 12); // The font of vertical text
         private SolidBrush m_textBrush = new SolidBrush(Color.Blue);    // The brush use on vertical text
         private Point m_textOrigin;                                     // Origin of vertical text
         private Point m_textDestPt = new Point(0, 0);                   // Updated origin of vertical text after move
@@ -82,7 +82,7 @@ namespace My_Note
 
             m_moveButton.Text = "m";
             m_moveButton.BackColor = Color.Yellow;
-            m_moveButton.Location = new Point(e.Location.X-5, e.Location.Y-5);
+            m_moveButton.Location = new Point(e.Location.X-8, e.Location.Y-8);
             m_moveButton.Size = new Size(16, 16);
             m_moveButton.MouseDown += moveButton_MouseDown;
             m_moveButton.MouseMove += moveButton_MouseMove;
@@ -90,13 +90,15 @@ namespace My_Note
 
             m_optionsButton.Text = "o";
             m_optionsButton.BackColor = Color.Blue;
-            m_optionsButton.Location = new Point(m_moveButton.Location.X + 50, m_moveButton.Location.Y);
+            // This is default spacing and will be updated dynamically based on text width
+            m_optionsButton.Location = new Point(m_moveButton.Location.X + 48, m_moveButton.Location.Y);
             m_optionsButton.Size = new Size(16, 16);
             m_optionsButton.MouseUp += optionsButton_MouseUp;
 
             m_rotateButton.Text = "r";
             m_rotateButton.BackColor = Color.Green;
-            m_rotateButton.Location = new Point(m_moveButton.Location.X + 100, m_moveButton.Location.Y);
+            // This is default spacing and will be updated dynamically based on text width
+            m_rotateButton.Location = new Point(m_moveButton.Location.X + 96, m_moveButton.Location.Y);
             m_rotateButton.Size = new Size(16, 16);
             m_rotateButton.MouseDown += rotateButton_MouseDown;
             m_rotateButton.MouseMove += rotateButton_MouseMove;
@@ -196,8 +198,8 @@ namespace My_Note
                     newPoint.Offset(m_alteringButtonOffsetPoint);
                     m_moveButton.Location = newPoint;
 
-                    m_textDestPt.X = newPoint.X + 5;
-                    m_textDestPt.Y = newPoint.Y + 5;
+                    m_textDestPt.X = newPoint.X + 8;
+                    m_textDestPt.Y = newPoint.Y + 8;
                     m_textOrigin = m_textDestPt;
                 }
             }
@@ -335,6 +337,9 @@ namespace My_Note
                 Point ptStartPosition = m_rotateButton.PointToScreen(new Point(e.X, e.Y));
                 m_alteringButtonOffsetPoint.X = m_rotateButton.Location.X - ptStartPosition.X;
                 m_alteringButtonOffsetPoint.Y = m_rotateButton.Location.Y - ptStartPosition.Y;
+
+                m_moveButton.Visible = false;
+                m_optionsButton.Visible = false;
             }
         } /* private void rotateButton_MouseDown(object sender, MouseEventArgs e) */
 
@@ -409,6 +414,8 @@ namespace My_Note
                 if (m_isRotating)
                 {
                     m_isRotating = false;
+                    m_moveButton.Visible = true;
+                    m_optionsButton.Visible = true;
                 }
             }
         } /* private void rotateButton_MouseUp(object sender, MouseEventArgs e) */
@@ -441,13 +448,15 @@ namespace My_Note
          */
         public void drawVerticalText(PaintEventArgs e)
         {
-            e.Graphics.TranslateTransform(m_moveButton.Location.X, m_moveButton.Location.Y);
+            //e.Graphics.TranslateTransform(m_moveButton.Location.X, m_moveButton.Location.Y);
+            e.Graphics.TranslateTransform(m_textOrigin.X, m_textOrigin.Y);
             e.Graphics.RotateTransform(m_textAngle);
             e.Graphics.TranslateTransform(-m_moveButton.Location.X, -m_moveButton.Location.Y);
             e.Graphics.DrawString(m_textString, m_textFont, m_textBrush, m_textOrigin);
             e.Graphics.ResetTransform();
 
             SizeF currentStringWidth = getStringWidth(e);
+            logString = "stringWidth = " + currentStringWidth;
         } /* public void drawVerticalText(PaintEventArgs e) */
 
         /*
