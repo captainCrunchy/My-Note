@@ -8,7 +8,7 @@ using System.Drawing;
 using System.Collections;
 using System.Drawing.Drawing2D;
 
-//  For readability: (Ctrl + m, Ctrl + o) to 'collapse', (Ctrl + m, Ctrl + l) to 'expand' defiitions
+//  For readability: (Ctrl + m, Ctrl + o) to 'collapse', (Ctrl + m, Ctrl + l) to 'expand' definitions
 
 /*
  *  TITLE:
@@ -61,6 +61,8 @@ namespace My_Note
         private Pen m_transparentPanelPen;                                  // Used to reduce repetitive data creation
         private bool m_canDash = false;                                     // Used when saving dashed or dotted lines
         private List<VerticalText> m_verticalTextList = new List<VerticalText>();   // Used to store VerticalText instances
+
+        // need to: shorten transparentPanel_MouseUp event (this is easily possible, towards the end)
 
         // This region contains all methods and event handlers
         // of the richTextBox, which is the main text box
@@ -497,7 +499,7 @@ namespace My_Note
                 }
                 if (m_currentSelectedControl == e_SelectedControl.VERTTEXT)
                 {
-                    // sending the MouseEventArg via constructor to assign location
+                    // sending the MouseEventArg via custom constructor to assign location
                     VerticalText nextText = new VerticalText(e);
 
                     m_verticalTextList.Add(nextText);
@@ -597,7 +599,7 @@ namespace My_Note
             for (int i = 0; i < m_verticalTextList.Count; i++)
             {
                 m_verticalTextList[i].drawVerticalText(e);
-                //mslog(m_verticalTextList[i].logString);
+                mslog(m_verticalTextList[i].logString);
             }
         } /* private void transparentPanel_Paint(object sender, PaintEventArgs e) */
 
@@ -676,9 +678,9 @@ namespace My_Note
          *      e       -> used to get the current location of the cursor
          *      
          * DESCRIPTION
-         *  Draws an arrow with user desired length which is restricted to west direction. This method
+         *  Draws an arrow with user desired rotButDist which is restricted to west direction. This method
          *  is optimized and used by the MouseMove event handler when the user has a mouse button down
-         *  and is dragging the arrow to desired length. Drawing is very dynamic in order to respond to
+         *  and is dragging the arrow to desired rotButDist. Drawing is very dynamic in order to respond to
          *  user input, so saving does not occur here.
          * 
          * RETURNS
@@ -778,9 +780,9 @@ namespace My_Note
          *      e       -> used to get the current location of the cursor
          *      
          * DESCRIPTION
-         *  Draws an arrow with user desired length which is restricted to north west direction. This method
+         *  Draws an arrow with user desired rotButDist which is restricted to north west direction. This method
          *  is optimized and used by the MouseMove event handler when the user has a mouse button down
-         *  and is dragging the arrow to desired length. Drawing is very dynamic in order to respond to
+         *  and is dragging the arrow to desired rotButDist. Drawing is very dynamic in order to respond to
          *  user input, so saving does not occur here.
          * 
          * RETURNS
@@ -887,9 +889,9 @@ namespace My_Note
          *      e       -> used to get the current location of the cursor
          *      
          * DESCRIPTION
-         *  Draws an arrow with user desired length which is restricted to north direction. This method
+         *  Draws an arrow with user desired rotButDist which is restricted to north direction. This method
          *  is optimized and used by the MouseMove event handler when the user has a mouse button down
-         *  and is dragging the arrow to desired length. Drawing is very dynamic in order to respond to
+         *  and is dragging the arrow to desired rotButDist. Drawing is very dynamic in order to respond to
          *  user input, so saving does not occur here.
          * 
          * RETURNS
@@ -989,9 +991,9 @@ namespace My_Note
          *      e       -> used to get the current location of the cursor
          *      
          * DESCRIPTION
-         *  Draws an arrow with user desired length which is restricted to north east direction. This method
+         *  Draws an arrow with user desired rotButDist which is restricted to north east direction. This method
          *  is optimized and used by the MouseMove event handler when the user has a mouse button down
-         *  and is dragging the arrow to desired length. Drawing is very dynamic in order to respond to
+         *  and is dragging the arrow to desired rotButDist. Drawing is very dynamic in order to respond to
          *  user input, so saving does not occur here.
          * 
          * RETURNS
@@ -1098,9 +1100,9 @@ namespace My_Note
          *      e       -> used to get the current location of the cursor
          *      
          * DESCRIPTION
-         *  Draws an arrow with user desired length which is restricted to east direction. This method
+         *  Draws an arrow with user desired rotButDist which is restricted to east direction. This method
          *  is optimized and used by the MouseMove event handler when the user has a mouse button down
-         *  and is dragging the arrow to desired length. Drawing is very dynamic in order to respond to
+         *  and is dragging the arrow to desired rotButDist. Drawing is very dynamic in order to respond to
          *  user input, so saving does not occur here.
          * 
          * RETURNS
@@ -1200,9 +1202,9 @@ namespace My_Note
          *      e       -> used to get the current location of the cursor
          *      
          * DESCRIPTION
-         *  Draws an arrow with user desired length which is restricted to south east direction. This method
+         *  Draws an arrow with user desired rotButDist which is restricted to south east direction. This method
          *  is optimized and used by the MouseMove event handler when the user has a mouse button down
-         *  and is dragging the arrow to desired length. Drawing is very dynamic in order to respond to
+         *  and is dragging the arrow to desired rotButDist. Drawing is very dynamic in order to respond to
          *  user input, so saving does not occur here.
          * 
          * RETURNS
@@ -1309,9 +1311,9 @@ namespace My_Note
          *      e       -> used to get the current location of the cursor
          *      
          * DESCRIPTION
-         *  Draws an arrow with user desired length which is restricted to south direction. This method
+         *  Draws an arrow with user desired rotButDist which is restricted to south direction. This method
          *  is optimized and used by the MouseMove event handler when the user has a mouse button down
-         *  and is dragging the arrow to desired length. Drawing is very dynamic in order to respond to
+         *  and is dragging the arrow to desired rotButDist. Drawing is very dynamic in order to respond to
          *  user input, so saving does not occur here.
          * 
          * RETURNS
@@ -1411,9 +1413,9 @@ namespace My_Note
          *      e       -> used to get the current location of the cursor
          *      
          * DESCRIPTION
-         *  Draws an arrow with user desired length which is restricted to south west direction. This method
+         *  Draws an arrow with user desired rotButDist which is restricted to south west direction. This method
          *  is optimized and used by the MouseMove event handler when the user has a mouse button down
-         *  and is dragging the arrow to desired length. Drawing is very dynamic in order to respond to
+         *  and is dragging the arrow to desired rotButDist. Drawing is very dynamic in order to respond to
          *  user input, so saving does not occur here.
          * 
          * RETURNS
@@ -1521,7 +1523,7 @@ namespace My_Note
          *      
          * DESCRIPTION
          *  Draws a rectangle in any direction with user desired size. This method is optimized and used by the
-         *  MouseMove event handler when the user has a mouse button down and is dragging it to desired length.
+         *  MouseMove event handler when the user has a mouse button down and is dragging it to desired rotButDist.
          *  Drawing is very dynamic in order to respond to user input, so saving does not occur here. Rectangle
          *  constructor uses complex Math methods in order to allow the user to draw the rectangle in any direction.
          * 
@@ -1612,7 +1614,7 @@ namespace My_Note
          *      
          * DESCRIPTION
          *  Draws an ellipse in any direction with user desired size. This method is optimized and used by the
-         *  MouseMove event handler when the user has a mouse button down and is dragging it to desired length.
+         *  MouseMove event handler when the user has a mouse button down and is dragging it to desired rotButDist.
          *  Drawing is very dynamic in order to respond to user input, so saving does not occur here.
          * 
          * RETURNS
@@ -1699,9 +1701,9 @@ namespace My_Note
          *      e       -> used to get the current location of the cursor
          *      
          * DESCRIPTION
-         *  Draws a solid line in any direction with user desired length. This method is optimized and used by
+         *  Draws a solid line in any direction with user desired rotButDist. This method is optimized and used by
          *  the MouseMove event handler when the user has a mouse button down and is dragging the line to desired
-         *  length. Drawing is very dynamic in order to respond to user input, so saving does not occur here.
+         *  rotButDist. Drawing is very dynamic in order to respond to user input, so saving does not occur here.
          * 
          * RETURNS
          *  Nothing
@@ -1764,9 +1766,9 @@ namespace My_Note
          *      e       -> used to get the current location of the cursor
          *      
          * DESCRIPTION
-         *  Draws a dashed line in any direction with user desired length. This method is optimized and used by
+         *  Draws a dashed line in any direction with user desired rotButDist. This method is optimized and used by
          *  the MouseMove event handler when the user has a mouse button down and is dragging the line to desired
-         *  length. Drawing is very dynamic in order to respond to user input, so saving does not occur here.
+         *  rotButDist. Drawing is very dynamic in order to respond to user input, so saving does not occur here.
          * 
          * RETURNS
          *  Nothing
@@ -1844,9 +1846,9 @@ namespace My_Note
          *      e       -> used to get the current location of the cursor
          *      
          * DESCRIPTION
-         *  Draws a dotted line in any direction with user desired length. This method is optimized and used by
+         *  Draws a dotted line in any direction with user desired rotButDist. This method is optimized and used by
          *  the MouseMove event handler when the user has a mouse button down and is dragging the line to desired
-         *  length. Drawing is very dynamic in order to respond to user input, so saving does not occur here.
+         *  rotButDist. Drawing is very dynamic in order to respond to user input, so saving does not occur here.
          * 
          * RETURNS
          *  Nothing
@@ -1934,9 +1936,9 @@ namespace My_Note
          * DESCRIPTION
          *  This method utilizes the famous Bresenham's line algorithms to calculate and return
          *  a set of points between a start point and end point. This method is used by several
-         *  methods that save solid, dashed, and solid lines by using a set of points. The reason
-         *  for saving individual points is to accomodate erase functionality. This method was
-         *  taken from an author who customized this algorithm specifically for C#, the author's
+         *  other methods that save solid, dashed, and dotted lines by using a set of points. The
+         *  reason for saving individual points is to accomodate erase functionality. This method
+         *  was taken from an author who customized this algorithm specifically for C#, the author's
          *  credits are documented.
          *  
          * RETURNS

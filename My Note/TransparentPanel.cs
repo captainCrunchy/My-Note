@@ -12,7 +12,7 @@ using System.Windows.Forms;
  *  DESCRIPTION:
  *      The purpose of this class is to provide the application with a transparent panel tool in the
  *      toolbox. An instance of this class is used to 'overlay' any other form, control, panel, etc...
- *      to allow the user to be able to apply graphics to those objects that noremally do not allow
+ *      to allow the user to be able to apply graphics to those objects that normally do not allow
  *      any graphics or drawing. It is currently used as a layer on top of a rich text box. It draws
  *      lines to resemble those of a notebook and also allows user to 'freehand' draw custom shapes
  *      anywhere on the panel. Initial code for this class was taken from a website and slightly modified

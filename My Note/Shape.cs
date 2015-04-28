@@ -15,7 +15,7 @@ using System.Drawing;
  *      therefore, each shape number can have many points as well as custom line width and line color. The 
  *      reason for creating so many points is to accomodate erase functionality where the eraser can remove
  *      individual points and not just sections, especially when this shape class is used to draw rectangles
- *      and ellipses. All the code for this class was taken from an existing project on the web with pencil
+ *      and ellipses. Initial code for this class was taken from an existing project on the web with pencil
  *      and eraser functionality and extended to work with other shapes like lines, ellipses and rectangles.
  *      The only chages to this class were made to member variables and arguments in methods by updating the
  *      naming conventions to match this application. Public member variables were converted to private and

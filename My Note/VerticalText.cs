@@ -36,8 +36,17 @@ namespace My_Note
         private SolidBrush m_textBrush = new SolidBrush(Color.Blue);    // The brush use on vertical text
         private Point m_textOrigin;                                     // Origin of vertical text
         private Point m_textDestPt = new Point(0, 0);                   // Updated origin of vertical text after move
+        
+        private float m_optButtDistF = 48;                              // Distance between move and options buttons
+        private Int32 m_optButOffsetX = 48;                             // x-offset from move to options button (used dynamically)
+        private Int32 m_optButOffsetY = 0;                              // y-offset from move to options button (used dynamically)
 
-        private Point m_alteringButtonOffsetPoint = new Point();        // Translates mouse location captured from entire screen to panel 
+        private float m_rotButDistF = 96;                               // Distance between move and rotate buttons
+        private Int32 m_rotButOffsetX = 96;                             // x-offset from move to rotate button (used dynamically)
+        private Int32 m_rotButOffsetY = 0;                              // y-offset from move to rotate button (used dynamically)
+
+        private Point m_alteringButtonOffsetPoint = new Point();        // Offset point saved by subtracting 'm_moveButton.Location' (assigned by
+                                                                        // constructor) from 'current point' (captured from entire screen)
 
         private Button m_moveButton = new Button();                     // Move the text around the panel
         private bool m_isMoving = false;                                // Indicates whether the text is being moved
@@ -48,11 +57,10 @@ namespace My_Note
         private Button m_rotateButton = new Button();                   // Rotates the vertical text to use desired angles
         private bool m_isRotating = false;                              // Indicates whether the text is being rotated
 
-        // TODO: finish rotate functionality, probably in the rotateButton_MouseUp event
         // TODO: implement vertText options box
-        // TODO: enable hidden methods
         // TODO: handle the spacing of buttons based on text size
-        // TODO: double check all comments
+        // TODO: update initial button locations (eventually) to even out the sides
+        // TODO: new button images (round)
 
         /*
          * NAME
@@ -64,8 +72,8 @@ namespace My_Note
          * 
          * DESCRIPTION
          *  This constructor is called, specifically, from trapsarentPanel_MouseUp event handler.
-         *  It utilizes (MouseEventArgs e) to get the location from the object using this class
-         *  so that initial locations can be set.
+         *  IMPORTANT: It utilizes (MouseEventArgs e) to get the location from the object using
+         *  this class so that locations can be set INITIALLY and used CONTINUALLY.
          *  
          * RETURNS
          *  Nothing
@@ -82,7 +90,7 @@ namespace My_Note
 
             m_moveButton.Text = "m";
             m_moveButton.BackColor = Color.Yellow;
-            m_moveButton.Location = new Point(e.Location.X-8, e.Location.Y-8);
+            m_moveButton.Location = new Point(e.Location.X-8, e.Location.Y-8); // important
             m_moveButton.Size = new Size(16, 16);
             m_moveButton.MouseDown += moveButton_MouseDown;
             m_moveButton.MouseMove += moveButton_MouseMove;
@@ -92,6 +100,7 @@ namespace My_Note
             m_optionsButton.BackColor = Color.Blue;
             // This is default spacing and will be updated dynamically based on text width
             m_optionsButton.Location = new Point(m_moveButton.Location.X + 48, m_moveButton.Location.Y);
+
             m_optionsButton.Size = new Size(16, 16);
             m_optionsButton.MouseUp += optionsButton_MouseUp;
 
@@ -103,7 +112,6 @@ namespace My_Note
             m_rotateButton.MouseDown += rotateButton_MouseDown;
             m_rotateButton.MouseMove += rotateButton_MouseMove;
             m_rotateButton.MouseUp += rotateButton_MouseUp;
-
         } /* public VerticalText(MouseEventArgs e) */
 
         // This region contains m_moveButton Property and Event Handlers
@@ -135,9 +143,10 @@ namespace My_Note
          * DESCRIPTION
          *  Prepares this VerticalText object to be moved by capturing the mouse click location
          *  within the main screen, then it translates/calculates this initial location to the
-         *  location within the panel to be used in by subtracting the difference between location
-         *  in the big screen and the location in the panel. This value is then stored in 
-         *  m_alteringButtonOffsetPoint and used in moveButton_MouseMove event.
+         *  location within the panel to be used in by getting the difference between location
+         *  in the big screen and the location of m_moveButton in the panel. This value is then
+         *  stored in m_alteringButtonOffsetPoint and used in moveButton_MouseMove event. Hides
+         *  other buttons for nice appearances.
          *  
          * RETURNS
          *  Nothing
@@ -156,6 +165,8 @@ namespace My_Note
                 Point ptStartPosition = m_moveButton.PointToScreen(new Point(e.X, e.Y));
                 m_alteringButtonOffsetPoint.X = m_moveButton.Location.X - ptStartPosition.X;
                 m_alteringButtonOffsetPoint.Y = m_moveButton.Location.Y - ptStartPosition.Y;
+
+                m_optionsButton.Visible = false;
                 m_rotateButton.Visible = false;
             }
             else
@@ -177,7 +188,7 @@ namespace My_Note
          * DESCRIPTION
          *  Moves the VerticalText object by updating its new location based on the MouseEventArg and the
          *  offset calculated and recorded in the MouseDown event earlier. First it updates the position of
-         *  the moveButton itself, then it calculates and updates the position of the m_textOrigin point.
+         *  the m_moveButton itself, then it calculates and updates the position of the m_textOrigin point.
          *  
          * RETURNS
          *  Nothing
@@ -215,7 +226,8 @@ namespace My_Note
          *      e       -> used to confirm that left mouse button was clicked
          * 
          * DESCRIPTION
-         *  Updates and refreshes values that were changed during MouseDown and MouseMove events
+         *  Updates the locations of other buttons and sets them to visible. Refreshes
+         *  values that were changed during MouseDown and MouseMove events.
          *  
          * RETURNS
          *  Nothing
@@ -233,8 +245,15 @@ namespace My_Note
                 if (m_isMoving)
                 {
                     m_isMoving = false;
+
+                    m_optionsButton.Refresh();
+                    m_optionsButton.Location = new Point(m_moveButton.Location.X - m_optButOffsetX,
+                                                         m_moveButton.Location.Y - m_optButOffsetY);
+                    m_optionsButton.Visible = true;
+
                     m_rotateButton.Refresh();
-                    m_rotateButton.Location = new Point(m_moveButton.Location.X + 100, m_moveButton.Location.Y);
+                    m_rotateButton.Location = new Point(m_moveButton.Location.X - m_rotButOffsetX,
+                                                        m_moveButton.Location.Y - m_rotButOffsetY);
                     m_rotateButton.Visible = true;
                 }
             }
@@ -316,10 +335,11 @@ namespace My_Note
          * DESCRIPTION
          *  Prepares this VerticalText object to be rotated by capturing the mouse click location
          *  within the main screen, then it translates/calculates this initial location to the
-         *  location within the panel to be used in by subtracting the difference between location
-         *  in the big screen and the location in the panel. This value is then stored in 
-         *  m_alteringButtonOffsetPoint and used in rotateButton_MouseMove event.
-         *  
+         *  location within the panel to be used in by getting the difference between location
+         *  in the big screen and the location of m_moveButton in the panel. This value is then
+         *  stored in m_alteringButtonOffsetPoint and used in rotateButton_MouseMove event. Hides
+         *  other buttons for nice appearances.
+
          * RETURNS
          *  Nothing
          *  
@@ -358,7 +378,7 @@ namespace My_Note
          *  the difference between the current mouse cursor position (m_rotateButton) and the pivot
          *  position (m_moveButton), then uses the results in a trigonometric function to calculate and
          *  assign a new angle to the text string. Updates the location of m_rotateButton based on the
-         *  MouseEventArg and the offset calculated and recorded in the MouseDown event earlier.
+         *  (MouseEventArg e) and the offset calculated and recorded in the MouseDown event earlier.
          * 
          * RETURNS
          *  Nothing
@@ -393,10 +413,17 @@ namespace My_Note
          * SYNOPSIS
          *  private void rotateButton_MouseUp(object sender, MouseEventArgs e);
          *      sender  -> does nothing
-         *      e       -> used to confirm that left mouse button was clicked
+         *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  None yet
+         *  Calculates new locations and repositions the other two buttons based on (a) the newly generated
+         *  text angle and (b) the assigned distance of each button from the text. The pivot point is still
+         *  the m_moveButton and the angle used is one generated during mouseMove event. Third and fourth
+         *  variables to be used for calculations of button locations are the distances from m_moveButton
+         *  to m_optionsButton and from m_moveButton to m_rotateButton locations, respectively. Trigonometric
+         *  equations simply calculate the destination point (as mentioned) given the pivot point, angle, and
+         *  distance to destination. After calculations are peformed and locations reassigned, the values of
+         *  some member variables are updated so they can be utilized in the moveButton_MouseMove event.
          * 
          * RETURNS
          *  Nothing
@@ -413,6 +440,27 @@ namespace My_Note
             {
                 if (m_isRotating)
                 {
+                    float X = m_moveButton.Location.X;
+                    float Y = m_moveButton.Location.Y;
+                    float radAngleF = (float)(Math.PI * (double)m_textAngle / 180.0);
+
+                    float optButDistF = m_optButtDistF;
+                    float newOptLocX = (float)(X + Math.Cos(radAngleF) * optButDistF);
+                    float newOptLocY = (float)(Y + Math.Sin(radAngleF) * optButDistF);
+                    PointF newOptButPtF = new PointF(newOptLocX, newOptLocY);
+                    m_optionsButton.Location = Point.Round(newOptButPtF);
+                    m_optButOffsetX = m_moveButton.Location.X - m_optionsButton.Location.X;
+                    m_optButOffsetY = m_moveButton.Location.Y - m_optionsButton.Location.Y;
+
+                    float rotButDistF = m_rotButDistF;
+                    float newRotLocX = (float)(X + Math.Cos(radAngleF) * rotButDistF);
+                    float newRotLocY = (float)(Y + Math.Sin(radAngleF) * rotButDistF);
+                    PointF newRotButPtF = new PointF(newRotLocX, newRotLocY);
+                    m_rotateButton.Location = Point.Round(newRotButPtF);
+                    m_rotButOffsetX = m_moveButton.Location.X - m_rotateButton.Location.X;
+                    m_rotButOffsetY = m_moveButton.Location.Y - m_rotateButton.Location.Y;
+                    
+                    // Reset values
                     m_isRotating = false;
                     m_moveButton.Visible = true;
                     m_optionsButton.Visible = true;
@@ -434,7 +482,10 @@ namespace My_Note
          *      e       -> used to indicate location and size of text
          * 
          * DESCRIPTION
-         *  None yet
+         *  This method draws text at a desired angle. The 'engine' of this method was taken from a
+         *  book, documented and credited appropriately; i.e. the transform methods. Arguments for
+         *  these methods are member variables that were generated using other methods of this class.
+         *  The string width is calculated to accomodate the position and spacing of buttons.
          * 
          * RETURNS
          *  Nothing
@@ -448,100 +499,17 @@ namespace My_Note
          */
         public void drawVerticalText(PaintEventArgs e)
         {
-            //e.Graphics.TranslateTransform(m_moveButton.Location.X, m_moveButton.Location.Y);
             e.Graphics.TranslateTransform(m_textOrigin.X, m_textOrigin.Y);
             e.Graphics.RotateTransform(m_textAngle);
             e.Graphics.TranslateTransform(-m_moveButton.Location.X, -m_moveButton.Location.Y);
             e.Graphics.DrawString(m_textString, m_textFont, m_textBrush, m_textOrigin);
             e.Graphics.ResetTransform();
 
-            SizeF currentStringWidth = getStringWidth(e);
-            logString = "stringWidth = " + currentStringWidth;
-        } /* public void drawVerticalText(PaintEventArgs e) */
-
-        /*
-         * NAME
-         *  private SizeF getStringWidth() - gets the width of string
-         *  
-         * SYNOPSIS
-         *  private SizeF getStringWidth(PaintEventArgs e);
-         *      e       -> used to get the width of text
-         * 
-         * DESCRIPTION
-         *  None yet
-         * 
-         * RETURNS
-         *  Size of the string as a float point structure SizeF
-         *  
-         * AUTHOR
-         *  Murat Zazi
-         *  
-         * DATE
-         *  7:29am 4/15/2015
-         */
-        private SizeF getStringWidth(PaintEventArgs e)
-        {
             int maxWidth = 200;
-            SizeF retWidth = new SizeF();
-            retWidth = e.Graphics.MeasureString(m_textString, m_textFont, maxWidth);
-
-            return retWidth;
-        } /* private SizeF getStringWidth(PaintEventArgs e) */
-
-        /*
-         * NAME
-         *  hideButtons() - hides the buttons
-         *  
-         * SYNOPSIS
-         *  private void hideButtons();
-         * 
-         * DESCRIPTION
-         *  None yet
-         * 
-         * RETURNS
-         *  Nothing
-         *  
-         * AUTHOR
-         *  Murat Zazi
-         *  
-         * DATE
-         *  6:45pm 4/17/2015
-         */
-        private void hideButtons()
-        {
-            m_moveButton.Visible = false;
-            m_optionsButton.Visible = false;
-            m_rotateButton.Visible = false;
-        } /* private void hideButtons() */
-
-        /*
-         * 6:46pm 4/17/15
-         */
-        /*
-         * NAME
-         *  showButtons() - shows the buttons
-         *  
-         * SYNOPSIS
-         *  private void showButtons();
-         * 
-         * DESCRIPTION
-         *  None yet
-         * 
-         * RETURNS
-         *  Nothing
-         *  
-         * AUTHOR
-         *  Murat Zazi
-         *  
-         * DATE
-         *  6:45pm 4/17/2015
-         */
-        private void showButtons()
-        {
-            m_moveButton.Visible = true;
-            m_moveButton.Visible = true;
-            m_moveButton.Visible = true;
-        } /* private void showButtons() */
+            SizeF currentStringSize = new SizeF();
+            currentStringSize = e.Graphics.MeasureString(m_textString, m_textFont, maxWidth);
+            logString = "currentStringSize = " + currentStringSize;
+        } /* public void drawVerticalText(PaintEventArgs e) */
 
         #endregion
     }
