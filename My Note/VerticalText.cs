@@ -30,19 +30,20 @@ namespace My_Note
     {
         public string logString = "logString empty"; // TEMP
 
-        private String m_textString = "Enter Text";                     // Actual text of vertical text
+        //private String m_textString = "Enter Text";                     // Actual text of vertical text
+        private String m_textString = "This is a much longer text";                     // Actual text of vertical text
         private Int32 m_textAngle = 0;                                  // The angle of vertical text
         private Font m_textFont = new Font("Microsoft Sans Serif", 12); // The font of vertical text
-        private SolidBrush m_textBrush = new SolidBrush(Color.Blue);    // The brush use on vertical text
+        private SolidBrush m_textBrush = new SolidBrush(Color.Red);    // The brush use on vertical text
         private Point m_textOrigin;                                     // Origin of vertical text
         private Point m_textDestPt = new Point(0, 0);                   // Updated origin of vertical text after move
         
         private float m_optButtDistF = 48;                              // Distance between move and options buttons
-        private Int32 m_optButOffsetX = 48;                             // x-offset from move to options button (used dynamically)
+        private Int32 m_optButOffsetX = -48;                            // x-offset from move to options button (used dynamically)
         private Int32 m_optButOffsetY = 0;                              // y-offset from move to options button (used dynamically)
 
         private float m_rotButDistF = 96;                               // Distance between move and rotate buttons
-        private Int32 m_rotButOffsetX = 96;                             // x-offset from move to rotate button (used dynamically)
+        private Int32 m_rotButOffsetX = -96;                            // x-offset from move to rotate button (used dynamically)
         private Int32 m_rotButOffsetY = 0;                              // y-offset from move to rotate button (used dynamically)
 
         private Point m_alteringButtonOffsetPoint = new Point();        // Offset point saved by subtracting 'm_moveButton.Location' (assigned by
@@ -57,6 +58,8 @@ namespace My_Note
         private Button m_rotateButton = new Button();                   // Rotates the vertical text to use desired angles
         private bool m_isRotating = false;                              // Indicates whether the text is being rotated
 
+        // TODO: maybe there should be a universal update button location method called by move and rotate buttons
+        // TODO: can I eliminate some member variables? Can I clean up constructor even more?
         // TODO: implement vertText options box
         // TODO: handle the spacing of buttons based on text size
         // TODO: update initial button locations (eventually) to even out the sides
@@ -92,6 +95,7 @@ namespace My_Note
             m_moveButton.BackColor = Color.Yellow;
             m_moveButton.Location = new Point(e.Location.X-8, e.Location.Y-8); // important
             m_moveButton.Size = new Size(16, 16);
+            // Add event handler programmatically as buttons are created 
             m_moveButton.MouseDown += moveButton_MouseDown;
             m_moveButton.MouseMove += moveButton_MouseMove;
             m_moveButton.MouseUp += moveButton_MouseUp;
@@ -100,7 +104,6 @@ namespace My_Note
             m_optionsButton.BackColor = Color.Blue;
             // This is default spacing and will be updated dynamically based on text width
             m_optionsButton.Location = new Point(m_moveButton.Location.X + 48, m_moveButton.Location.Y);
-
             m_optionsButton.Size = new Size(16, 16);
             m_optionsButton.MouseUp += optionsButton_MouseUp;
 
@@ -246,14 +249,32 @@ namespace My_Note
                 {
                     m_isMoving = false;
 
-                    m_optionsButton.Refresh();
-                    m_optionsButton.Location = new Point(m_moveButton.Location.X - m_optButOffsetX,
-                                                         m_moveButton.Location.Y - m_optButOffsetY);
-                    m_optionsButton.Visible = true;
+                    float X = m_moveButton.Location.X;
+                    float Y = m_moveButton.Location.Y;
+                    float radAngleF = (float)(Math.PI * (double)m_textAngle / 180.0);
 
-                    m_rotateButton.Refresh();
-                    m_rotateButton.Location = new Point(m_moveButton.Location.X - m_rotButOffsetX,
-                                                        m_moveButton.Location.Y - m_rotButOffsetY);
+                    float optButDistF = m_optButtDistF;
+                    float newOptLocX = (float)(X + Math.Cos(radAngleF) * optButDistF);
+                    float newOptLocY = (float)(Y + Math.Sin(radAngleF) * optButDistF);
+                    PointF newOptButPtF = new PointF(newOptLocX, newOptLocY);
+                    m_optionsButton.Location = Point.Round(newOptButPtF);
+                    m_optButOffsetX = m_moveButton.Location.X - m_optionsButton.Location.X;
+                    m_optButOffsetY = m_moveButton.Location.Y - m_optionsButton.Location.Y;
+
+                    float rotButDistF = m_rotButDistF;
+                    float newRotLocX = (float)(X + Math.Cos(radAngleF) * rotButDistF);
+                    float newRotLocY = (float)(Y + Math.Sin(radAngleF) * rotButDistF);
+                    PointF newRotButPtF = new PointF(newRotLocX, newRotLocY);
+                    m_rotateButton.Location = Point.Round(newRotButPtF);
+                    m_rotButOffsetX = m_moveButton.Location.X - m_rotateButton.Location.X;
+                    m_rotButOffsetY = m_moveButton.Location.Y - m_rotateButton.Location.Y;
+                    //m_optionsButton.Refresh();
+                    //m_optionsButton.Location = new Point(m_moveButton.Location.X - m_optButOffsetX,
+                    //                                     m_moveButton.Location.Y - m_optButOffsetY);
+                    //m_rotateButton.Refresh();
+                    //m_rotateButton.Location = new Point(m_moveButton.Location.X - m_rotButOffsetX,
+                    //                                    m_moveButton.Location.Y - m_rotButOffsetY);
+                    m_optionsButton.Visible = true;
                     m_rotateButton.Visible = true;
                 }
             }
@@ -302,6 +323,7 @@ namespace My_Note
         {
             if (e.Button == MouseButtons.Left)
             {
+                m_optionsBox.SetUIAttributes(ref m_textFont, ref m_textString, ref m_textBrush);
                 m_optionsBox.ShowDialog();
             }
         } /* private void optionsButton_MouseUp(object sender, MouseEventArgs e) */
@@ -508,7 +530,22 @@ namespace My_Note
             int maxWidth = 200;
             SizeF currentStringSize = new SizeF();
             currentStringSize = e.Graphics.MeasureString(m_textString, m_textFont, maxWidth);
-            logString = "currentStringSize = " + currentStringSize;
+            int intVal = Convert.ToInt32(currentStringSize.Width);
+            logString = "currentStringSize = " + intVal;
+
+            // update offset values for buttons
+            if (m_rotButOffsetX < 0)
+            {
+                m_rotButOffsetX = ((intVal + 14) * -1);
+            }
+            else
+            {
+                m_rotButOffsetX = intVal + 14;
+            }
+            m_rotButDistF = Math.Abs(m_rotButOffsetX);
+            m_optButOffsetX = m_rotButOffsetX / 2;
+            m_optButtDistF = Math.Abs(m_optButOffsetX);
+
         } /* public void drawVerticalText(PaintEventArgs e) */
 
         #endregion

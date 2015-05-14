@@ -28,26 +28,117 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
+            this.FontStyleLabel = new System.Windows.Forms.Label();
+            this.FontStyleComboBox = new System.Windows.Forms.ComboBox();
+            this.FontSizeComboBox = new System.Windows.Forms.ComboBox();
+            this.FontSizeLabel = new System.Windows.Forms.Label();
+            this.FontColorLabel = new System.Windows.Forms.Label();
+            this.TextLabel = new System.Windows.Forms.Label();
+            this.TextRichTextBox = new System.Windows.Forms.RichTextBox();
+            this.FontColorComboBox = new My_Note.VTextColorComboBox();
             this.SuspendLayout();
             // 
-            // label1
+            // FontStyleLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(274, 127);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(51, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Font Size";
+            this.FontStyleLabel.AutoSize = true;
+            this.FontStyleLabel.Location = new System.Drawing.Point(9, 9);
+            this.FontStyleLabel.Name = "FontStyleLabel";
+            this.FontStyleLabel.Size = new System.Drawing.Size(54, 13);
+            this.FontStyleLabel.TabIndex = 0;
+            this.FontStyleLabel.Text = "Font Style";
+            // 
+            // FontStyleComboBox
+            // 
+            this.FontStyleComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.FontStyleComboBox.FormattingEnabled = true;
+            this.FontStyleComboBox.Items.AddRange(new object[] {
+            "Calibri",
+            "Consolas",
+            "Microsoft Sans Serif",
+            "Times New Roman"});
+            this.FontStyleComboBox.Location = new System.Drawing.Point(12, 25);
+            this.FontStyleComboBox.Name = "FontStyleComboBox";
+            this.FontStyleComboBox.Size = new System.Drawing.Size(121, 21);
+            this.FontStyleComboBox.TabIndex = 1;
+            // 
+            // FontSizeComboBox
+            // 
+            this.FontSizeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.FontSizeComboBox.FormattingEnabled = true;
+            this.FontSizeComboBox.Items.AddRange(new object[] {
+            "8",
+            "9",
+            "10",
+            "12",
+            "14"});
+            this.FontSizeComboBox.Location = new System.Drawing.Point(139, 25);
+            this.FontSizeComboBox.Name = "FontSizeComboBox";
+            this.FontSizeComboBox.Size = new System.Drawing.Size(51, 21);
+            this.FontSizeComboBox.TabIndex = 2;
+            // 
+            // FontSizeLabel
+            // 
+            this.FontSizeLabel.AutoSize = true;
+            this.FontSizeLabel.Location = new System.Drawing.Point(139, 9);
+            this.FontSizeLabel.Name = "FontSizeLabel";
+            this.FontSizeLabel.Size = new System.Drawing.Size(51, 13);
+            this.FontSizeLabel.TabIndex = 3;
+            this.FontSizeLabel.Text = "Font Size";
+            // 
+            // FontColorLabel
+            // 
+            this.FontColorLabel.AutoSize = true;
+            this.FontColorLabel.Location = new System.Drawing.Point(196, 9);
+            this.FontColorLabel.Name = "FontColorLabel";
+            this.FontColorLabel.Size = new System.Drawing.Size(55, 13);
+            this.FontColorLabel.TabIndex = 4;
+            this.FontColorLabel.Text = "Font Color";
+            // 
+            // TextLabel
+            // 
+            this.TextLabel.AutoSize = true;
+            this.TextLabel.Location = new System.Drawing.Point(12, 49);
+            this.TextLabel.Name = "TextLabel";
+            this.TextLabel.Size = new System.Drawing.Size(28, 13);
+            this.TextLabel.TabIndex = 7;
+            this.TextLabel.Text = "Text";
+            // 
+            // TextRichTextBox
+            // 
+            this.TextRichTextBox.Location = new System.Drawing.Point(12, 65);
+            this.TextRichTextBox.Name = "TextRichTextBox";
+            this.TextRichTextBox.Size = new System.Drawing.Size(305, 30);
+            this.TextRichTextBox.TabIndex = 8;
+            this.TextRichTextBox.Text = "";
+            // 
+            // FontColorComboBox
+            // 
+            this.FontColorComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.FontColorComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.FontColorComboBox.FormattingEnabled = true;
+            this.FontColorComboBox.Location = new System.Drawing.Point(196, 25);
+            this.FontColorComboBox.Name = "FontColorComboBox";
+            this.FontColorComboBox.SelectedItem = null;
+            this.FontColorComboBox.SelectedValue = System.Drawing.Color.White;
+            this.FontColorComboBox.Size = new System.Drawing.Size(121, 21);
+            this.FontColorComboBox.TabIndex = 6;
             // 
             // VertTextOptionsBox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(602, 374);
-            this.Controls.Add(this.label1);
+            this.ClientSize = new System.Drawing.Size(352, 292);
+            this.Controls.Add(this.TextRichTextBox);
+            this.Controls.Add(this.TextLabel);
+            this.Controls.Add(this.FontColorComboBox);
+            this.Controls.Add(this.FontColorLabel);
+            this.Controls.Add(this.FontSizeLabel);
+            this.Controls.Add(this.FontSizeComboBox);
+            this.Controls.Add(this.FontStyleComboBox);
+            this.Controls.Add(this.FontStyleLabel);
             this.Name = "VertTextOptionsBox";
             this.Text = "VertTextOptionsBox";
+            this.Load += new System.EventHandler(this.VertTextOptionsBox_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -55,6 +146,13 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label FontStyleLabel;
+        private System.Windows.Forms.ComboBox FontStyleComboBox;
+        private System.Windows.Forms.ComboBox FontSizeComboBox;
+        private System.Windows.Forms.Label FontSizeLabel;
+        private System.Windows.Forms.Label FontColorLabel;
+        private VTextColorComboBox FontColorComboBox;
+        private System.Windows.Forms.Label TextLabel;
+        private System.Windows.Forms.RichTextBox TextRichTextBox;
     }
 }

@@ -73,6 +73,12 @@
     <Compile Include="VertTextOptionsBox.Designer.cs">
       <DependentUpon>VertTextOptionsBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="VTextColorComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="VTextColorComboBox.Designer.cs">
+      <DependentUpon>VTextColorComboBox.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="mainForm.resx">
       <DependentUpon>mainForm.cs</DependentUpon>
     </EmbeddedResource>
