@@ -599,7 +599,7 @@ namespace My_Note
             for (int i = 0; i < m_verticalTextList.Count; i++)
             {
                 m_verticalTextList[i].drawVerticalText(e);
-                //mslog(m_verticalTextList[i].logString);
+                mslog(m_verticalTextList[i].logString);
             }
         } /* private void transparentPanel_Paint(object sender, PaintEventArgs e) */
 
