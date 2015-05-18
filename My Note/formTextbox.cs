@@ -41,36 +41,42 @@ using System.Drawing.Drawing2D;
  *                       components have been separated into regions each with appropriate comments.
  */
 
+/* TODO: add this to CODE STRUCTURE somewhere: Thoughout this class elements are being refreshed and invalidated
+ * in order to force to repaint. These calls are made only when absolutely necessary and on only the required elemnts, 
+ * for example: some objects call Refresh() and others Invalidate(). This is because repainitng is expensive and
+ * lowers performance efficiency.
+*/
+
 namespace My_Note
 {
     public partial class MainForm : Form
     {
         private ShapeContainer m_shapesStorage = new ShapeContainer();      // Storage of all the drawing data
-        private bool m_isDrawing = false;                                   // Is the mouse currently down (transparentPanel_Mouse...)
-        private bool m_isErasing = false;                                   // Is the mouse currently down (transparentPanel_Mouse...)
+        private bool m_isDrawing = false;                                   // Is the mouse currently down and drawing
+        private bool m_isErasing = false;                                   // Is the mouse currently down and erasing
         private Point m_lastPosition = new Point(0, 0);                     // Last cursor position, used to cut down on repetative data
-        private Color m_currentDrawColor = Color.Black;                     // Current drawing color (updated immediately on change)
+        private Color m_currentDrawColor = Color.Black;                     // Current drawing color
         private float m_currentPenWidth = 1;                                // Current pen width (does not change)
         private int m_shapeNumber = 0;                                      // Record the shape numbers so they can be drawn separately
         private Point m_drawStartPoint = new Point(0, 0);                   // Start point of arrow or line
         private Point m_drawEndPoint = new Point(0, 0);                     // End point of arrow or line
-        private Point m_arrowLeftSide = new Point(0, 0);                    // Left side of the arrow
-        private Point m_arrowRightSide = new Point(0, 0);                   // Right side of the arrow
+        private Point m_arrowLeftSide = new Point(0, 0);                    // Left side of the arrow head
+        private Point m_arrowRightSide = new Point(0, 0);                   // Right side of the arrow head
         private Int32 m_arrowFarPoint = 0;                                  // Used in the diagonal arrows
         private Graphics m_transparentPanelGraphics;                        // Used to reduce repetitive data creation
         private Pen m_transparentPanelPen;                                  // Used to reduce repetitive data creation
         private bool m_canDash = false;                                     // Used when saving dashed or dotted lines
-        private List<VerticalText> m_verticalTextList = new List<VerticalText>();   // Used to store VerticalText instances
+        private List<VerticalText> m_verticalTextList = new List<VerticalText>();  // Used to store VerticalText instances
+        private int m_richTextBoxSelectStartCharIndex = 0;                  // Record start index before text selection using mouse
+        private int m_richTextBoxSelectCurrentCharIndex = 0;                // Record current index during text selection using mouse
+        private bool m_isSelectingText = false;                             // Is the mouse currently down and selecting text
 
-        // need to: shorten transparentPanel_MouseUp event (this is easily possible, towards the end)
-
-        // This region contains all methods and event handlers
-        // of the richTextBox, which is the main text box
+        // This region contains methods for richTextBox
         #region richTextBoxMethods
 
         /*
          * NAME
-         *  richTextBox_TextChanged() - event handler for richTextBox
+         *  richTextBox_TextChanged() - repaints UI elements when text is changed
          *  
          * SYNOPSIS
          *  private void richTextBox_TextChanged(object sender, EventArgs e);
@@ -79,7 +85,7 @@ namespace My_Note
          * 
          * DESCRIPTION
          *  Calls invalidate on richTextBox and transparentPanel during text typing
-         *  in order to update user drawings presented on transparentPanel
+         *  in order to update current graphics of UI elements.
          *  
          * RETURNS
          *  Nothing
@@ -98,8 +104,7 @@ namespace My_Note
 
         #endregion
 
-        // This region contains event handler methods of the
-        // transparentPanel, which is the main drawing panel
+        // This region contains event handler for transparentPanel
         #region transparentPanelEventMethods
 
         /*
@@ -109,13 +114,14 @@ namespace My_Note
          * SYNOPSIS
          *  private void transparentPanel_Click(object sender, System.EventArgs e);
          *      sender  -> does nothing
-         *      e       -> used to capture the location of the cursor upon click
+         *      e       -> used to capture the location of the cursor upon click and
+         *                 confirm that the left mouse button was clicked
          *      
          * DESCRIPTION
-         *  When textControl is selected, this method will pass down the mouse location coordinates
-         *  through the transparentPanel and to the richTextBox so that the text cursor is positioned
-         *  in the right place. Additional calculations are performed because the origin of the
-         *  richTextBox is away from the origins of its front and back layers.
+         *  When textControl is selected, this method will pass down the mouse location coordinates through
+         *  the transparentPanel and to the richTextBox so that the text cursor is positioned in the right
+         *  place. Additional calculations are performed because the origin point of richTextBox is away from
+         *  the origin points of its front and back layers.
          * 
          * RETURNS
          *  Nothing
@@ -128,17 +134,18 @@ namespace My_Note
          */
         private void transparentPanel_Click(object sender, System.EventArgs e)
         {
-            // If currently in text editing mode
-            if (m_currentSelectedControl == e_SelectedControl.TEXT)
+            var mouseEventArgs = e as MouseEventArgs;
+            if (mouseEventArgs.Button == MouseButtons.Left)
             {
-                var mouseEventArgs = e as MouseEventArgs;
-                if (mouseEventArgs.Button == MouseButtons.Left)
+                // If currently in text editing mode
+                if (m_currentSelectedControl == e_SelectedControl.TEXT)
                 {
-                    int charCount = richTextBox.TextLength;
                     Point newPoint = new Point(mouseEventArgs.X - 40, mouseEventArgs.Y - 35);
                     int charIndex = richTextBox.GetCharIndexFromPosition(newPoint);
                     richTextBox.SelectionStart = charIndex;
+                    richTextBox.SelectionLength = 0;
                     richTextBox.Select();
+                    transparentPanel.Refresh();
                 }
             }
         } /*private void transparentPanel_Click(object sender, System.EventArgs e)*/
@@ -150,10 +157,17 @@ namespace My_Note
          * SYNOPSIS
          *  private void transparentPanel_MouseDown(object sender, MouseEventArgs e);
          *      sender  -> does nothing
-         *      e       -> used to get the location of the mouse and set it to m_drawStartPoint
+         *      e       -> used to capture current location of cursor, assign it to other
+         *                 values, and confirm that left mouse button was clicked
          *      
          * DESCRIPTION
-         *  Prepares drawing controls to be used by setting/updating member variables
+         *  Prepares drawing controls to be used by setting/updating values of member variables.
+         *  If text control is selected, then this method prepares a multi-character text selection.
+         *  Pencil and eraser controls need simpler preparation processes. Last two conditions cast
+         *  the 'enum' type m_currentSelectedControl to 'int' in order to test as many conditions as
+         *  possible while keeping a minimum required lines of code and maintaining readability. Great
+         *  deal of effort was put into arranging the structure of this code to maintain simplicity,
+         *  readability, and to optimize performance.
          * 
          * RETURNS
          *  Nothing
@@ -162,12 +176,18 @@ namespace My_Note
          *  Murat Zazi
          *  
          * DATE
-         *  9:01 am 3/10/2015
+         *  9:01am 3/10/2015
          */
         private void transparentPanel_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
+
+                if (m_currentSelectedControl == e_SelectedControl.TEXT)
+                {
+                    Point newPoint = new Point(e.X - 40, e.Y - 35); // Text box origin has an offset
+                    m_richTextBoxSelectStartCharIndex = richTextBox.GetCharIndexFromPosition(newPoint);
+                }
                 if (m_currentSelectedControl == e_SelectedControl.PENCIL)
                 {
                     m_isDrawing = true;
@@ -178,69 +198,16 @@ namespace My_Note
                 {
                     m_isErasing = true;
                 }
-                if (m_currentSelectedControl == e_SelectedControl.WARROW)
+                // This technique saves many lines of code and  uses less test conditions
+                if (((int)m_currentSelectedControl > 2) &&
+                    ((int)m_currentSelectedControl < 14))
                 {
                     m_isDrawing = true;
                     m_drawStartPoint = e.Location;
                 }
-                if (m_currentSelectedControl == e_SelectedControl.NWARROW)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                    m_arrowFarPoint = 0;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.NARROW)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.NEARROW)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.EARROW)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.SEARROW)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.SARROW)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.SWARROW)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.RECTANGLE)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.ELLIPSE)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.SOLID)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.DASHED)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                    m_canDash = true;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.DOTTED)
+
+                if (((int)m_currentSelectedControl > 13) &&
+                    ((int)m_currentSelectedControl < 16))
                 {
                     m_isDrawing = true;
                     m_drawStartPoint = e.Location;
@@ -256,13 +223,17 @@ namespace My_Note
          * SYNOPSIS
          *  private void transparentPanel_MouseMove(object sender, MouseEventArgs e);
          *      sender  -> does nothing
-         *      e       -> used to capture current location of cursor and pass to helper method
+         *      e       -> used to capture current location of cursor, pass it to helper methods,
+         *                 and confirm that left mouse button was clicked
          *      
          * DESCRIPTION
-         *  Based on the tool selected start drawing, saving, or erasing. Some of the shapes are drawn
+         *  Based on the control selected start drawing, saving, or erasing. Some of the shapes are drawn
          *  and saved in this method (pencil, eraser). Other shapes (lines, arrows, ovals, rectangles) are
          *  only drawn here to display to the user a dynamic response. They get saved on MouseUp event.
-         *  Eraser only removes anything that is not text.
+         *  Eraser only removes anything that is not text. When text control is selected this method is used
+         *  for multi-character and/or multi-line selection in the richTextBox, as the mouse is down and being
+         *  dragged. Great deal of effort was put into arranging the structure of this code to maintain 
+         *  simplicity, readability, and to optimize performance.
          * 
          * RETURNS
          *  Nothing
@@ -277,6 +248,15 @@ namespace My_Note
         {
             if (e.Button == MouseButtons.Left)
             {
+                if (m_currentSelectedControl == e_SelectedControl.TEXT)
+                {
+                    m_isSelectingText = true;
+                    Point newPoint = new Point(e.X - 40, e.Y - 35);
+                    m_richTextBoxSelectCurrentCharIndex = richTextBox.GetCharIndexFromPosition(newPoint);
+                    richTextBox.SelectionStart = Math.Min(m_richTextBoxSelectStartCharIndex, m_richTextBoxSelectCurrentCharIndex);
+                    richTextBox.SelectionLength = Math.Abs(m_richTextBoxSelectCurrentCharIndex - m_richTextBoxSelectStartCharIndex);
+                    richTextBox.Select();
+                }
                 if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.PENCIL))
                 {
                     drawWithPencil(e);
@@ -285,82 +265,67 @@ namespace My_Note
                 {
                     startErasing(e);
                 }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.WARROW))
+                if (m_isDrawing && m_lastPosition != e.Location)
                 {
-                    if ((m_lastPosition != e.Location) && (e.Location.X < m_drawStartPoint.X))
+                    if ((m_currentSelectedControl == e_SelectedControl.WARROW) && (e.Location.X < m_drawStartPoint.X))
                     {
                         drawWestArrow(e);
                     }
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.NWARROW))
-                {
-                    if ((m_lastPosition != e.Location) && (e.Location.X < m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y))
+                    if ((m_currentSelectedControl == e_SelectedControl.NWARROW) &&
+                        (e.Location.X < m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y))
                     {
                         drawNorthWestArrow(e);
                     }
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.NARROW))
-                {
-                    if ((m_lastPosition != e.Location) && (e.Location.Y < m_drawStartPoint.Y))
+                    if ((m_currentSelectedControl == e_SelectedControl.NARROW) && (e.Location.Y < m_drawStartPoint.Y))
                     {
                         drawNorthArrow(e);
                     }
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.NEARROW))
-                {
-                    if ((m_lastPosition != e.Location) && (e.Location.X > m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y))
+                    if ((m_currentSelectedControl == e_SelectedControl.NEARROW) && 
+                        (e.Location.X > m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y))
                     {
                         drawNorthEastArrow(e);
                     }
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.EARROW))
-                {
-                    if ((m_lastPosition != e.Location) && (e.Location.X > m_drawStartPoint.X))
+                    if ((m_currentSelectedControl == e_SelectedControl.EARROW) && (e.Location.X > m_drawStartPoint.X))
                     {
                         drawEastArrow(e);
                     }
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.SEARROW))
-                {
-                    if ((m_lastPosition != e.Location) && (e.Location.X > m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y))
+                    if ((m_currentSelectedControl == e_SelectedControl.SEARROW) &&
+                        (e.Location.X > m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y))
                     {
                         drawSouthEastArrow(e);
                     }
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.SARROW))
-                {
-                    if ((m_lastPosition != e.Location) && (e.Location.Y > m_drawStartPoint.Y))
+                    if ((m_currentSelectedControl == e_SelectedControl.SARROW) && (e.Location.Y > m_drawStartPoint.Y))
                     {
                         drawSouthArrow(e);
                     }
-                }
-                if (m_isDrawing & (m_currentSelectedControl == e_SelectedControl.SWARROW))
-                {
-                    if ((m_lastPosition != e.Location) && (e.Location.X < m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y))
+                    if ((m_currentSelectedControl == e_SelectedControl.SWARROW) &&
+                        (e.Location.X < m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y))
                     {
                         drawSouthWestArrow(e);
                     }
                 }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.RECTANGLE))
+                if (m_isDrawing)
                 {
-                    drawRectangle(e);
-                }
-
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.ELLIPSE))
-                {
-                    drawEllipse(e);
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.SOLID))
-                {
-                    drawSolidLine(e);
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.DASHED))
-                {
-                    drawDashedLine(e);
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.DOTTED))
-                {
-                    drawDottedLine(e);
+                    if (m_currentSelectedControl == e_SelectedControl.RECTANGLE)
+                    {
+                        drawRectangle(e);
+                    }
+                    if (m_currentSelectedControl == e_SelectedControl.ELLIPSE)
+                    {
+                        drawEllipse(e);
+                    }
+                    if (m_currentSelectedControl == e_SelectedControl.SOLID)
+                    {
+                        drawSolidLine(e);
+                    }
+                    if (m_currentSelectedControl == e_SelectedControl.DASHED)
+                    {
+                        drawDashedLine(e);
+                    }
+                    if (m_currentSelectedControl == e_SelectedControl.DOTTED)
+                    {
+                        drawDottedLine(e);
+                    }
                 }
             }
         } /* private void transparentPanel_MouseMove(object sender, MouseEventArgs e) */
@@ -372,14 +337,16 @@ namespace My_Note
          * SYNOPSIS
          *  private void transparentPanel_MouseUp(object sender, MouseEventArgs e);
          *      sender  -> does nothing
-         *      e       -> used to capture current location of cursor and pass to helper methods
+         *      e       -> used to capture current location of cursor, pass it to helper methods,
+         *                 and confirm that left mouse button was clicked
          *      
          * DESCRIPTION
          *  Updates values, saves data, redraws transparentPanel and richTextBox. Pencil and
          *  eraser actions are already saved up to this point. Lines, arrows, and other shapes
          *  use special methods for saving, which are triggered by this method. 'if' statements
          *  test for several values to ensure/restrict the direction of the shape being drawn
-         * 
+         * //TODO:                     // Prevent accidentally creating too many instances of VerticalText
+            // code was structured this way to minimize test conditions while maintaining readability
          * RETURNS
          *  Nothing
          * 
@@ -393,6 +360,16 @@ namespace My_Note
         {
             if (e.Button == MouseButtons.Left)
             {
+                if ((m_currentSelectedControl == e_SelectedControl.TEXT) && (m_isSelectingText == true))
+                {
+                    richTextBox.SelectionStart = Math.Min(m_richTextBoxSelectStartCharIndex, m_richTextBoxSelectCurrentCharIndex);
+                    richTextBox.SelectionLength = Math.Abs(m_richTextBoxSelectCurrentCharIndex - m_richTextBoxSelectStartCharIndex);
+                    richTextBox.Select();
+                    richTextBox.Invalidate();
+                    transparentPanel.Invalidate();
+                    //richTextBox.Refresh();
+                    m_isSelectingText = false;
+                }
                 if (m_currentSelectedControl == e_SelectedControl.PENCIL)
                 {
                     transparentPanel.Invalidate();
@@ -404,130 +381,79 @@ namespace My_Note
                     transparentPanel.Invalidate();
                     richTextBox.Invalidate();
                 }
-                if (m_currentSelectedControl == e_SelectedControl.WARROW)
+                if (m_isDrawing)
                 {
-                    if (m_isDrawing && (e.Location.X < m_drawStartPoint.X))
+                    if (m_currentSelectedControl == e_SelectedControl.WARROW && (e.Location.X < m_drawStartPoint.X))
                     {
                         saveWestArrow(e);
                     }
-                }
-                if (m_currentSelectedControl == e_SelectedControl.NWARROW)
-                {
-                    if ((m_isDrawing) && (e.Location.X < m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y))
+                    if (m_currentSelectedControl == e_SelectedControl.NWARROW &&
+                        (e.Location.X < m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y))
                     {
                         saveNorthWestArrow(e);
                     }
-                }
-                if (m_currentSelectedControl == e_SelectedControl.NARROW)
-                {
-                    if (m_isDrawing && (e.Location.Y < m_drawStartPoint.Y))
+                    if (m_currentSelectedControl == e_SelectedControl.NARROW && (e.Location.Y < m_drawStartPoint.Y))
                     {
                         saveNorthArrow(e);
                     }
-                }
-                if (m_currentSelectedControl == e_SelectedControl.NEARROW)
-                {
-                    if (m_isDrawing && (e.Location.X > m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y))
+                    if (m_currentSelectedControl == e_SelectedControl.NEARROW &&
+                        (e.Location.X > m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y))
                     {
                         saveNorthEastArrow(e);
                     }
-                }
-                if (m_currentSelectedControl == e_SelectedControl.EARROW)
-                {
-                    if (m_isDrawing && (e.Location.X > m_drawStartPoint.X))
+                    if (m_currentSelectedControl == e_SelectedControl.EARROW && (e.Location.X > m_drawStartPoint.X))
                     {
                         saveEastArrow(e);
                     }
-                }
-                if (m_currentSelectedControl == e_SelectedControl.SEARROW)
-                {
-                    if (m_isDrawing && (e.Location.X > m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y))
+                    if (m_currentSelectedControl == e_SelectedControl.SEARROW &&
+                        (e.Location.X > m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y))
                     {
                         saveSouthEastArrow(e);
                     }
-                }
-                if (m_currentSelectedControl == e_SelectedControl.SARROW)
-                {
-                    if (m_isDrawing && (e.Location.Y > m_drawStartPoint.Y))
+                    if (m_currentSelectedControl == e_SelectedControl.SARROW && (e.Location.Y > m_drawStartPoint.Y))
                     {
                         saveSouthArrow(e);
                     }
-                }
-                if (m_currentSelectedControl == e_SelectedControl.SWARROW)
-                {
-                    if (m_isDrawing && (e.Location.X < m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y))
+                    if (m_currentSelectedControl == e_SelectedControl.SWARROW &&
+                        (e.Location.X < m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y))
                     {
                         saveSouthWestArrow(e);
                     }
-                }
-                if (m_currentSelectedControl == e_SelectedControl.RECTANGLE)
-                {
-                    if (m_isDrawing)
+                    if (m_currentSelectedControl == e_SelectedControl.RECTANGLE)
                     {
                         saveRectangle(e);
                     }
-                }
-                if (m_currentSelectedControl == e_SelectedControl.ELLIPSE)
-                {
-                    if (m_isDrawing)
+                    if (m_currentSelectedControl == e_SelectedControl.ELLIPSE)
                     {
                         saveEllipse(e);
                     }
-                }
-                if (m_currentSelectedControl == e_SelectedControl.SOLID)
-                {
-                    if (m_isDrawing)
+                    if (m_currentSelectedControl == e_SelectedControl.SOLID)
                     {
                         saveSolidLine(e);
                     }
-                }
-                if (m_currentSelectedControl == e_SelectedControl.DASHED)
-                {
-                    if (m_isDrawing)
+                    if (m_currentSelectedControl == e_SelectedControl.DASHED)
                     {
                         saveDashedLine(e);
                         m_canDash = false;
                     }
-                }
-                if (m_currentSelectedControl == e_SelectedControl.DOTTED)
-                {
-                    if (m_isDrawing)
+                    if (m_currentSelectedControl == e_SelectedControl.DOTTED)
                     {
                         saveDottedLine(e);
                         m_canDash = false;
                     }
+                    m_isDrawing = false;
                 }
                 if (m_currentSelectedControl == e_SelectedControl.VERTTEXT)
                 {
-                    // Prevent accidentally creating too many instances of VerticalText
                     foreach (VerticalText v in m_verticalTextList)
                     {
-                        if (v.isNew())
-                        {
-                            return;
-                        }
+                        if (v.isNew()) { return; }
                     }
-                    // Sending the MouseEventArg 'e' via custom constructor to assign location
-                    VerticalText nextText = new VerticalText(e);
-                    nextText.OwnerTranspPanel = transparentPanel;
-                    nextText.OwnerRichTextBox = richTextBox;
-                    nextText.OwnerBackPanel = backPanel;
-                    nextText.m_ownerVerticalTextList = m_verticalTextList;
-
-                    m_verticalTextList.Add(nextText);
-                    transparentPanel.Controls.Add(nextText.MoveButton);
-                    transparentPanel.Controls.Add(nextText.OptionsButton);
-                    transparentPanel.Controls.Add(nextText.DeleteButton);
-                    transparentPanel.Controls.Add(nextText.RotateButton);
-
+                    createVertTextObject(e);
                     transparentPanel.Invalidate();
                     richTextBox.Invalidate();
                     backPanel.Invalidate();
                     transparentPanel.Refresh();
-                }
-                if (m_isDrawing)
-                {
-                    m_isDrawing = false;
                 }
             }
         } /* private void transparentPanel_MouseUp(object sender, MouseEventArgs e) */
@@ -612,15 +538,13 @@ namespace My_Note
             for (int i = 0; i < m_verticalTextList.Count; i++)
             {
                 m_verticalTextList[i].drawVerticalText(e);
-                mslog(m_verticalTextList[i].logString);
             }
         } /* private void transparentPanel_Paint(object sender, PaintEventArgs e) */
 
         #endregion
 
-        // This region contains methods used in transparentPanel,
-        // also contains helper methods for event handler methods.
-        #region transparentPanelMethods
+        // This region contains 'helper' methods
+        #region Helper Methods
 
         /*
          * NAME
@@ -1665,8 +1589,8 @@ namespace My_Note
          *  the ellipse based on m_drawStartPoint and e.Location (current point) variables. Second, use a
          *  GraphicsPath object to plot a set of points on the panel based on generated origin and size.
          *  Third, use GraphicsPathIterator object to extract a set of points from GraphicsPant object, this
-         *  technique seems to be best for extracting the most points. Finally, save the generated points
-         *  in the m_shapesStorage object. The reason for savig a set of points is to accomodate erase functionality.
+         *  technique seems to be best for extracting the most points. Finally, save the generated points in the
+         *  m_shapesStorage object. The reason for saving a set of points is to accomodate erase functionality.
          * 
          * RETURNS
          *  Nothing
@@ -1747,7 +1671,7 @@ namespace My_Note
          * DESCRIPTION
          *  Saves points generated by a solid line. This methods uses a 'helper' method GetPointsOnLine to
          *  generate a set of points based on start and end points and saves these points in a m_shapesStorage
-         *  object. The reason for savig a set of points is to accomodate erase functionality.
+         *  object. The reason for saving a set of points is to accomodate erase functionality.
          * 
          * RETURNS
          *  Nothing
@@ -1814,9 +1738,9 @@ namespace My_Note
          * 
          * DESCRIPTION
          *  Saves points generated by a dashed line. This methods uses a 'helper' method GetPointsOnLine to
-         *  generate a set of points based on start and end points. A for-loop iterates over the newly generated
-         *  set of points to selectively save only those points that form a dashed line. The newly selected points
-         *  are saved in m_shapesStorage object. The reason for savig a set of points is to accomodate erase functionality.
+         *  generate a set of points based on start and end points. A for-loop iterates over the newly generated set
+         *  of points to selectively save only those points that form a dashed line. The newly selected points are
+         *  saved in m_shapesStorage object. The reason for saving a set of points is to accomodate erase functionality.
          * 
          * RETURNS
          *  Nothing
@@ -1894,9 +1818,9 @@ namespace My_Note
          * 
          * DESCRIPTION
          *  Saves points generated by a dotted line. This methods uses a 'helper' method GetPointsOnLine to
-         *  generate a set of points based on start and end points. A for-loop iterates over the newly generated
-         *  set of points to selectively save only those points that form a dotted line. The newly selected points
-         *  are saved in m_shapesStorage object. The reason for savig a set of points is to accomodate erase functionality.
+         *  generate a set of points based on start and end points. A for-loop iterates over the newly generated set
+         *  of points to selectively save only those points that form a dotted line. The newly selected points are
+         *  saved in m_shapesStorage object. The reason for saving a set of points is to accomodate erase functionality.
          * 
          * RETURNS
          *  Nothing
@@ -1929,11 +1853,6 @@ namespace My_Note
             }
             transparentPanel.Refresh();
         } /* private void saveDottedLine(MouseEventArgs e) */
-        
-        #endregion
-
-        // This region contains 'helper' methods
-        #region Helper Methods
 
         /*
          * NAME
@@ -2004,6 +1923,46 @@ namespace My_Note
             }
             yield break;
         } /* public static IEnumerable<Point> GetPointsOnLine(int x0, int y0, int x1, int y1) */
+
+        /*
+         * NAME
+         *  createVertTextObject() - creates an instance of VerticalText and adds it to the Panel
+         *  
+         * SYNOPSIS
+         *  private void createVertTextObject(MouseEventArgs e);
+         *      e       -> is passed down to the constructor to establish the current location
+         * 
+         * DESCRIPTION
+         *  This method creates and saves an instance of VerticalText class. When created, it is added to
+         *  a List<> of VerticalText objects which gets used to redraw them in _Paint event. Also, each instance
+         *  of VerticalText comes with buttons which are added to this panel. Some references are passed in
+         *  to assist certain functions (options, delete) to be executed within the object. Specifically, these
+         *  functions will be triggered using options and delete buttons in the VerticalText object. This method
+         *  only gets called from transparentPanel_MouseUp() event.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  1:43pm 5/18/2015
+         */
+        private void createVertTextObject(MouseEventArgs e)
+        {
+            VerticalText nextText = new VerticalText(e);
+            nextText.OwnerTranspPanel = transparentPanel;
+            nextText.OwnerRichTextBox = richTextBox;
+            nextText.OwnerBackPanel = backPanel;
+            nextText.OwnerVerticalTextList = m_verticalTextList;
+
+            m_verticalTextList.Add(nextText);
+            transparentPanel.Controls.Add(nextText.MoveButton);
+            transparentPanel.Controls.Add(nextText.OptionsButton);
+            transparentPanel.Controls.Add(nextText.DeleteButton);
+            transparentPanel.Controls.Add(nextText.RotateButton);
+        } /* private void createVertTextObject(MouseEventArgs e) */
 
         #endregion
     }

@@ -158,6 +158,218 @@ namespace My_Note
         {
             logTextBox.Text = "";
         }
+
         // Temp (End)
     }
 }
+/*private void transparentPanel_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+
+                if (m_currentSelectedControl == e_SelectedControl.TEXT)
+                {
+                    Point newPoint = new Point(e.X - 40, e.Y - 35); // This is because text box is a little bit offset
+                    m_richTextBoxSelectStartCharIndex = richTextBox.GetCharIndexFromPosition(newPoint);
+
+                    //int charIndex = richTextBox.GetCharIndexFromPosition(newPoint);
+                    //richTextBox.SelectionStart = charIndex;
+                    //m_richTextBoxSelectStartCharIndex = charIndex;
+                    //mslog("SelectionStart = " + richTextBox.SelectionStart);
+                }
+
+
+
+                if (m_currentSelectedControl == e_SelectedControl.PENCIL)
+                {
+                    m_isDrawing = true;
+                    m_shapeNumber++;
+                    m_lastPosition = new Point(0, 0);
+                }
+                if (m_currentSelectedControl == e_SelectedControl.ERASER)
+                {
+                    m_isErasing = true;
+                }
+
+                // below can all be combined with a bunch of or statements
+                // or it can be done to see if the selected control is within a certain value range
+
+                // Technique is used to save over 50 lines of code
+                if ((int)m_currentSelectedControl < 8)
+                {
+
+                }
+                if (m_currentSelectedControl == e_SelectedControl.WARROW)
+                {
+                    mslog("selected warrow = " + (int)e_SelectedControl.WARROW);
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.NWARROW)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.NARROW)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.NEARROW)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.EARROW)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.SEARROW)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.SARROW)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.SWARROW)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.RECTANGLE)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.ELLIPSE)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.SOLID)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.DASHED)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                    m_canDash = true;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.DOTTED)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                    m_canDash = true;
+                }
+            }
+        } /* private void transparentPanel_MouseDown(object sender, MouseEventArgs e) */
+
+/*private void transparentPanel_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                if (m_currentSelectedControl == e_SelectedControl.TEXT)
+                {
+                    m_isSelectingText = true;
+                    Point newPoint = new Point(e.X - 40, e.Y - 35);
+                    m_richTextBoxSelectCurrentCharIndex = richTextBox.GetCharIndexFromPosition(newPoint);
+                    // can't select going backwards
+                    richTextBox.SelectionStart = Math.Min(m_richTextBoxSelectStartCharIndex, m_richTextBoxSelectCurrentCharIndex);
+                    richTextBox.SelectionLength = Math.Abs(m_richTextBoxSelectCurrentCharIndex - m_richTextBoxSelectStartCharIndex);
+                    richTextBox.Select();
+                }
+
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.PENCIL))
+                {
+                    drawWithPencil(e);
+                }
+                if (m_isErasing && (m_currentSelectedControl == e_SelectedControl.ERASER))
+                {
+                    startErasing(e);
+                }
+
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.WARROW))
+                {
+                    if ((m_lastPosition != e.Location) && (e.Location.X < m_drawStartPoint.X))
+                    {
+                        drawWestArrow(e);
+                    }
+                }
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.NWARROW))
+                {
+                    if ((m_lastPosition != e.Location) && (e.Location.X < m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y))
+                    {
+                        drawNorthWestArrow(e);
+                    }
+                }
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.NARROW))
+                {
+                    if ((m_lastPosition != e.Location) && (e.Location.Y < m_drawStartPoint.Y))
+                    {
+                        drawNorthArrow(e);
+                    }
+                }
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.NEARROW))
+                {
+                    if ((m_lastPosition != e.Location) && (e.Location.X > m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y))
+                    {
+                        drawNorthEastArrow(e);
+                    }
+                }
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.EARROW))
+                {
+                    if ((m_lastPosition != e.Location) && (e.Location.X > m_drawStartPoint.X))
+                    {
+                        drawEastArrow(e);
+                    }
+                }
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.SEARROW))
+                {
+                    if ((m_lastPosition != e.Location) && (e.Location.X > m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y))
+                    {
+                        drawSouthEastArrow(e);
+                    }
+                }
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.SARROW))
+                {
+                    if ((m_lastPosition != e.Location) && (e.Location.Y > m_drawStartPoint.Y))
+                    {
+                        drawSouthArrow(e);
+                    }
+                }
+                if (m_isDrawing & (m_currentSelectedControl == e_SelectedControl.SWARROW))
+                {
+                    if ((m_lastPosition != e.Location) && (e.Location.X < m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y))
+                    {
+                        drawSouthWestArrow(e);
+                    }
+                }
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.RECTANGLE))
+                {
+                    drawRectangle(e);
+                }
+
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.ELLIPSE))
+                {
+                    drawEllipse(e);
+                }
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.SOLID))
+                {
+                    drawSolidLine(e);
+                }
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.DASHED))
+                {
+                    drawDashedLine(e);
+                }
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.DOTTED))
+                {
+                    drawDottedLine(e);
+                }
+            }
+        } /* private void transparentPanel_MouseMove(object sender, MouseEventArgs e) */

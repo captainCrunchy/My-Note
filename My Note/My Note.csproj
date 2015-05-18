@@ -90,6 +90,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="VertTextOptionsForm.resx">
       <DependentUpon>VertTextOptionsForm.cs</DependentUpon>
@@ -106,6 +107,42 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\removeX.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\moveArrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\optionsImg.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rotateArrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dashLnClr.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dotLnClr.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\eraserClr.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\hlColorClr.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pencilClr.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\solidLnClr.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\txtColorClr.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\vertTxtClr.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

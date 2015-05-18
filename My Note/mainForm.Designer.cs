@@ -46,10 +46,6 @@
             this.orangeColorButton = new System.Windows.Forms.Button();
             this.purpleColorButton = new System.Windows.Forms.Button();
             this.yellowColorButton = new System.Windows.Forms.Button();
-            this.vertTextButton = new System.Windows.Forms.Button();
-            this.dottedSelectButton = new System.Windows.Forms.Button();
-            this.dashedSelectButton = new System.Windows.Forms.Button();
-            this.solidSelectButton = new System.Windows.Forms.Button();
             this.ovalSelectButton = new System.Windows.Forms.Button();
             this.rectangleSelectButton = new System.Windows.Forms.Button();
             this.SEarrowButton = new System.Windows.Forms.Button();
@@ -61,15 +57,9 @@
             this.NarrowButton = new System.Windows.Forms.Button();
             this.NWarrowButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            this.eraserSelectButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.pencilSelectButton = new System.Windows.Forms.Button();
             this.textSelectButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.pictureBox18 = new System.Windows.Forms.PictureBox();
-            this.pictureBox17 = new System.Windows.Forms.PictureBox();
-            this.textColorButton = new System.Windows.Forms.Button();
-            this.highlightColorButton = new System.Windows.Forms.Button();
             this.strikeoutButton = new System.Windows.Forms.Button();
             this.underlineButton = new System.Windows.Forms.Button();
             this.italicButton = new System.Windows.Forms.Button();
@@ -81,6 +71,16 @@
             this.logTextBox = new System.Windows.Forms.TextBox();
             this.clearLog = new System.Windows.Forms.Button();
             this.transparentPanel = new My_Note.TransparentPanel();
+            this.vertTextButton = new System.Windows.Forms.Button();
+            this.dottedSelectButton = new System.Windows.Forms.Button();
+            this.dashedSelectButton = new System.Windows.Forms.Button();
+            this.solidSelectButton = new System.Windows.Forms.Button();
+            this.eraserSelectButton = new System.Windows.Forms.Button();
+            this.pencilSelectButton = new System.Windows.Forms.Button();
+            this.pictureBox18 = new System.Windows.Forms.PictureBox();
+            this.pictureBox17 = new System.Windows.Forms.PictureBox();
+            this.textColorButton = new System.Windows.Forms.Button();
+            this.highlightColorButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.toolbarPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox18)).BeginInit();
@@ -282,50 +282,6 @@
             this.yellowColorButton.UseVisualStyleBackColor = false;
             this.yellowColorButton.Click += new System.EventHandler(this.yellowColorButton_Click);
             // 
-            // vertTextButton
-            // 
-            this.vertTextButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("vertTextButton.BackgroundImage")));
-            this.vertTextButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.vertTextButton.Location = new System.Drawing.Point(573, 5);
-            this.vertTextButton.Name = "vertTextButton";
-            this.vertTextButton.Size = new System.Drawing.Size(27, 46);
-            this.vertTextButton.TabIndex = 54;
-            this.vertTextButton.UseVisualStyleBackColor = true;
-            this.vertTextButton.Click += new System.EventHandler(this.vertTextButton_Click);
-            // 
-            // dottedSelectButton
-            // 
-            this.dottedSelectButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("dottedSelectButton.BackgroundImage")));
-            this.dottedSelectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.dottedSelectButton.Location = new System.Drawing.Point(522, 42);
-            this.dottedSelectButton.Name = "dottedSelectButton";
-            this.dottedSelectButton.Size = new System.Drawing.Size(45, 11);
-            this.dottedSelectButton.TabIndex = 53;
-            this.dottedSelectButton.UseVisualStyleBackColor = true;
-            this.dottedSelectButton.Click += new System.EventHandler(this.dottedSelectButton_Click);
-            // 
-            // dashedSelectButton
-            // 
-            this.dashedSelectButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("dashedSelectButton.BackgroundImage")));
-            this.dashedSelectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.dashedSelectButton.Location = new System.Drawing.Point(522, 22);
-            this.dashedSelectButton.Name = "dashedSelectButton";
-            this.dashedSelectButton.Size = new System.Drawing.Size(45, 11);
-            this.dashedSelectButton.TabIndex = 52;
-            this.dashedSelectButton.UseVisualStyleBackColor = true;
-            this.dashedSelectButton.Click += new System.EventHandler(this.dashedSelectButton_Click);
-            // 
-            // solidSelectButton
-            // 
-            this.solidSelectButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("solidSelectButton.BackgroundImage")));
-            this.solidSelectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.solidSelectButton.Location = new System.Drawing.Point(522, 4);
-            this.solidSelectButton.Name = "solidSelectButton";
-            this.solidSelectButton.Size = new System.Drawing.Size(45, 11);
-            this.solidSelectButton.TabIndex = 51;
-            this.solidSelectButton.UseVisualStyleBackColor = true;
-            this.solidSelectButton.Click += new System.EventHandler(this.solidSelectButton_Click);
-            // 
             // ovalSelectButton
             // 
             this.ovalSelectButton.Font = new System.Drawing.Font("Wingdings", 14F);
@@ -446,18 +402,6 @@
             this.label3.TabIndex = 39;
             this.label3.Text = "Erase";
             // 
-            // eraserSelectButton
-            // 
-            this.eraserSelectButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("eraserSelectButton.BackgroundImage")));
-            this.eraserSelectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.eraserSelectButton.Font = new System.Drawing.Font("Constantia", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.eraserSelectButton.Location = new System.Drawing.Point(321, 19);
-            this.eraserSelectButton.Name = "eraserSelectButton";
-            this.eraserSelectButton.Size = new System.Drawing.Size(33, 33);
-            this.eraserSelectButton.TabIndex = 38;
-            this.eraserSelectButton.UseVisualStyleBackColor = true;
-            this.eraserSelectButton.Click += new System.EventHandler(this.eraserSelectButton_Click);
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -467,18 +411,6 @@
             this.label2.Size = new System.Drawing.Size(23, 12);
             this.label2.TabIndex = 37;
             this.label2.Text = "Text";
-            // 
-            // pencilSelectButton
-            // 
-            this.pencilSelectButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pencilSelectButton.BackgroundImage")));
-            this.pencilSelectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pencilSelectButton.Font = new System.Drawing.Font("Constantia", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.pencilSelectButton.Location = new System.Drawing.Point(282, 19);
-            this.pencilSelectButton.Name = "pencilSelectButton";
-            this.pencilSelectButton.Size = new System.Drawing.Size(33, 33);
-            this.pencilSelectButton.TabIndex = 36;
-            this.pencilSelectButton.UseVisualStyleBackColor = true;
-            this.pencilSelectButton.Click += new System.EventHandler(this.pencilSelectButton_Click);
             // 
             // textSelectButton
             // 
@@ -501,44 +433,6 @@
             this.label1.Size = new System.Drawing.Size(30, 12);
             this.label1.TabIndex = 34;
             this.label1.Text = "Pencil";
-            // 
-            // pictureBox18
-            // 
-            this.pictureBox18.BackColor = System.Drawing.Color.YellowGreen;
-            this.pictureBox18.Location = new System.Drawing.Point(195, 42);
-            this.pictureBox18.Name = "pictureBox18";
-            this.pictureBox18.Size = new System.Drawing.Size(33, 10);
-            this.pictureBox18.TabIndex = 33;
-            this.pictureBox18.TabStop = false;
-            // 
-            // pictureBox17
-            // 
-            this.pictureBox17.BackColor = System.Drawing.Color.Yellow;
-            this.pictureBox17.Location = new System.Drawing.Point(156, 42);
-            this.pictureBox17.Name = "pictureBox17";
-            this.pictureBox17.Size = new System.Drawing.Size(33, 10);
-            this.pictureBox17.TabIndex = 32;
-            this.pictureBox17.TabStop = false;
-            // 
-            // textColorButton
-            // 
-            this.textColorButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("textColorButton.BackgroundImage")));
-            this.textColorButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.textColorButton.Location = new System.Drawing.Point(195, 4);
-            this.textColorButton.Name = "textColorButton";
-            this.textColorButton.Size = new System.Drawing.Size(33, 33);
-            this.textColorButton.TabIndex = 6;
-            this.textColorButton.UseVisualStyleBackColor = true;
-            // 
-            // highlightColorButton
-            // 
-            this.highlightColorButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("highlightColorButton.BackgroundImage")));
-            this.highlightColorButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.highlightColorButton.Location = new System.Drawing.Point(156, 4);
-            this.highlightColorButton.Name = "highlightColorButton";
-            this.highlightColorButton.Size = new System.Drawing.Size(33, 33);
-            this.highlightColorButton.TabIndex = 5;
-            this.highlightColorButton.UseVisualStyleBackColor = true;
             // 
             // strikeoutButton
             // 
@@ -647,6 +541,112 @@
             this.transparentPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseDown);
             this.transparentPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseMove);
             this.transparentPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseUp);
+            // 
+            // vertTextButton
+            // 
+            this.vertTextButton.BackgroundImage = global::My_Note.Properties.Resources.vertTxtClr;
+            this.vertTextButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.vertTextButton.Location = new System.Drawing.Point(573, 5);
+            this.vertTextButton.Name = "vertTextButton";
+            this.vertTextButton.Size = new System.Drawing.Size(27, 46);
+            this.vertTextButton.TabIndex = 54;
+            this.vertTextButton.UseVisualStyleBackColor = true;
+            this.vertTextButton.Click += new System.EventHandler(this.vertTextButton_Click);
+            // 
+            // dottedSelectButton
+            // 
+            this.dottedSelectButton.BackgroundImage = global::My_Note.Properties.Resources.dotLnClr;
+            this.dottedSelectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.dottedSelectButton.Location = new System.Drawing.Point(522, 42);
+            this.dottedSelectButton.Name = "dottedSelectButton";
+            this.dottedSelectButton.Size = new System.Drawing.Size(45, 11);
+            this.dottedSelectButton.TabIndex = 53;
+            this.dottedSelectButton.UseVisualStyleBackColor = true;
+            this.dottedSelectButton.Click += new System.EventHandler(this.dottedSelectButton_Click);
+            // 
+            // dashedSelectButton
+            // 
+            this.dashedSelectButton.BackgroundImage = global::My_Note.Properties.Resources.dashLnClr;
+            this.dashedSelectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.dashedSelectButton.Location = new System.Drawing.Point(522, 22);
+            this.dashedSelectButton.Name = "dashedSelectButton";
+            this.dashedSelectButton.Size = new System.Drawing.Size(45, 11);
+            this.dashedSelectButton.TabIndex = 52;
+            this.dashedSelectButton.UseVisualStyleBackColor = true;
+            this.dashedSelectButton.Click += new System.EventHandler(this.dashedSelectButton_Click);
+            // 
+            // solidSelectButton
+            // 
+            this.solidSelectButton.BackgroundImage = global::My_Note.Properties.Resources.solidLnClr;
+            this.solidSelectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.solidSelectButton.Location = new System.Drawing.Point(522, 4);
+            this.solidSelectButton.Name = "solidSelectButton";
+            this.solidSelectButton.Size = new System.Drawing.Size(45, 11);
+            this.solidSelectButton.TabIndex = 51;
+            this.solidSelectButton.UseVisualStyleBackColor = true;
+            this.solidSelectButton.Click += new System.EventHandler(this.solidSelectButton_Click);
+            // 
+            // eraserSelectButton
+            // 
+            this.eraserSelectButton.BackgroundImage = global::My_Note.Properties.Resources.eraserClr;
+            this.eraserSelectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.eraserSelectButton.Font = new System.Drawing.Font("Constantia", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.eraserSelectButton.Location = new System.Drawing.Point(321, 19);
+            this.eraserSelectButton.Name = "eraserSelectButton";
+            this.eraserSelectButton.Size = new System.Drawing.Size(33, 33);
+            this.eraserSelectButton.TabIndex = 38;
+            this.eraserSelectButton.UseVisualStyleBackColor = true;
+            this.eraserSelectButton.Click += new System.EventHandler(this.eraserSelectButton_Click);
+            // 
+            // pencilSelectButton
+            // 
+            this.pencilSelectButton.BackgroundImage = global::My_Note.Properties.Resources.pencilClr;
+            this.pencilSelectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pencilSelectButton.Font = new System.Drawing.Font("Constantia", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.pencilSelectButton.Location = new System.Drawing.Point(282, 19);
+            this.pencilSelectButton.Name = "pencilSelectButton";
+            this.pencilSelectButton.Size = new System.Drawing.Size(33, 33);
+            this.pencilSelectButton.TabIndex = 36;
+            this.pencilSelectButton.UseVisualStyleBackColor = true;
+            this.pencilSelectButton.Click += new System.EventHandler(this.pencilSelectButton_Click);
+            // 
+            // pictureBox18
+            // 
+            this.pictureBox18.BackColor = System.Drawing.Color.YellowGreen;
+            this.pictureBox18.Location = new System.Drawing.Point(195, 42);
+            this.pictureBox18.Name = "pictureBox18";
+            this.pictureBox18.Size = new System.Drawing.Size(33, 10);
+            this.pictureBox18.TabIndex = 33;
+            this.pictureBox18.TabStop = false;
+            // 
+            // pictureBox17
+            // 
+            this.pictureBox17.BackColor = System.Drawing.Color.Yellow;
+            this.pictureBox17.Location = new System.Drawing.Point(156, 42);
+            this.pictureBox17.Name = "pictureBox17";
+            this.pictureBox17.Size = new System.Drawing.Size(33, 10);
+            this.pictureBox17.TabIndex = 32;
+            this.pictureBox17.TabStop = false;
+            // 
+            // textColorButton
+            // 
+            this.textColorButton.BackgroundImage = global::My_Note.Properties.Resources.txtColorClr;
+            this.textColorButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.textColorButton.Location = new System.Drawing.Point(195, 4);
+            this.textColorButton.Name = "textColorButton";
+            this.textColorButton.Size = new System.Drawing.Size(33, 33);
+            this.textColorButton.TabIndex = 6;
+            this.textColorButton.UseVisualStyleBackColor = true;
+            // 
+            // highlightColorButton
+            // 
+            this.highlightColorButton.BackgroundImage = global::My_Note.Properties.Resources.hlColorClr;
+            this.highlightColorButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.highlightColorButton.Location = new System.Drawing.Point(156, 4);
+            this.highlightColorButton.Name = "highlightColorButton";
+            this.highlightColorButton.Size = new System.Drawing.Size(33, 33);
+            this.highlightColorButton.TabIndex = 5;
+            this.highlightColorButton.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
