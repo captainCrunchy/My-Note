@@ -22,20 +22,14 @@ using System.Windows.Forms;
  *      Patrick Bailey, February 5, 2014
  *      http://www.whiteboardcoder.com/2014/02/visual-studio-2012-c-transparent.html
  *      
- *  STRUCTURE:
- *      This class contains basic (self-explanatory) member variables and methods
+ *  CODE STRUCTURE:
+ *      This class has a basic layout with member variables and methods.
  */
 
 namespace My_Note
 {
     class TransparentPanel : Panel
     {
-        // Used to adjust line spacing based on user selected font
-        private struct lineSpaceForFont
-        {
-            public const float MICROSOFT_SANS_SERIF = 20;
-        }
-
         private float m_thisWidth;                      // Width of this panel
         private float m_thisHeight;                     // Height of this panel
         private float m_lineBegin;                      // X-coordinate of the line beginning
@@ -43,6 +37,12 @@ namespace My_Note
         private float m_nextLine;                       // Y-coordinate of the line (dynamic)
         private Pen m_bluePen = new Pen(Color.Blue);    // Used to draw horizontal lines
         private Pen m_redPen = new Pen(Color.Red);      // Used to draw vertical lines
+        
+        // Used to adjust line spacing based on user selected font
+        private struct lineSpaceForFont
+        {
+            public const float MICROSOFT_SANS_SERIF = 20;
+        }
 
         // The modification to make the panel 'transparent'
         protected override CreateParams CreateParams

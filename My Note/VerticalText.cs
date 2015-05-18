@@ -19,10 +19,11 @@ using System.Windows.Forms;
  *      a desired angle. Buttons and their locations are created dynamically and their event handlers are assigned in 
  *      the constructor programmatically.
  *      
- *  STRUCTURE:
- *      Variables were created and initialized immediately in the declaration section for reusability, to avoid
- *      repetion of creation in order to increase drawing performance. Some variables are initialized in the custom
- *      constructor. Other components have been separated into regions each with appropriate comments.
+ *  CODE STRUCTURE:
+ *      Variables were created and initialized immediately in the declaration section for reusability, to avoid repetition of
+ *      variable creation in order to increase drawing performance. Some variables are initialized in the custom constructor
+ *      Methods have been separated into regions based on their functionality each with appropriate comments; i.e. region for
+ *      move button, region for options button, region for helper methods, etc.
  */
 
 namespace My_Note
@@ -31,44 +32,43 @@ namespace My_Note
     {
         public string logString = "logString empty"; // TEMP
 
-        private String m_textString = "Enter Text";                     // Actual text, used in drawString(), updated from options
-        private Int32 m_textAngle = 0;                                  // Angle of text, used in drawString() and updateButtonLocations(), 
-                                                                        // updated in m_rotateButton_MouseUp()
-        private Font m_textFont = new Font("Microsoft Sans Serif", 12); // Font of text, used in drawString(), updated from options
-        private SolidBrush m_textBrush = new SolidBrush(Color.Black);   // Brush of text, used in drawString(), updated from options
-        private Point m_textOrigin;                                     // Origin of text, used in drawString(), updated with m_moveButton        
+        private String m_textString = "Enter Text";                     // Actual text, used in drawVerticalText(), updated from options
+        private Font m_textFont = new Font("Microsoft Sans Serif", 12); // Font of text, used in drawVerticalText(), updated from options
+        private SolidBrush m_textBrush = new SolidBrush(Color.Black);   // Brush of text, used in drawVerticalText(), updated from options
+        private Point m_textOrigin;                                     // Origin of text, used in drawVerticalText(), updated with m_moveButton
+        private Int32 m_textAngle = 0;                                  /* Angle of text, used in drawVerticalText() and updateButtonLocations(), 
+                                                                           updated in m_rotateButton_MouseUp() */
         
-        private float m_optButtDistF = 48;                              // Distance between move and options buttons (important)
-        private Int32 m_optButOffsetX = -48;                            // X-offset from move to options button (used dynamically)
-        private Int32 m_optButOffsetY = 0;                              // Y-offset from move to options button (used dynamically)
-
-        private float m_rotButDistF = 96;                               // Distance between move and rotate buttons (important)
-        private Int32 m_rotButOffsetX = -96;                            // x-offset from move to rotate button (used dynamically)
-        private Int32 m_rotButOffsetY = 0;                              // y-offset from move to rotate button (used dynamically)
-
-        private Point m_alteringButtonOffsetPoint = new Point();        // Offset point saved by subtracting 'm_moveButton.Location' (assigned by
-                                                                        // constructor) minus 'current point' (captured from entire screen)
-
         private Button m_moveButton = new Button();                     // Button that moves the text around the panel
         private bool m_isMoving = false;                                // Indicates whether the text is currently being moved
+        private Point m_alteringButtonOffsetPoint = new Point();        /* Offset point saved by subtracting 'm_moveButton.Location' (assigned
+                                                                           by constructor) minus 'current point' (captured from entire screen) */
 
         private Button m_optionsButton = new Button();                  // Brings up options window to modify text properties
-        private VertTextOptionsForm m_optionsBox = new VertTextOptionsForm();  // Options window to modify text properties
+        private VertTextOptionsForm m_optionsForm = new VertTextOptionsForm();  // Options window to modify text properties
+        private float m_optButDistF = 32;                               // Distance between move and options buttons, used in
+                                                                        // updateButtonLocations(), updated in drawVerticalText()
+
+        private Button m_deleteButton = new Button();
+        private float m_delButDistF = 64;
 
         private Button m_rotateButton = new Button();                   // Button that rotates text to user desired angles
         private bool m_isRotating = false;                              // Indicates whether the text is being rotated
+        private float m_rotButDistF = 96;                               /* Distance between move and rotate buttons, used in
+                                                                           udpateButtonLocations(), updated in drawVerticalText() */
 
-        // TODO: maybe there should be a universal update button location method called by move and rotate buttons
-        // TODO: can I eliminate some member variables? Can I clean up constructor even more?
-        // TODO: implement vertText options box
-        // TODO: handle the spacing of buttons based on text size
-        // TODO: update initial button locations (eventually) to even out the sides
+        /* Next three member variables point to the objects that live in the form (in formTextbox.cs) which owns this (VerticalText)
+           object as well. They are declared here only to assist the 'm_optionsButton_MouseUp' event handler with repainting this object
+           when changes are made to it. This technique seems to be the only way to access objects that are outside of this object without
+           breaking the rules of encapsulation. These member variables are accessed via their properties defined in m_optionsButton region. */
+        private TransparentPanel m_ownerTranspPanel;
+        private RichTextBox m_ownerRichTextBox;
+        private Panel m_ownerBackPanel;
+
+        public List<VerticalText> m_ownerVerticalTextList;
         // TODO: new button images (round)
-        // TODO: make the update button spacing a separate method because it will be called from
-        //       rotateButton and moveButton events, and when returning from options box
-        // TODO: prevent the move button from being dragged outside the boundaries of panel
         // TODO: add a delete button?
-        // TODO: refres all comments when done
+        // TODO: refresh all comments when done (drawVerticalText - != (), options mouse up)
 
         /*
          * NAME
@@ -81,7 +81,7 @@ namespace My_Note
          * DESCRIPTION
          *  This constructor is called, specifically, from trapsarentPanel_MouseUp event handler.
          *  IMPORTANT: It utilizes (MouseEventArgs e) to get the location from the object using
-         *  this class so that locations can be set INITIALLY and used CONTINUALLY.
+         *  this class so that locations can be set INITIALLY and used CONTINUALLY afterwards.
          *  
          * RETURNS
          *  Nothing
@@ -100,22 +100,27 @@ namespace My_Note
             m_moveButton.BackColor = Color.Yellow;
             m_moveButton.Location = new Point(e.Location.X-8, e.Location.Y-8); // important
             m_moveButton.Size = new Size(16, 16);
-            // Add event handler programmatically as buttons are created 
             m_moveButton.MouseDown += m_moveButton_MouseDown;
             m_moveButton.MouseMove += m_moveButton_MouseMove;
             m_moveButton.MouseUp += m_moveButton_MouseUp;
 
             m_optionsButton.Text = "o";
             m_optionsButton.BackColor = Color.Blue;
-            // This is default spacing and will be updated dynamically based on text width
-            m_optionsButton.Location = new Point(m_moveButton.Location.X + 48, m_moveButton.Location.Y);
+            //m_optionsButton.Location = new Point(m_moveButton.Location.X + 48, m_moveButton.Location.Y);
+            m_optionsButton.Location = new Point(m_moveButton.Location.X + (Int32)m_optButDistF, m_moveButton.Location.Y);
             m_optionsButton.Size = new Size(16, 16);
             m_optionsButton.MouseUp += m_optionsButton_MouseUp;
 
+            m_deleteButton.Text = "d";
+            m_deleteButton.BackColor = Color.Red;
+            m_deleteButton.Location = new Point(m_moveButton.Location.X + (Int32)m_delButDistF, m_moveButton.Location.Y);
+            m_deleteButton.Size = new Size(16, 16);
+            m_deleteButton.MouseUp += m_deleteButton_MouseUp;
+
             m_rotateButton.Text = "r";
             m_rotateButton.BackColor = Color.Green;
-            // This is default spacing and will be updated dynamically based on text width
-            m_rotateButton.Location = new Point(m_moveButton.Location.X + 96, m_moveButton.Location.Y);
+            //m_rotateButton.Location = new Point(m_moveButton.Location.X + 96, m_moveButton.Location.Y);
+            m_rotateButton.Location = new Point(m_moveButton.Location.X + (Int32)m_delButDistF, m_moveButton.Location.Y);
             m_rotateButton.Size = new Size(16, 16);
             m_rotateButton.MouseDown += m_rotateButton_MouseDown;
             m_rotateButton.MouseMove += m_rotateButton_MouseMove;
@@ -175,6 +180,7 @@ namespace My_Note
                 m_alteringButtonOffsetPoint.Y = m_moveButton.Location.Y - ptStartPosition.Y;
 
                 m_optionsButton.Visible = false;
+                m_deleteButton.Visible = false;
                 m_rotateButton.Visible = false;
             }
             else
@@ -213,8 +219,17 @@ namespace My_Note
             {
                 if (m_isMoving)
                 {
+                    // Get new location
                     Point newPoint = m_moveButton.PointToScreen(new Point(e.X, e.Y));
                     newPoint.Offset(m_alteringButtonOffsetPoint);
+
+                    // Keep location within the panel
+                    if (newPoint.X < 0) newPoint.X = 0;
+                    if (newPoint.X > 500) newPoint.X = 500;
+                    if (newPoint.Y < 0) newPoint.Y = 0;
+                    if (newPoint.Y > 590) newPoint.Y = 590;
+
+                    // Assign new location
                     m_moveButton.Location = newPoint;
                     m_textOrigin = new Point(newPoint.X + 8, newPoint.Y + 8);
                 }
@@ -254,9 +269,8 @@ namespace My_Note
                     // Reset values
                     m_isMoving = false;
                     m_optionsButton.Visible = true;
+                    m_deleteButton.Visible = true;
                     m_rotateButton.Visible = true;
-                    logString = "\r\n(1)m_optButDistF = " + m_optButtDistF + 
-                        "\r\nm_rotButDistF = " + m_rotButDistF;
                 }
             }
         } /* private void m_moveButton_MouseUp(object sender, MouseEventArgs e) */
@@ -275,6 +289,30 @@ namespace My_Note
             set
             {
                 m_optionsButton = value;
+            }
+        }
+
+        public TransparentPanel OwnerTranspPanel
+        {
+            set
+            {
+                m_ownerTranspPanel = value;
+            }
+        }
+
+        public RichTextBox OwnerRichTextBox
+        {
+            set
+            {
+                m_ownerRichTextBox = value;
+            }
+        }
+
+        public Panel OwnerBackPanel
+        {
+            set
+            {
+                m_ownerBackPanel = value;
             }
         }
 
@@ -304,13 +342,62 @@ namespace My_Note
         {
             if (e.Button == MouseButtons.Left)
             {
-                m_optionsBox.CaptureUIAttributes(m_textFont, m_textString, m_textBrush);
-                m_optionsBox.ShowDialog();
-                m_optionsBox.UpdateUIAttributes(ref m_textFont, ref m_textString, ref m_textBrush);
+                m_optionsForm.CaptureUIAttributes(m_textFont, m_textString, m_textBrush);
+                m_optionsForm.ShowDialog();
+                m_optionsForm.UpdateUIAttributes(ref m_textFont, ref m_textString, ref m_textBrush);
+                
+                m_ownerTranspPanel.Invalidate();
+                m_ownerRichTextBox.Invalidate();
+                m_ownerBackPanel.Invalidate();
+                m_ownerTranspPanel.Refresh();
             }
         } /* private void m_optionsButton_MouseUp(object sender, MouseEventArgs e) */
 
         #endregion
+
+        public Button DeleteButton
+        {
+            get
+            {
+                return m_deleteButton;
+            }
+            set
+            {
+                m_deleteButton = value;
+            }
+        }
+
+        /*
+         *  4:15pm 5/17/15
+         */
+        private void m_deleteButton_MouseUp(object sender, MouseEventArgs e)
+        {
+            VerticalText vOne = this;
+            DialogResult dialogResult = MessageBox.Show("Are you sure you want to delete this text?",
+                "Click yes or no", MessageBoxButtons.OKCancel);
+            if (dialogResult == DialogResult.OK)
+            {
+                logString = "yes delete";
+                foreach (VerticalText v in m_ownerVerticalTextList)
+                {
+                    if (v == this)
+                    {
+                        m_ownerTranspPanel.Controls.Remove(m_moveButton);
+                        m_ownerTranspPanel.Controls.Remove(m_optionsButton);
+                        m_ownerTranspPanel.Controls.Remove(m_deleteButton);
+                        m_ownerTranspPanel.Controls.Remove(m_rotateButton);
+                        m_ownerVerticalTextList.Remove(v);
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                logString = "no delete";
+            }
+            VerticalText vTwo = this;
+        }
+
 
         // This region contains m_rotateButton Property and Event Handlers
         #region m_rotateButton methods
@@ -364,6 +451,7 @@ namespace My_Note
 
                 m_moveButton.Visible = false;
                 m_optionsButton.Visible = false;
+                m_deleteButton.Visible = false;
             }
         } /* private void m_rotateButton_MouseDown(object sender, MouseEventArgs e) */
 
@@ -450,20 +538,15 @@ namespace My_Note
                     m_isRotating = false;
                     m_moveButton.Visible = true;
                     m_optionsButton.Visible = true;
-                    logString = "\r\n(1)m_optButDistF = " + m_optButtDistF +
-                        "\r\nm_rotButDistF = " + m_rotButDistF + 
-                        "\r\nm_optButOffsetX = " + m_optButOffsetX +
-                        "\r\nm_optButOffsetY = " + m_optButOffsetY + 
-                        "\r\nm_rotButOffsetX = " + m_rotButOffsetX +
-                        "\r\nm_rotButOffsetY = " + m_rotButOffsetY;
+                    m_deleteButton.Visible = true;
                 }
             }
         } /* private void m_rotateButton_MouseUp(object sender, MouseEventArgs e) */
 
         #endregion
 
-        // This region contains 'helper' methods
-        #region Helper Methods
+        // This region contains 'helper' and public methods
+        #region Helper and Public Methods
 
         /*
          * NAME
@@ -491,58 +574,185 @@ namespace My_Note
          */
         public void drawVerticalText(PaintEventArgs e)
         {
+            // Save original value
+            float oldRotButDistF = m_rotButDistF;
+            
+            // Draw rotated text
             e.Graphics.TranslateTransform(m_textOrigin.X, m_textOrigin.Y);
             e.Graphics.RotateTransform(m_textAngle);
             e.Graphics.TranslateTransform(-m_moveButton.Location.X, -m_moveButton.Location.Y);
             e.Graphics.DrawString(m_textString, m_textFont, m_textBrush, m_textOrigin);
             e.Graphics.ResetTransform();
 
+            // Update values for button locations
             int maxWidth = 300;
             SizeF currentStringSize = new SizeF();
             currentStringSize = e.Graphics.MeasureString(m_textString, m_textFont, maxWidth);
             int intVal = Convert.ToInt32(currentStringSize.Width);
-            //logString = "currentStringSize = " + intVal;
-
-            // update offset values for buttons
-            if (m_rotButOffsetX < 0)
+            
+            // Limit the proximity of buttons and assign values
+            m_rotButDistF = Math.Abs(intVal + 14);
+            if (m_rotButDistF < 36)
             {
-                m_rotButOffsetX = ((intVal + 14) * -1);
+                m_rotButDistF = 36;
             }
-            else
+            m_optButDistF = m_rotButDistF / 3;
+            m_delButDistF = m_rotButDistF / 3 * 2;
+            if (oldRotButDistF != m_rotButDistF)
             {
-                m_rotButOffsetX = intVal + 14;
+                updateButtonLocations();
             }
-            m_rotButDistF = Math.Abs(m_rotButOffsetX);
-            m_optButOffsetX = m_rotButOffsetX / 2;
-            m_optButtDistF = Math.Abs(m_optButOffsetX);
-
+            //m_rotButDistF = Math.Abs(intVal + 14);
+            //if (m_rotButDistF < 36)
+            //{
+            //    m_rotButDistF = 36;
+            //}
+            //m_optButDistF = m_rotButDistF / 2;
+            //if (oldRotButDistF != m_rotButDistF)
+            //{
+            //    updateButtonLocations();
+            //}
         } /* public void drawVerticalText(PaintEventArgs e) */
 
         /*
+         * NAME
+         *  updateButtonLocations() - updates the locations of the buttons
+         *  
+         * SYNOPSIS
+         *  private void updateButtonLocations();
+         * 
+         * DESCRIPTION
+         *  This method gets called by the _MouseUp events of m_rotateButton and m_moveButton in
+         *  order to update the locations of all the buttons. The calculations are performed by using
+         *  the location of m_moveButton as the pivot point and the angle of the text to project
+         *  the direction of the other buttons. 
+         * 
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
          *  6:18pm 5/15/2015
-         */ 
+         */
         private void updateButtonLocations()
         {
             float X = m_moveButton.Location.X;
             float Y = m_moveButton.Location.Y;
             float radAngleF = (float)(Math.PI * (double)m_textAngle / 180.0);
 
-            float optButDistF = m_optButtDistF;
+            float optButDistF = m_optButDistF;
             float newOptLocX = (float)(X + Math.Cos(radAngleF) * optButDistF);
             float newOptLocY = (float)(Y + Math.Sin(radAngleF) * optButDistF);
             PointF newOptButPtF = new PointF(newOptLocX, newOptLocY);
             m_optionsButton.Location = Point.Round(newOptButPtF);
-            m_optButOffsetX = m_moveButton.Location.X - m_optionsButton.Location.X;
-            m_optButOffsetY = m_moveButton.Location.Y - m_optionsButton.Location.Y;
+
+            float delButDistF = m_delButDistF;
+            float newDelLocX = (float)(X + Math.Cos(radAngleF) * delButDistF);
+            float newDelLocY = (float)(Y + Math.Sin(radAngleF) * delButDistF);
+            PointF newDelButPtF = new PointF(newDelLocX, newDelLocY);
+            m_deleteButton.Location = Point.Round(newDelButPtF);
 
             float rotButDistF = m_rotButDistF;
             float newRotLocX = (float)(X + Math.Cos(radAngleF) * rotButDistF);
             float newRotLocY = (float)(Y + Math.Sin(radAngleF) * rotButDistF);
             PointF newRotButPtF = new PointF(newRotLocX, newRotLocY);
             m_rotateButton.Location = Point.Round(newRotButPtF);
-            m_rotButOffsetX = m_moveButton.Location.X - m_rotateButton.Location.X;
-            m_rotButOffsetY = m_moveButton.Location.Y - m_rotateButton.Location.Y;
-        }
+        } /* private void updateButtonLocations() */
+
+        /*
+         * NAME
+         *  isNew() - checks to see if this VerticalText object is new
+         *  
+         * SYNOPSIS
+         *  public bool isNew();
+         * 
+         * DESCRIPTION
+         *  This method gets called to check and see if this object is new; i.e. was
+         *  created and not yet modified. Such functionality will assist the owner of
+         *  this object in preventing the creation of too many new VerticalText instances
+         *  by accidentally clicking on the panel too fast/too many times.
+         * 
+         * RETURNS
+         *  True if this object was just created and false if it has been modified.
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  12:48pm 5/17/2015
+         */
+        public bool isNew()
+        {
+            if (m_textString == "Enter Text")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        } /* public bool isNew() */
+
+        /*
+         * NAME
+         *  hideButtons() - hides all the buttons associated with this object
+         *  
+         * SYNOPSIS
+         *  public void hideButtons();
+         * 
+         * DESCRIPTION
+         *  This method gets called to set the 'Visible' properties of all the buttons associated
+         *  with this object to false. This is done to indicate to the user that VerticalText
+         *  control is not selected and to deliver a more presentable UI.
+         * 
+         * RETURNS
+         *  True if this object was just created and false if it has been modified.
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  1:05pm 5/17/2015
+         */
+        public void hideButtons()
+        {
+            m_moveButton.Visible = false;
+            m_optionsButton.Visible = false;
+            m_deleteButton.Visible = false;
+            m_rotateButton.Visible = false;
+        } /* public void hideButtons() */
+
+        /*
+         * NAME
+         *  showButtons() - shows all the buttons associated with this object
+         *  
+         * SYNOPSIS
+         *  public void showButtons();
+         * 
+         * DESCRIPTION
+         *  This method gets called to set the 'Visible' properties of all the buttons associated with
+         *  this object to true. This is done to indicate to the user that VerticalText control is
+         *  currently selected to give the user tools to modify each instance of VerticalText.
+         * 
+         * RETURNS
+         *  True if this object was just created and false if it has been modified.
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  1:06pm 5/17/2015
+         */
+        public void showButtons()
+        {
+            m_moveButton.Visible = true;
+            m_optionsButton.Visible = true;
+            m_deleteButton.Visible = true;
+            m_rotateButton.Visible = true;
+        } /* public void showButtons() */
+
         #endregion
     }
 }

@@ -19,7 +19,7 @@ using System.Drawing.Drawing2D;
  *      visible. It provides common controls such as 'File' and 'Help' menu options, text and draw
  *      controls, and a 'combined' panel for text editing and drawing.
  *      
- *  STRUCTURE:
+ *  CODE STRUCTURE:
  *      This class is divided into several files, which are all responsible for performing a specific
  *      task. The files are simply extensions of this class, i.e. '... partial class...'. Below is a
  *      description of each 'partial class' and its purpose.
@@ -499,12 +499,25 @@ namespace My_Note
                 }
                 if (m_currentSelectedControl == e_SelectedControl.VERTTEXT)
                 {
-                    // sending the MouseEventArg via custom constructor to assign location
+                    // Prevent accidentally creating too many instances of VerticalText
+                    foreach (VerticalText v in m_verticalTextList)
+                    {
+                        if (v.isNew())
+                        {
+                            return;
+                        }
+                    }
+                    // Sending the MouseEventArg 'e' via custom constructor to assign location
                     VerticalText nextText = new VerticalText(e);
+                    nextText.OwnerTranspPanel = transparentPanel;
+                    nextText.OwnerRichTextBox = richTextBox;
+                    nextText.OwnerBackPanel = backPanel;
+                    nextText.m_ownerVerticalTextList = m_verticalTextList;
 
                     m_verticalTextList.Add(nextText);
                     transparentPanel.Controls.Add(nextText.MoveButton);
                     transparentPanel.Controls.Add(nextText.OptionsButton);
+                    transparentPanel.Controls.Add(nextText.DeleteButton);
                     transparentPanel.Controls.Add(nextText.RotateButton);
 
                     transparentPanel.Invalidate();

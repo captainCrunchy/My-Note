@@ -24,7 +24,7 @@ using System.Drawing;
  *      Geoff Samuel, May 23, 2011
  *      http://www.codeproject.com/Articles/198419/Painting-on-a-panel
  *      
- *  STRUCTURE:
+ *  CODE STRUCTURE:
  *      This class contains a custom constructor and member variables along with their properties.
  */
 

@@ -20,7 +20,7 @@ using System.Windows.Forms;
  *      the calling VerticalText object. This object also uses a custom ComboBox in addition to regular
  *      ComboBox(es).
  * 
- *  STRUCTURE:
+ *  CODE STRUCTURE:
  *      In order: member variables, load/initializer methods, private methods, public methods.
  *      Event handlers for UI objects correspond to the layout of the UI objects in the form.
  */
@@ -120,72 +120,6 @@ namespace My_Note
 
         /*
          * NAME
-         *  OKOptionsButton_Click() - gets called upon OK button click
-         *  
-         * SYNOPSIS
-         *  private void OKOptionsButton_Click(object sender, EventArgs e);
-         *      sender  -> does nothing
-         *      e       -> checks to see if the left mouse button was clicked
-         * 
-         * DESCRIPTION
-         *  This event handler gets called when the 'OK' button is clicked. It updates the enum property in order
-         *  to properly save changes; it also closes this form which triggers this form's _FormClosing event handler.
-         *  
-         * RETURNS
-         *  Nothing
-         *  
-         * AUTHOR
-         *  Murat Zazi
-         *  
-         * DATE
-         *  8:10am 5/15/2015
-         */
-        private void OKOptionsButton_Click(object sender, EventArgs e)
-        {
-            var mouseEventArgs = e as MouseEventArgs;
-            if (mouseEventArgs.Button == MouseButtons.Left)
-            {
-                m_selectedCloseButton = e_selectedCloseButton.OKBUTTON;
-                this.Close();
-            }
-        } /* private void OKOptionsButton_Click(object sender, EventArgs e) */
-
-        /*
-         * NAME
-         *  CancelOptionsButton_Click() - gets called upon Cancel button click
-         *  
-         * SYNOPSIS
-         *  private void CancelOptionsButton_Click(object sender, EventArgs e);
-         *      sender  -> does nothing
-         *      e       -> checks to see if the left mouse button was clicked
-         * 
-         * DESCRIPTION
-         *  This event handler gets called when the 'Cancel' button is clicked. It updates the enum property in order
-         *   to properly save changes; it also closes this form which triggers this form's _FormClosing event handler.
-         *   Functionally, using 'Cancel' button to close this form does the same thing as clicking the 'X' or using
-         *   'Alt + F4'; its real purpose is to give the user a sense of control when using this form.
-         *  
-         * RETURNS
-         *  Nothing
-         *  
-         * AUTHOR
-         *  Murat Zazi
-         *  
-         * DATE
-         *  8:17am 5/15/2015
-         */
-        private void CancelOptionsButton_Click(object sender, EventArgs e)
-        {
-            var mouseEventArgs = e as MouseEventArgs;
-            if (mouseEventArgs.Button == MouseButtons.Left)
-            {
-                m_selectedCloseButton = e_selectedCloseButton.CANCELBUTTON;
-                this.Close();
-            }
-        } /* private void CancelOptionsButton_Click(object sender, EventArgs e) */
-
-        /*
-         * NAME
          *  FontStyleComboBox_SelectedIndexChanged() - gets called when the font ComboBox value is changed
          *  
          * SYNOPSIS
@@ -272,6 +206,106 @@ namespace My_Note
             m_newTextColor = FontColorComboBox.SelectedValue;
             TextRichTextBox.ForeColor = m_newTextColor;
         } /* private void FontColorComboBox_SelectedIndexChanged(object sender, EventArgs e) */
+
+        /*
+         * NAME
+         *  TextRichTextBox_TextChanged() - detects when text is changed
+         *  
+         * SYNOPSIS
+         *  private void TextRichTextBox_TextChanged(object sender, EventArgs e);
+         *      sender  -> does nothing
+         *      e       -> does nothing
+         * 
+         * DESCRIPTION
+         *  This method checks to see that there is at least one character in the RichTextBox before allowing
+         *  the user to make any changes to the VerticalText object by enabling or disabling 'OK' button.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  12:04pm 5/17/2015
+         */
+        private void TextRichTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (TextRichTextBox.Text.Length == 0)
+            {
+                OKOptionsButton.Enabled = false;
+            }
+            else
+            {
+                OKOptionsButton.Enabled = true;
+            }
+        } /* private void TextRichTextBox_TextChanged(object sender, EventArgs e) */
+
+        /*
+         * NAME
+         *  OKOptionsButton_Click() - gets called upon OK button click
+         *  
+         * SYNOPSIS
+         *  private void OKOptionsButton_Click(object sender, EventArgs e);
+         *      sender  -> does nothing
+         *      e       -> checks to see if the left mouse button was clicked
+         * 
+         * DESCRIPTION
+         *  This event handler gets called when the 'OK' button is clicked. It updates the enum property in order
+         *  to properly save changes; it also closes this form which triggers this form's _FormClosing event handler.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  8:10am 5/15/2015
+         */
+        private void OKOptionsButton_Click(object sender, EventArgs e)
+        {
+            var mouseEventArgs = e as MouseEventArgs;
+            if (mouseEventArgs.Button == MouseButtons.Left)
+            {
+                m_selectedCloseButton = e_selectedCloseButton.OKBUTTON;
+                this.Close();
+            }
+        } /* private void OKOptionsButton_Click(object sender, EventArgs e) */
+
+        /*
+         * NAME
+         *  CancelOptionsButton_Click() - gets called upon Cancel button click
+         *  
+         * SYNOPSIS
+         *  private void CancelOptionsButton_Click(object sender, EventArgs e);
+         *      sender  -> does nothing
+         *      e       -> checks to see if the left mouse button was clicked
+         * 
+         * DESCRIPTION
+         *  This event handler gets called when the 'Cancel' button is clicked. It updates the enum property in order
+         *   to properly save changes; it also closes this form which triggers this form's _FormClosing event handler.
+         *   Functionally, using 'Cancel' button to close this form does the same thing as clicking the 'X' or using
+         *   'Alt + F4'; its real purpose is to give the user a sense of control when using this form.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  8:17am 5/15/2015
+         */
+        private void CancelOptionsButton_Click(object sender, EventArgs e)
+        {
+            var mouseEventArgs = e as MouseEventArgs;
+            if (mouseEventArgs.Button == MouseButtons.Left)
+            {
+                m_selectedCloseButton = e_selectedCloseButton.CANCELBUTTON;
+                this.Close();
+            }
+        } /* private void CancelOptionsButton_Click(object sender, EventArgs e) */
 
         /*
          * NAME

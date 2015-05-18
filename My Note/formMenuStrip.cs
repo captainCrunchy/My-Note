@@ -16,7 +16,7 @@ using System.Windows.Forms;
  *      visible. It provides common controls such as 'File' and 'Help' menu options, text and draw
  *      controls, and a 'combined' panel for text editing and drawing.
  *      
- *  STRUCTURE:
+ *  CODE STRUCTURE:
  *      This class is divided into several files, which are all responsible for performing a specific
  *      task. The files are simply extensions of this class, i.e. '... partial class...'. Below is a
  *      description of each 'partial class' and its purpose.

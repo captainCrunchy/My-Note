@@ -116,6 +116,7 @@
             this.TextRichTextBox.Size = new System.Drawing.Size(305, 30);
             this.TextRichTextBox.TabIndex = 8;
             this.TextRichTextBox.Text = "";
+            this.TextRichTextBox.TextChanged += new System.EventHandler(this.TextRichTextBox_TextChanged);
             // 
             // OKOptionsButton
             // 

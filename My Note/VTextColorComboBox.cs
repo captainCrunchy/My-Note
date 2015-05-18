@@ -23,7 +23,7 @@ using System.Windows.Forms;
  *      Jonathan Wood, February 11, 2011 
  *      http://www.blackbeltcoder.com/Articles/controls/creating-a-color-picker-with-an-owner-draw-combobox
  *      
- *  STRUCTURE:
+ *  CODE STRUCTURE:
  *      This class maintains much of the structure designed by the original author.
  */
 

@@ -17,13 +17,13 @@ using System.Drawing;
  *      code for this class was taken from an existing project on the web with pencil and eraser functionality and
  *      extended to work with other shapes like lines, ellipses, and rectangles. The only changes to this class were
  *      made to member variables and arguments in methods by udpating the naming conventions to match this application.
- *      Public member variables were converted to private and assigned properties.
+ *      Public member variables were converted to private and were assigned properties.
  *      A link to the author and site is provided below:
  *      Geoff Samuel, May 23, 2011
  *      http://www.codeproject.com/Articles/198419/Painting-on-a-panel
  * 
- *  STRUCTURE:
- *      This class contains basic (self-explanatory) member variables and methods
+ *  CODE STRUCTURE:
+ *      This class has a basic layout with member variables and methods.
  */
 
 namespace My_Note

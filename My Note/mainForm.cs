@@ -19,7 +19,7 @@ using System.Windows.Forms;
  *      visible. It provides common controls such as 'File' and 'Help' menu options, text and draw
  *      controls, and a 'combined' panel for text editing and drawing.
  *      
- *  STRUCTURE:
+ *  CODE STRUCTURE:
  *      This class is divided into several files, which are all responsible for performing a specific
  *      task. The files are simply extensions of this class, i.e. '... partial class...'. Below is a
  *      description of each 'partial class' and its purpose.
@@ -45,6 +45,9 @@ namespace My_Note
 {
     public partial class MainForm : Form
     {
+        private e_SelectedControl m_currentSelectedControl;     // Used to indicate the type of control the user selected
+        private Color m_selectedControlButtonColor;             // Used to indicate the current color to be used by a control
+        
         // The types of text and drawing controls available to the user
         private enum e_SelectedControl
         {
@@ -52,9 +55,6 @@ namespace My_Note
             NEARROW, EARROW, SEARROW, SARROW, SWARROW,
             RECTANGLE, ELLIPSE, SOLID, DASHED, DOTTED, VERTTEXT
         }
-
-        private e_SelectedControl m_currentSelectedControl;     // Used to indicate the type of control the user selected
-        private Color m_selectedControlButtonColor;             // Used to indicate the current color to be used by a control
 
         public MainForm()
         {

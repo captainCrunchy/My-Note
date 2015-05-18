@@ -17,7 +17,7 @@ using System.Drawing;
  *      visible. It provides common controls such as 'File' and 'Help' menu options, text and draw
  *      controls, and a 'combined' panel for text editing and drawing.
  *      
- *  STRUCTURE:
+ *  CODE STRUCTURE:
  *      This class is divided into several files, which are all responsible for performing a specific
  *      task. The files are simply extensions of this class, i.e. '... partial class...'. Below is a
  *      description of each 'partial class' and its purpose.
@@ -41,12 +41,17 @@ using System.Drawing;
  *                       Other components have been separated into regions each with appropriate comments.
  */
 
+// TODO: update comments for events occurring that deal with vertical text box
+
 namespace My_Note
 {
     public partial class MainForm : Form
     {
-        /*  This method sets the current control to text editing. Updates the panel's cursor to match the
-         *  current control. Updates selection colors for controls.
+        private bool canHideVertTextButtons = false;    /* Used to assist in hiding the buttons for
+                                                           VerticalText when it is not being used */
+
+        /*  This method sets the current control to text editing. Updates the panel's
+         *  cursor to match the current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
          *  12:12pm 3/17/2015
@@ -59,8 +64,8 @@ namespace My_Note
             textSelectButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*  This method sets the current control to pencil editing. Updates the panel's cursor to match the 
-         *  current control. Updates selection colors for controls.
+        /*  This method sets the current control to pencil editing. Updates the panel's
+         *  cursor to match the current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
          *  12:13pm 3/17/2015
@@ -73,8 +78,8 @@ namespace My_Note
             pencilSelectButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*  This method sets the current control to eraser. Updates the panel's cursor to match the
-         *  current control. Updates selection colors for controls.
+        /*  This method sets the current control to eraser. Updates the panel's cursor
+         *  to match the current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
          *  12:14pm 3/17/2015
@@ -87,8 +92,8 @@ namespace My_Note
             eraserSelectButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*  This method sets the current control to draw west arrow. Updates the panel's cursor
-         *  to match the current control. Updates selection colors for controls.
+        /*  This method sets the current control to draw west arrow. Updates the panel's
+         *  cursor to match the current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
          *  
@@ -102,8 +107,8 @@ namespace My_Note
             WarrowButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*  This method sets the current control to draw north west arrow. Updates the panel's cursor
-         *  to match the current control. Updates selection colors for controls.
+        /*  This method sets the current control to draw north west arrow. Updates the panel's
+         *  cursor to match the current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
          *  7:27am 3/19/2015
@@ -116,8 +121,8 @@ namespace My_Note
             NWarrowButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*  This method sets the current control to draw north arrow. Updates the panel's cursor to
-         *  match the current control. Updates selection colors for controls.
+        /*  This method sets the current control to draw north arrow. Updates the panel's
+         *  cursor match the current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
          *  7:28am 3/19/2015
@@ -130,8 +135,8 @@ namespace My_Note
             NarrowButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*  This method sets the current control to draw north east arrow. Updates the panel's cursor to
-         *  match the current control. Updates selection colors for controls.
+        /*  This method sets the current control to draw north east arrow. Updates the panel's
+         *  cursor to match the current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
          *  7:29am 3/19/2015
@@ -144,8 +149,8 @@ namespace My_Note
             NEarrowButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*  This method sets the current control to draw east arrow. Updates the panel's cursor to
-         *  match the current control. Updates selection colors for controls.
+        /*  This method sets the current control to draw east arrow. Updates the panel's
+         *  cursor match the current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
          *  7:30am 3/19/2015
@@ -158,8 +163,8 @@ namespace My_Note
             EarrowButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*  This method sets the current control to draw south east arrow. Updates the panel's cursor to
-         *  match the current control. Updates selection colors for controls.
+        /*  This method sets the current control to draw south east arrow. Updates the panel's
+         *  cursor to match the current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
          *  7:31am 3/19/2015
@@ -172,8 +177,8 @@ namespace My_Note
             SEarrowButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*  This method sets the current control to draw south arrow. Updates the panel's cursor to
-         *  match the current control. Updates selection colors for controls.
+        /*  This method sets the current control to draw south arrow. Updates the panel's
+         *  cursor to match the current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
          *  7:32am 3/19/2015
@@ -186,8 +191,8 @@ namespace My_Note
             SarrowButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*  This method sets the current control to draw south west arrow. Updates the panel's cursor to
-         *  match the current control. Updates selection colors for controls.
+        /*  This method sets the current control to draw south west arrow. Updates the panel's
+         *  cursor to match the current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
          *  7:33am 3/19/2015
@@ -200,8 +205,8 @@ namespace My_Note
             SWarrowButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*  This method sets the current control to draw rectangle. Updates the panel's cursor to
-         *  match the current control. Updates selection colors for controls.
+        /*  This method sets the current control to draw rectangle. Updates the panel's
+         *  cursor to match the current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
          *  7:34am 3/19/2015
@@ -214,8 +219,8 @@ namespace My_Note
             rectangleSelectButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*  This method sets the current control to draw ellipse. Updates the panel's cursor to
-         *  match the current control. Updates selection colors for controls.
+        /*  This method sets the current control to draw ellipse. Updates the panel's
+         *  cursor to match the current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
          *  7:35am 3/19/2015
@@ -228,7 +233,7 @@ namespace My_Note
             ovalSelectButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*  This method sets the current control to draw solid line. Updates the panel's cursor
+        /*  This method sets the current control to draw solid line. Updates the panel's
          *  cursor to match the current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
@@ -242,7 +247,7 @@ namespace My_Note
             solidSelectButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*  This method sets the current control to draw dashed line. Updates the panel's cursor
+        /*  This method sets the current control to draw dashed line. Updates the panel's
          *  cursor to match the current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
@@ -256,7 +261,7 @@ namespace My_Note
             dashedSelectButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*  This method sets the current control to draw dotted line. Updates the panel's cursor
+        /*  This method sets the current control to draw dotted line. Updates the panel's
          *  cursor to match the current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
@@ -270,8 +275,9 @@ namespace My_Note
             dottedSelectButton.BackColor = m_selectedControlButtonColor;
         }
 
-        /*  This method sets the current control to draw rotatable text. Updates the panel's cursor
-         *  cursor to match the current control. Updates selection colors for controls.
+        /*  This method sets the current control to draw rotatable text. Updates the panel's
+         *  cursor to match the current control. Updates selection colors for controls. Sets
+         *  the buttons of each VerticalText object on the form to 'Visible'.
          *  
          *  Murat Zazi
          *  7:38am 3/19/2015
@@ -282,6 +288,14 @@ namespace My_Note
             m_currentSelectedControl = e_SelectedControl.VERTTEXT;
             setDefaultBackColorForControls();
             vertTextButton.BackColor = m_selectedControlButtonColor;
+            canHideVertTextButtons = true;
+            foreach (VerticalText v in m_verticalTextList)
+            {
+                v.showButtons();
+            }
+            transparentPanel.Invalidate();
+            richTextBox.Invalidate();
+            backPanel.Invalidate();
         }
 
         /*  This method brings up a color dialog box to select a color for current drawing tools
@@ -431,8 +445,9 @@ namespace My_Note
             drawColorButton.BackColor = m_currentDrawColor;
         }
 
-        /*  This method gets called to reset the BackColor of all controls to default, it
-         *  then sets the current control's BackColor to a selected color.
+        /*  This method gets called to reset the BackColor of all controls to default and set current
+         *  control's BackColor to a color to indicate 'selected'. If vertTextButton was the last
+         *  control selected, then it hides the buttons associated with all instances of VerticalText.
          *  
          *  Murat Zazi
          *  7:12pm 3/9/2015
@@ -456,6 +471,19 @@ namespace My_Note
             dashedSelectButton.BackColor = Color.Transparent;
             dottedSelectButton.BackColor = Color.Transparent;
             vertTextButton.BackColor = Color.Transparent;
+
+            if (canHideVertTextButtons)
+            {
+                foreach (VerticalText v in m_verticalTextList)
+                {
+                    v.hideButtons();
+                }
+                canHideVertTextButtons = false;
+                
+                transparentPanel.Invalidate();
+                richTextBox.Invalidate();
+                backPanel.Invalidate();
+            }
         }
     }
 }
