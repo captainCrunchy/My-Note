@@ -31,9 +31,20 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.printToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.eidtToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newSubjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteSubjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.autoSaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.minuteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.minutesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.minutesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.noneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.myNoteHelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolbarPanel = new System.Windows.Forms.Panel();
             this.drawColorButton = new System.Windows.Forms.Button();
             this.whiteColorButton = new System.Windows.Forms.Button();
@@ -46,6 +57,10 @@
             this.orangeColorButton = new System.Windows.Forms.Button();
             this.purpleColorButton = new System.Windows.Forms.Button();
             this.yellowColorButton = new System.Windows.Forms.Button();
+            this.vertTextButton = new System.Windows.Forms.Button();
+            this.dottedSelectButton = new System.Windows.Forms.Button();
+            this.dashedSelectButton = new System.Windows.Forms.Button();
+            this.solidSelectButton = new System.Windows.Forms.Button();
             this.ovalSelectButton = new System.Windows.Forms.Button();
             this.rectangleSelectButton = new System.Windows.Forms.Button();
             this.SEarrowButton = new System.Windows.Forms.Button();
@@ -57,9 +72,15 @@
             this.NarrowButton = new System.Windows.Forms.Button();
             this.NWarrowButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
+            this.eraserSelectButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
+            this.pencilSelectButton = new System.Windows.Forms.Button();
             this.textSelectButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.pictureBox18 = new System.Windows.Forms.PictureBox();
+            this.pictureBox17 = new System.Windows.Forms.PictureBox();
+            this.textColorButton = new System.Windows.Forms.Button();
+            this.highlightColorButton = new System.Windows.Forms.Button();
             this.strikeoutButton = new System.Windows.Forms.Button();
             this.underlineButton = new System.Windows.Forms.Button();
             this.italicButton = new System.Windows.Forms.Button();
@@ -68,23 +89,20 @@
             this.drawColorDialog = new System.Windows.Forms.ColorDialog();
             this.richTextBox = new System.Windows.Forms.RichTextBox();
             this.backPanel = new System.Windows.Forms.Panel();
-            this.logTextBox = new System.Windows.Forms.TextBox();
-            this.clearLog = new System.Windows.Forms.Button();
+            this.subjectOnePanel = new System.Windows.Forms.Panel();
+            this.prevPageButton = new System.Windows.Forms.Button();
+            this.nextPageButton = new System.Windows.Forms.Button();
+            this.subjectTwoPanel = new System.Windows.Forms.Panel();
+            this.subjectThreePanel = new System.Windows.Forms.Panel();
+            this.subjectFourPanel = new System.Windows.Forms.Panel();
+            this.subjectFivePanel = new System.Windows.Forms.Panel();
             this.transparentPanel = new My_Note.TransparentPanel();
-            this.vertTextButton = new System.Windows.Forms.Button();
-            this.dottedSelectButton = new System.Windows.Forms.Button();
-            this.dashedSelectButton = new System.Windows.Forms.Button();
-            this.solidSelectButton = new System.Windows.Forms.Button();
-            this.eraserSelectButton = new System.Windows.Forms.Button();
-            this.pencilSelectButton = new System.Windows.Forms.Button();
-            this.pictureBox18 = new System.Windows.Forms.PictureBox();
-            this.pictureBox17 = new System.Windows.Forms.PictureBox();
-            this.textColorButton = new System.Windows.Forms.Button();
-            this.highlightColorButton = new System.Windows.Forms.Button();
+            this.pageNumberLabel = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.toolbarPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox18)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox17)).BeginInit();
+            this.transparentPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -92,37 +110,118 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.eidtToolStripMenuItem,
-            this.viewToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(975, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(812, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveToolStripMenuItem,
+            this.printToolStripMenuItem,
+            this.closeToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.saveToolStripMenuItem.Text = "Save";
+            // 
+            // printToolStripMenuItem
+            // 
+            this.printToolStripMenuItem.Name = "printToolStripMenuItem";
+            this.printToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.printToolStripMenuItem.Text = "Print";
+            // 
+            // closeToolStripMenuItem
+            // 
+            this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.closeToolStripMenuItem.Text = "Close";
+            // 
             // eidtToolStripMenuItem
             // 
+            this.eidtToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newSubjectToolStripMenuItem,
+            this.deleteSubjectToolStripMenuItem,
+            this.autoSaveToolStripMenuItem});
             this.eidtToolStripMenuItem.Name = "eidtToolStripMenuItem";
             this.eidtToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.eidtToolStripMenuItem.Text = "Edit";
             // 
-            // viewToolStripMenuItem
+            // newSubjectToolStripMenuItem
             // 
-            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.viewToolStripMenuItem.Text = "View";
+            this.newSubjectToolStripMenuItem.Name = "newSubjectToolStripMenuItem";
+            this.newSubjectToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.newSubjectToolStripMenuItem.Text = "New Subject";
+            // 
+            // deleteSubjectToolStripMenuItem
+            // 
+            this.deleteSubjectToolStripMenuItem.Name = "deleteSubjectToolStripMenuItem";
+            this.deleteSubjectToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.deleteSubjectToolStripMenuItem.Text = "Delete Subject";
+            // 
+            // autoSaveToolStripMenuItem
+            // 
+            this.autoSaveToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.minuteToolStripMenuItem,
+            this.minutesToolStripMenuItem,
+            this.minutesToolStripMenuItem1,
+            this.noneToolStripMenuItem});
+            this.autoSaveToolStripMenuItem.Name = "autoSaveToolStripMenuItem";
+            this.autoSaveToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.autoSaveToolStripMenuItem.Text = "Auto Save";
+            // 
+            // minuteToolStripMenuItem
+            // 
+            this.minuteToolStripMenuItem.Name = "minuteToolStripMenuItem";
+            this.minuteToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.minuteToolStripMenuItem.Text = "1 - Minute";
+            // 
+            // minutesToolStripMenuItem
+            // 
+            this.minutesToolStripMenuItem.Name = "minutesToolStripMenuItem";
+            this.minutesToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.minutesToolStripMenuItem.Text = "5 - Minutes";
+            // 
+            // minutesToolStripMenuItem1
+            // 
+            this.minutesToolStripMenuItem1.Name = "minutesToolStripMenuItem1";
+            this.minutesToolStripMenuItem1.Size = new System.Drawing.Size(140, 22);
+            this.minutesToolStripMenuItem1.Text = "10 - Minutes";
+            // 
+            // noneToolStripMenuItem
+            // 
+            this.noneToolStripMenuItem.Name = "noneToolStripMenuItem";
+            this.noneToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.noneToolStripMenuItem.Text = "None";
             // 
             // helpToolStripMenuItem
             // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.myNoteHelpToolStripMenuItem,
+            this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
+            // 
+            // myNoteHelpToolStripMenuItem
+            // 
+            this.myNoteHelpToolStripMenuItem.Name = "myNoteHelpToolStripMenuItem";
+            this.myNoteHelpToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.myNoteHelpToolStripMenuItem.Text = "My Note Help";
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.aboutToolStripMenuItem.Text = "About";
             // 
             // toolbarPanel
             // 
@@ -282,6 +381,50 @@
             this.yellowColorButton.UseVisualStyleBackColor = false;
             this.yellowColorButton.Click += new System.EventHandler(this.yellowColorButton_Click);
             // 
+            // vertTextButton
+            // 
+            this.vertTextButton.BackgroundImage = global::My_Note.Properties.Resources.vertTxtClr;
+            this.vertTextButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.vertTextButton.Location = new System.Drawing.Point(573, 5);
+            this.vertTextButton.Name = "vertTextButton";
+            this.vertTextButton.Size = new System.Drawing.Size(27, 46);
+            this.vertTextButton.TabIndex = 54;
+            this.vertTextButton.UseVisualStyleBackColor = true;
+            this.vertTextButton.Click += new System.EventHandler(this.vertTextButton_Click);
+            // 
+            // dottedSelectButton
+            // 
+            this.dottedSelectButton.BackgroundImage = global::My_Note.Properties.Resources.dotLnClr;
+            this.dottedSelectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.dottedSelectButton.Location = new System.Drawing.Point(522, 42);
+            this.dottedSelectButton.Name = "dottedSelectButton";
+            this.dottedSelectButton.Size = new System.Drawing.Size(45, 11);
+            this.dottedSelectButton.TabIndex = 53;
+            this.dottedSelectButton.UseVisualStyleBackColor = true;
+            this.dottedSelectButton.Click += new System.EventHandler(this.dottedSelectButton_Click);
+            // 
+            // dashedSelectButton
+            // 
+            this.dashedSelectButton.BackgroundImage = global::My_Note.Properties.Resources.dashLnClr;
+            this.dashedSelectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.dashedSelectButton.Location = new System.Drawing.Point(522, 22);
+            this.dashedSelectButton.Name = "dashedSelectButton";
+            this.dashedSelectButton.Size = new System.Drawing.Size(45, 11);
+            this.dashedSelectButton.TabIndex = 52;
+            this.dashedSelectButton.UseVisualStyleBackColor = true;
+            this.dashedSelectButton.Click += new System.EventHandler(this.dashedSelectButton_Click);
+            // 
+            // solidSelectButton
+            // 
+            this.solidSelectButton.BackgroundImage = global::My_Note.Properties.Resources.solidLnClr;
+            this.solidSelectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.solidSelectButton.Location = new System.Drawing.Point(522, 4);
+            this.solidSelectButton.Name = "solidSelectButton";
+            this.solidSelectButton.Size = new System.Drawing.Size(45, 11);
+            this.solidSelectButton.TabIndex = 51;
+            this.solidSelectButton.UseVisualStyleBackColor = true;
+            this.solidSelectButton.Click += new System.EventHandler(this.solidSelectButton_Click);
+            // 
             // ovalSelectButton
             // 
             this.ovalSelectButton.Font = new System.Drawing.Font("Wingdings", 14F);
@@ -402,6 +545,18 @@
             this.label3.TabIndex = 39;
             this.label3.Text = "Erase";
             // 
+            // eraserSelectButton
+            // 
+            this.eraserSelectButton.BackgroundImage = global::My_Note.Properties.Resources.eraserClr;
+            this.eraserSelectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.eraserSelectButton.Font = new System.Drawing.Font("Constantia", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.eraserSelectButton.Location = new System.Drawing.Point(321, 19);
+            this.eraserSelectButton.Name = "eraserSelectButton";
+            this.eraserSelectButton.Size = new System.Drawing.Size(33, 33);
+            this.eraserSelectButton.TabIndex = 38;
+            this.eraserSelectButton.UseVisualStyleBackColor = true;
+            this.eraserSelectButton.Click += new System.EventHandler(this.eraserSelectButton_Click);
+            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -411,6 +566,18 @@
             this.label2.Size = new System.Drawing.Size(23, 12);
             this.label2.TabIndex = 37;
             this.label2.Text = "Text";
+            // 
+            // pencilSelectButton
+            // 
+            this.pencilSelectButton.BackgroundImage = global::My_Note.Properties.Resources.pencilClr;
+            this.pencilSelectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pencilSelectButton.Font = new System.Drawing.Font("Constantia", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.pencilSelectButton.Location = new System.Drawing.Point(282, 19);
+            this.pencilSelectButton.Name = "pencilSelectButton";
+            this.pencilSelectButton.Size = new System.Drawing.Size(33, 33);
+            this.pencilSelectButton.TabIndex = 36;
+            this.pencilSelectButton.UseVisualStyleBackColor = true;
+            this.pencilSelectButton.Click += new System.EventHandler(this.pencilSelectButton_Click);
             // 
             // textSelectButton
             // 
@@ -433,6 +600,44 @@
             this.label1.Size = new System.Drawing.Size(30, 12);
             this.label1.TabIndex = 34;
             this.label1.Text = "Pencil";
+            // 
+            // pictureBox18
+            // 
+            this.pictureBox18.BackColor = System.Drawing.Color.YellowGreen;
+            this.pictureBox18.Location = new System.Drawing.Point(195, 42);
+            this.pictureBox18.Name = "pictureBox18";
+            this.pictureBox18.Size = new System.Drawing.Size(33, 10);
+            this.pictureBox18.TabIndex = 33;
+            this.pictureBox18.TabStop = false;
+            // 
+            // pictureBox17
+            // 
+            this.pictureBox17.BackColor = System.Drawing.Color.Yellow;
+            this.pictureBox17.Location = new System.Drawing.Point(156, 42);
+            this.pictureBox17.Name = "pictureBox17";
+            this.pictureBox17.Size = new System.Drawing.Size(33, 10);
+            this.pictureBox17.TabIndex = 32;
+            this.pictureBox17.TabStop = false;
+            // 
+            // textColorButton
+            // 
+            this.textColorButton.BackgroundImage = global::My_Note.Properties.Resources.txtColorClr;
+            this.textColorButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.textColorButton.Location = new System.Drawing.Point(195, 4);
+            this.textColorButton.Name = "textColorButton";
+            this.textColorButton.Size = new System.Drawing.Size(33, 33);
+            this.textColorButton.TabIndex = 6;
+            this.textColorButton.UseVisualStyleBackColor = true;
+            // 
+            // highlightColorButton
+            // 
+            this.highlightColorButton.BackgroundImage = global::My_Note.Properties.Resources.hlColorClr;
+            this.highlightColorButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.highlightColorButton.Location = new System.Drawing.Point(156, 4);
+            this.highlightColorButton.Name = "highlightColorButton";
+            this.highlightColorButton.Size = new System.Drawing.Size(33, 33);
+            this.highlightColorButton.TabIndex = 5;
+            this.highlightColorButton.UseVisualStyleBackColor = true;
             // 
             // strikeoutButton
             // 
@@ -493,7 +698,7 @@
             // 
             this.richTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.richTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.richTextBox.Location = new System.Drawing.Point(190, 125);
+            this.richTextBox.Location = new System.Drawing.Point(186, 125);
             this.richTextBox.MaxLength = 1860;
             this.richTextBox.Name = "richTextBox";
             this.richTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
@@ -505,33 +710,86 @@
             // backPanel
             // 
             this.backPanel.BackColor = System.Drawing.Color.White;
-            this.backPanel.Location = new System.Drawing.Point(150, 90);
+            this.backPanel.Location = new System.Drawing.Point(146, 90);
             this.backPanel.Name = "backPanel";
             this.backPanel.Size = new System.Drawing.Size(520, 605);
             this.backPanel.TabIndex = 3;
             // 
-            // logTextBox
+            // subjectOnePanel
             // 
-            this.logTextBox.Location = new System.Drawing.Point(676, 90);
-            this.logTextBox.Multiline = true;
-            this.logTextBox.Name = "logTextBox";
-            this.logTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.logTextBox.Size = new System.Drawing.Size(281, 605);
-            this.logTextBox.TabIndex = 5;
+            this.subjectOnePanel.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.subjectOnePanel.Location = new System.Drawing.Point(672, 90);
+            this.subjectOnePanel.Name = "subjectOnePanel";
+            this.subjectOnePanel.Size = new System.Drawing.Size(28, 116);
+            this.subjectOnePanel.TabIndex = 5;
+            this.subjectOnePanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.subjectOnePanel_MouseDown);
             // 
-            // clearLog
+            // prevPageButton
             // 
-            this.clearLog.Location = new System.Drawing.Point(12, 158);
-            this.clearLog.Name = "clearLog";
-            this.clearLog.Size = new System.Drawing.Size(75, 23);
-            this.clearLog.TabIndex = 6;
-            this.clearLog.Text = "Clear log";
-            this.clearLog.UseVisualStyleBackColor = true;
-            this.clearLog.Click += new System.EventHandler(this.clearLogButton_Click);
+            this.prevPageButton.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.prevPageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.prevPageButton.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.prevPageButton.Location = new System.Drawing.Point(156, 695);
+            this.prevPageButton.Name = "prevPageButton";
+            this.prevPageButton.Size = new System.Drawing.Size(40, 20);
+            this.prevPageButton.TabIndex = 44;
+            this.prevPageButton.Text = "ß";
+            this.prevPageButton.UseVisualStyleBackColor = false;
+            this.prevPageButton.Click += new System.EventHandler(this.prevPageButton_Click);
+            // 
+            // nextPageButton
+            // 
+            this.nextPageButton.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.nextPageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.nextPageButton.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.nextPageButton.Location = new System.Drawing.Point(616, 695);
+            this.nextPageButton.Name = "nextPageButton";
+            this.nextPageButton.Size = new System.Drawing.Size(40, 20);
+            this.nextPageButton.TabIndex = 47;
+            this.nextPageButton.Text = "à";
+            this.nextPageButton.UseVisualStyleBackColor = false;
+            this.nextPageButton.Click += new System.EventHandler(this.nextPageButton_Click);
+            // 
+            // subjectTwoPanel
+            // 
+            this.subjectTwoPanel.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.subjectTwoPanel.Location = new System.Drawing.Point(672, 212);
+            this.subjectTwoPanel.Name = "subjectTwoPanel";
+            this.subjectTwoPanel.Size = new System.Drawing.Size(28, 116);
+            this.subjectTwoPanel.TabIndex = 48;
+            this.subjectTwoPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.subjectTwoPanel_MouseDown);
+            // 
+            // subjectThreePanel
+            // 
+            this.subjectThreePanel.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.subjectThreePanel.Location = new System.Drawing.Point(672, 334);
+            this.subjectThreePanel.Name = "subjectThreePanel";
+            this.subjectThreePanel.Size = new System.Drawing.Size(28, 116);
+            this.subjectThreePanel.TabIndex = 49;
+            this.subjectThreePanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.subjectThreePanel_MouseDown);
+            // 
+            // subjectFourPanel
+            // 
+            this.subjectFourPanel.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.subjectFourPanel.Location = new System.Drawing.Point(672, 456);
+            this.subjectFourPanel.Name = "subjectFourPanel";
+            this.subjectFourPanel.Size = new System.Drawing.Size(28, 116);
+            this.subjectFourPanel.TabIndex = 50;
+            this.subjectFourPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.subjectFourPanel_MouseDown);
+            // 
+            // subjectFivePanel
+            // 
+            this.subjectFivePanel.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.subjectFivePanel.Location = new System.Drawing.Point(672, 578);
+            this.subjectFivePanel.Name = "subjectFivePanel";
+            this.subjectFivePanel.Size = new System.Drawing.Size(28, 116);
+            this.subjectFivePanel.TabIndex = 51;
+            this.subjectFivePanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.subjectFivePanel_MouseDown);
             // 
             // transparentPanel
             // 
-            this.transparentPanel.Location = new System.Drawing.Point(150, 90);
+            this.transparentPanel.Controls.Add(this.pageNumberLabel);
+            this.transparentPanel.Location = new System.Drawing.Point(146, 90);
             this.transparentPanel.Name = "transparentPanel";
             this.transparentPanel.Size = new System.Drawing.Size(520, 605);
             this.transparentPanel.TabIndex = 4;
@@ -542,119 +800,28 @@
             this.transparentPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseMove);
             this.transparentPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseUp);
             // 
-            // vertTextButton
+            // pageNumberLabel
             // 
-            this.vertTextButton.BackgroundImage = global::My_Note.Properties.Resources.vertTxtClr;
-            this.vertTextButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.vertTextButton.Location = new System.Drawing.Point(573, 5);
-            this.vertTextButton.Name = "vertTextButton";
-            this.vertTextButton.Size = new System.Drawing.Size(27, 46);
-            this.vertTextButton.TabIndex = 54;
-            this.vertTextButton.UseVisualStyleBackColor = true;
-            this.vertTextButton.Click += new System.EventHandler(this.vertTextButton_Click);
-            // 
-            // dottedSelectButton
-            // 
-            this.dottedSelectButton.BackgroundImage = global::My_Note.Properties.Resources.dotLnClr;
-            this.dottedSelectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.dottedSelectButton.Location = new System.Drawing.Point(522, 42);
-            this.dottedSelectButton.Name = "dottedSelectButton";
-            this.dottedSelectButton.Size = new System.Drawing.Size(45, 11);
-            this.dottedSelectButton.TabIndex = 53;
-            this.dottedSelectButton.UseVisualStyleBackColor = true;
-            this.dottedSelectButton.Click += new System.EventHandler(this.dottedSelectButton_Click);
-            // 
-            // dashedSelectButton
-            // 
-            this.dashedSelectButton.BackgroundImage = global::My_Note.Properties.Resources.dashLnClr;
-            this.dashedSelectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.dashedSelectButton.Location = new System.Drawing.Point(522, 22);
-            this.dashedSelectButton.Name = "dashedSelectButton";
-            this.dashedSelectButton.Size = new System.Drawing.Size(45, 11);
-            this.dashedSelectButton.TabIndex = 52;
-            this.dashedSelectButton.UseVisualStyleBackColor = true;
-            this.dashedSelectButton.Click += new System.EventHandler(this.dashedSelectButton_Click);
-            // 
-            // solidSelectButton
-            // 
-            this.solidSelectButton.BackgroundImage = global::My_Note.Properties.Resources.solidLnClr;
-            this.solidSelectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.solidSelectButton.Location = new System.Drawing.Point(522, 4);
-            this.solidSelectButton.Name = "solidSelectButton";
-            this.solidSelectButton.Size = new System.Drawing.Size(45, 11);
-            this.solidSelectButton.TabIndex = 51;
-            this.solidSelectButton.UseVisualStyleBackColor = true;
-            this.solidSelectButton.Click += new System.EventHandler(this.solidSelectButton_Click);
-            // 
-            // eraserSelectButton
-            // 
-            this.eraserSelectButton.BackgroundImage = global::My_Note.Properties.Resources.eraserClr;
-            this.eraserSelectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.eraserSelectButton.Font = new System.Drawing.Font("Constantia", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.eraserSelectButton.Location = new System.Drawing.Point(321, 19);
-            this.eraserSelectButton.Name = "eraserSelectButton";
-            this.eraserSelectButton.Size = new System.Drawing.Size(33, 33);
-            this.eraserSelectButton.TabIndex = 38;
-            this.eraserSelectButton.UseVisualStyleBackColor = true;
-            this.eraserSelectButton.Click += new System.EventHandler(this.eraserSelectButton_Click);
-            // 
-            // pencilSelectButton
-            // 
-            this.pencilSelectButton.BackgroundImage = global::My_Note.Properties.Resources.pencilClr;
-            this.pencilSelectButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pencilSelectButton.Font = new System.Drawing.Font("Constantia", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.pencilSelectButton.Location = new System.Drawing.Point(282, 19);
-            this.pencilSelectButton.Name = "pencilSelectButton";
-            this.pencilSelectButton.Size = new System.Drawing.Size(33, 33);
-            this.pencilSelectButton.TabIndex = 36;
-            this.pencilSelectButton.UseVisualStyleBackColor = true;
-            this.pencilSelectButton.Click += new System.EventHandler(this.pencilSelectButton_Click);
-            // 
-            // pictureBox18
-            // 
-            this.pictureBox18.BackColor = System.Drawing.Color.YellowGreen;
-            this.pictureBox18.Location = new System.Drawing.Point(195, 42);
-            this.pictureBox18.Name = "pictureBox18";
-            this.pictureBox18.Size = new System.Drawing.Size(33, 10);
-            this.pictureBox18.TabIndex = 33;
-            this.pictureBox18.TabStop = false;
-            // 
-            // pictureBox17
-            // 
-            this.pictureBox17.BackColor = System.Drawing.Color.Yellow;
-            this.pictureBox17.Location = new System.Drawing.Point(156, 42);
-            this.pictureBox17.Name = "pictureBox17";
-            this.pictureBox17.Size = new System.Drawing.Size(33, 10);
-            this.pictureBox17.TabIndex = 32;
-            this.pictureBox17.TabStop = false;
-            // 
-            // textColorButton
-            // 
-            this.textColorButton.BackgroundImage = global::My_Note.Properties.Resources.txtColorClr;
-            this.textColorButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.textColorButton.Location = new System.Drawing.Point(195, 4);
-            this.textColorButton.Name = "textColorButton";
-            this.textColorButton.Size = new System.Drawing.Size(33, 33);
-            this.textColorButton.TabIndex = 6;
-            this.textColorButton.UseVisualStyleBackColor = true;
-            // 
-            // highlightColorButton
-            // 
-            this.highlightColorButton.BackgroundImage = global::My_Note.Properties.Resources.hlColorClr;
-            this.highlightColorButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.highlightColorButton.Location = new System.Drawing.Point(156, 4);
-            this.highlightColorButton.Name = "highlightColorButton";
-            this.highlightColorButton.Size = new System.Drawing.Size(33, 33);
-            this.highlightColorButton.TabIndex = 5;
-            this.highlightColorButton.UseVisualStyleBackColor = true;
+            this.pageNumberLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.pageNumberLabel.Location = new System.Drawing.Point(4, 4);
+            this.pageNumberLabel.Name = "pageNumberLabel";
+            this.pageNumberLabel.Size = new System.Drawing.Size(20, 13);
+            this.pageNumberLabel.TabIndex = 0;
+            this.pageNumberLabel.Text = "1";
+            this.pageNumberLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(975, 739);
-            this.Controls.Add(this.clearLog);
-            this.Controls.Add(this.logTextBox);
+            this.ClientSize = new System.Drawing.Size(812, 717);
+            this.Controls.Add(this.subjectFivePanel);
+            this.Controls.Add(this.subjectFourPanel);
+            this.Controls.Add(this.subjectThreePanel);
+            this.Controls.Add(this.subjectTwoPanel);
+            this.Controls.Add(this.nextPageButton);
+            this.Controls.Add(this.prevPageButton);
+            this.Controls.Add(this.subjectOnePanel);
             this.Controls.Add(this.transparentPanel);
             this.Controls.Add(this.richTextBox);
             this.Controls.Add(this.toolbarPanel);
@@ -664,12 +831,14 @@
             this.Name = "MainForm";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.MainForm_Load);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.MainForm_Paint);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.toolbarPanel.ResumeLayout(false);
             this.toolbarPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox18)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox17)).EndInit();
+            this.transparentPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -680,7 +849,6 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem eidtToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.Panel toolbarPanel;
         private System.Windows.Forms.Button textColorButton;
@@ -727,8 +895,26 @@
         private System.Windows.Forms.Button purpleColorButton;
         private System.Windows.Forms.Panel backPanel;
         private My_Note.TransparentPanel transparentPanel;
-        private System.Windows.Forms.TextBox logTextBox;
-        private System.Windows.Forms.Button clearLog;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem printToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newSubjectToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteSubjectToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem autoSaveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem minuteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem minutesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem minutesToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem noneToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem myNoteHelpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.Panel subjectOnePanel;
+        private System.Windows.Forms.Button prevPageButton;
+        private System.Windows.Forms.Button nextPageButton;
+        private System.Windows.Forms.Panel subjectTwoPanel;
+        private System.Windows.Forms.Panel subjectThreePanel;
+        private System.Windows.Forms.Panel subjectFourPanel;
+        private System.Windows.Forms.Panel subjectFivePanel;
+        private System.Windows.Forms.Label pageNumberLabel;
     }
 }
 

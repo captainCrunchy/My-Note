@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
 
-//  For readability: (Ctrl + m, Ctrl + o) to 'collapse', (Ctrl + m, Ctrl + l) to 'expand' definitions
-
 /*
  *  TITLE:
  *      MainForm : Form
@@ -41,14 +39,19 @@ using System.Drawing;
  *                       Other components have been separated into regions each with appropriate comments.
  */
 
-// TODO: update comments for events occurring that deal with vertical text box
+/*  TODO: update CODE STRUCTURE comments in this class and in other partial classes to match this class
+ * 
+ */
 
 namespace My_Note
 {
     public partial class MainForm : Form
     {
-        private bool canHideVertTextButtons = false;    /* Used to assist in hiding the buttons for
-                                                           VerticalText when it is not being used */
+        private bool canHideVertTextButtons = false;    /* Used to assist in hiding the buttons for VerticalText
+                                                           object when its control is not selected */
+
+        // This region contains methods that update UI when new control is selected
+        #region Control Selection Changed
 
         /*  This method sets the current control to text editing. Updates the panel's
          *  cursor to match the current control. Updates selection colors for controls.
@@ -452,6 +455,12 @@ namespace My_Note
          *  Murat Zazi
          *  7:12pm 3/9/2015
          */
+
+        #endregion
+
+        // This region contains 'helper' methods
+        #region Helper Methods
+
         private void setDefaultBackColorForControls()
         {
             textSelectButton.BackColor = Color.Transparent;
@@ -485,5 +494,7 @@ namespace My_Note
                 backPanel.Invalidate();
             }
         }
+
+        #endregion
     }
 }

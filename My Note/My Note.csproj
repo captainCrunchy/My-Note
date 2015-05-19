@@ -59,10 +59,14 @@
     <Compile Include="mainForm.Designer.cs">
       <DependentUpon>mainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="MyNoteStore.cs" />
+    <Compile Include="Page.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shape.cs" />
     <Compile Include="ShapeContainer.cs" />
+    <Compile Include="StoreHandler.cs" />
+    <Compile Include="Subject.cs" />
     <Compile Include="TransparentPanel.cs">
       <SubType>Component</SubType>
     </Compile>

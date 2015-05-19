@@ -8,8 +8,6 @@ using System.Drawing;
 using System.Collections;
 using System.Drawing.Drawing2D;
 
-//  For readability: (Ctrl + m, Ctrl + o) to 'collapse', (Ctrl + m, Ctrl + l) to 'expand' definitions
-
 /*
  *  TITLE:
  *      MainForm : Form
@@ -41,16 +39,13 @@ using System.Drawing.Drawing2D;
  *                       components have been separated into regions each with appropriate comments.
  */
 
-/* TODO: add this to CODE STRUCTURE somewhere: Thoughout this class elements are being refreshed and invalidated
- * in order to force to repaint. These calls are made only when absolutely necessary and on only the required elemnts, 
- * for example: some objects call Refresh() and others Invalidate(). This is because repainitng is expensive and
- * lowers performance efficiency.
-*/
-
 namespace My_Note
 {
     public partial class MainForm : Form
     {
+        private Graphics m_transparentPanelGraphics;                        // Used to reduce repetitive data creation
+        private Pen m_transparentPanelPen;                                  // Used to reduce repetitive data creation
+
         private ShapeContainer m_shapesStorage = new ShapeContainer();      // Storage of all the drawing data
         private bool m_isDrawing = false;                                   // Is the mouse currently down and drawing
         private bool m_isErasing = false;                                   // Is the mouse currently down and erasing
@@ -60,16 +55,24 @@ namespace My_Note
         private int m_shapeNumber = 0;                                      // Record the shape numbers so they can be drawn separately
         private Point m_drawStartPoint = new Point(0, 0);                   // Start point of arrow or line
         private Point m_drawEndPoint = new Point(0, 0);                     // End point of arrow or line
+        
         private Point m_arrowLeftSide = new Point(0, 0);                    // Left side of the arrow head
         private Point m_arrowRightSide = new Point(0, 0);                   // Right side of the arrow head
         private Int32 m_arrowFarPoint = 0;                                  // Used in the diagonal arrows
-        private Graphics m_transparentPanelGraphics;                        // Used to reduce repetitive data creation
-        private Pen m_transparentPanelPen;                                  // Used to reduce repetitive data creation
+
         private bool m_canDash = false;                                     // Used when saving dashed or dotted lines
+        
         private List<VerticalText> m_verticalTextList = new List<VerticalText>();  // Used to store VerticalText instances
+        
         private int m_richTextBoxSelectStartCharIndex = 0;                  // Record start index before text selection using mouse
         private int m_richTextBoxSelectCurrentCharIndex = 0;                // Record current index during text selection using mouse
         private bool m_isSelectingText = false;                             // Is the mouse currently down and selecting text
+
+        /*  TODO: Added page number
+         * 
+        */
+
+        private int m_currentPageNumber = 1;
 
         // This region contains methods for richTextBox
         #region richTextBoxMethods
@@ -165,9 +168,7 @@ namespace My_Note
          *  If text control is selected, then this method prepares a multi-character text selection.
          *  Pencil and eraser controls need simpler preparation processes. Last two conditions cast
          *  the 'enum' type m_currentSelectedControl to 'int' in order to test as many conditions as
-         *  possible while keeping a minimum required lines of code and maintaining readability. Great
-         *  deal of effort was put into arranging the structure of this code to maintain simplicity,
-         *  readability, and to optimize performance.
+         *  possible while keeping a minimum required lines of code and maintaining readability.
          * 
          * RETURNS
          *  Nothing
@@ -232,8 +233,7 @@ namespace My_Note
          *  only drawn here to display to the user a dynamic response. They get saved on MouseUp event.
          *  Eraser only removes anything that is not text. When text control is selected this method is used
          *  for multi-character and/or multi-line selection in the richTextBox, as the mouse is down and being
-         *  dragged. Great deal of effort was put into arranging the structure of this code to maintain 
-         *  simplicity, readability, and to optimize performance.
+         *  dragged.
          * 
          * RETURNS
          *  Nothing
@@ -341,12 +341,14 @@ namespace My_Note
          *                 and confirm that left mouse button was clicked
          *      
          * DESCRIPTION
-         *  Updates values, saves data, redraws transparentPanel and richTextBox. Pencil and
-         *  eraser actions are already saved up to this point. Lines, arrows, and other shapes
-         *  use special methods for saving, which are triggered by this method. 'if' statements
-         *  test for several values to ensure/restrict the direction of the shape being drawn
-         * //TODO:                     // Prevent accidentally creating too many instances of VerticalText
-            // code was structured this way to minimize test conditions while maintaining readability
+         *  Updates values, saves data, redraws transparentPanel and richTextBox. Pencil and eraser
+         *  actions are already saved up to this point. Lines, arrows, and other shapes use special
+         *  methods for saving, which are triggered by this method. Some conditions test for
+         *  several values to ensure/restrict the direction of the arrow being drawn. When adding a
+         *  VerticalText object (rotatable text feature) a condition tests to see if one has been recently
+         *  created and modified. Such mechanism is used to ensure that the user does not accidentally
+         *  create too many such objects.
+         *  
          * RETURNS
          *  Nothing
          * 
@@ -367,7 +369,6 @@ namespace My_Note
                     richTextBox.Select();
                     richTextBox.Invalidate();
                     transparentPanel.Invalidate();
-                    //richTextBox.Refresh();
                     m_isSelectingText = false;
                 }
                 if (m_currentSelectedControl == e_SelectedControl.PENCIL)
@@ -381,7 +382,7 @@ namespace My_Note
                     transparentPanel.Invalidate();
                     richTextBox.Invalidate();
                 }
-                if (m_isDrawing)
+                if (m_isDrawing) // Draw one of the arrows
                 {
                     if (m_currentSelectedControl == e_SelectedControl.WARROW && (e.Location.X < m_drawStartPoint.X))
                     {
@@ -468,9 +469,10 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This method gets called automatically whenever any element within the transparent panel
-         *  makes any kind of change. It is declared to accomodate the behavior of verticalTextBox
-         *  by repainting itself and updating the view.
+         *  This method gets called automatically whenever any element within transparentPanel makes
+         *  any kind of change. It is declared to accomodate the behavior of VerticalTextOptionsForm
+         *   by repainting itself and updating the view. Such behavior is necessary to minimize
+         *   communication between non-related objects and preserve rules of encapsulation.
          *  
          * RETURNS
          *  Nothing
@@ -508,7 +510,7 @@ namespace My_Note
          *  number, then they are connected to form a line. If the shape numbers are different,
          *  then a new shape begins to form. This method gets triggered by the OnPaint() method
          *  of the TransparentPanel.cs subclass by the command: base.OnPaint(e);. Also, redraws
-         *  the verticalTextObjects by iterating over the container that holds them.
+         *  the VerticalText object by iterating over the container that holds them.
          * 
          * RETURNS
          *  Nothing
@@ -615,10 +617,10 @@ namespace My_Note
          *      e       -> used to get the current location of the cursor
          *      
          * DESCRIPTION
-         *  Draws an arrow with user desired rotButDist which is restricted to west direction. This method
-         *  is optimized and used by the MouseMove event handler when the user has a mouse button down
-         *  and is dragging the arrow to desired rotButDist. Drawing is very dynamic in order to respond to
-         *  user input, so saving does not occur here.
+         *  Draws an arrow restricted to west direction as the user has the mouse down and dragging it. The
+         *  location of endpoint of the arrow is dictated by the current value of the X coordinate in the
+         *  appropriate direction away from the start point. This method simply draws the arrow to display to
+         *  the user a real-time response. Saving does not occur here.
          * 
          * RETURNS
          *  Nothing
@@ -661,7 +663,7 @@ namespace My_Note
          *  Saves an arrow drawn by the user which is restricted to west direction. This method saves
          *  all the points that form the arrow and not just the beginning and end. Such functionality
          *  is necessary in order to accomodate the erase functionality, where a user can erase only the
-         *  desired points of the arrow. This method is called by MouseUp event handler and stores each
+         *  desired points of the arrow. This method is called by _MouseUp event handler and stores each
          *  arrow as three shapes.
          * 
          * RETURNS
@@ -717,10 +719,10 @@ namespace My_Note
          *      e       -> used to get the current location of the cursor
          *      
          * DESCRIPTION
-         *  Draws an arrow with user desired rotButDist which is restricted to north west direction. This method
-         *  is optimized and used by the MouseMove event handler when the user has a mouse button down
-         *  and is dragging the arrow to desired rotButDist. Drawing is very dynamic in order to respond to
-         *  user input, so saving does not occur here.
+         *  Draws an arrow restricted to north west direction as the user has the mouse down and dragging it.
+         *  The location of endpoint of the arrow is dictated by the furthest point of either horizontal or
+         *  vertical value towards the appropriate direction from the start point. This method simply draws the
+         *  arrow to display to the user a real-time response. Saving does not occur here. 
          * 
          * RETURNS
          *  Nothing
@@ -774,7 +776,7 @@ namespace My_Note
          *  Saves an arrow drawn by the user which is restricted to north west direction. This method saves
          *  all the points that form the arrow and not just the beginning and end. Such functionality
          *  is necessary in order to accomodate the erase functionality, where a user can erase only the
-         *  desired points of the arrow. This method is called by MouseUp event handler and stores each
+         *  desired points of the arrow. This method is called by _MouseUp event handler and stores each
          *  arrow as three shapes.
          * 
          * RETURNS
@@ -826,10 +828,10 @@ namespace My_Note
          *      e       -> used to get the current location of the cursor
          *      
          * DESCRIPTION
-         *  Draws an arrow with user desired rotButDist which is restricted to north direction. This method
-         *  is optimized and used by the MouseMove event handler when the user has a mouse button down
-         *  and is dragging the arrow to desired rotButDist. Drawing is very dynamic in order to respond to
-         *  user input, so saving does not occur here.
+         *  Draws an arrow restricted to north direction as the user has the mouse down and dragging it. The
+         *  location of endpoint of the arrow is dictated by the current value of the Y coordinate in the
+         *  appropriate direction away from the start point. This method simply draws the arrow to display to
+         *  the user a real-time response. Saving does not occur here.
          * 
          * RETURNS
          *  Nothing
@@ -872,7 +874,7 @@ namespace My_Note
          *  Saves an arrow drawn by the user which is restricted to north direction. This method saves
          *  all the points that form the arrow and not just the beginning and end. Such functionality
          *  is necessary in order to accomodate the erase functionality, where a user can erase only the
-         *  desired points of the arrow. This method is called by MouseUp event handler and stores each
+         *  desired points of the arrow. This method is called by _MouseUp event handler and stores each
          *  arrow as three shapes.
          * 
          * RETURNS
@@ -928,10 +930,10 @@ namespace My_Note
          *      e       -> used to get the current location of the cursor
          *      
          * DESCRIPTION
-         *  Draws an arrow with user desired rotButDist which is restricted to north east direction. This method
-         *  is optimized and used by the MouseMove event handler when the user has a mouse button down
-         *  and is dragging the arrow to desired rotButDist. Drawing is very dynamic in order to respond to
-         *  user input, so saving does not occur here.
+         *  Draws an arrow restricted to north east direction as the user has the mouse down and dragging it.
+         *  The location of endpoint of the arrow is dictated by the furthest point of either horizontal or
+         *  vertical value towards the appropriate direction from the start point. This method simply draws the
+         *  arrow to display to the user a real-time response. Saving does not occur here. 
          * 
          * RETURNS
          *  Nothing
@@ -985,7 +987,7 @@ namespace My_Note
          *  Saves an arrow drawn by the user which is restricted to north east direction. This method saves
          *  all the points that form the arrow and not just the beginning and end. Such functionality
          *  is necessary in order to accomodate the erase functionality, where a user can erase only the
-         *  desired points of the arrow. This method is called by MouseUp event handler and stores each
+         *  desired points of the arrow. This method is called by _MouseUp event handler and stores each
          *  arrow as three shapes.
          * 
          * RETURNS
@@ -1037,10 +1039,10 @@ namespace My_Note
          *      e       -> used to get the current location of the cursor
          *      
          * DESCRIPTION
-         *  Draws an arrow with user desired rotButDist which is restricted to east direction. This method
-         *  is optimized and used by the MouseMove event handler when the user has a mouse button down
-         *  and is dragging the arrow to desired rotButDist. Drawing is very dynamic in order to respond to
-         *  user input, so saving does not occur here.
+         *  Draws an arrow restricted to east direction as the user has the mouse down and dragging it. The
+         *  location of endpoint of the arrow is dictated by the current value of the X coordinate in the
+         *  appropriate direction away from the start point. This method simply draws the arrow to display to
+         *  the user a real-time response. Saving does not occur here.
          * 
          * RETURNS
          *  Nothing
@@ -1083,7 +1085,7 @@ namespace My_Note
          *  Saves an arrow drawn by the user which is restricted to east direction. This method saves
          *  all the points that form the arrow and not just the beginning and end. Such functionality
          *  is necessary in order to accomodate the erase functionality, where a user can erase only the
-         *  desired points of the arrow. This method is called by MouseUp event handler and stores each
+         *  desired points of the arrow. This method is called by _MouseUp event handler and stores each
          *  arrow as three shapes.
          * 
          * RETURNS
@@ -1139,10 +1141,10 @@ namespace My_Note
          *      e       -> used to get the current location of the cursor
          *      
          * DESCRIPTION
-         *  Draws an arrow with user desired rotButDist which is restricted to south east direction. This method
-         *  is optimized and used by the MouseMove event handler when the user has a mouse button down
-         *  and is dragging the arrow to desired rotButDist. Drawing is very dynamic in order to respond to
-         *  user input, so saving does not occur here.
+         *  Draws an arrow restricted to south east direction as the user has the mouse down and dragging it.
+         *  The location of endpoint of the arrow is dictated by the furthest point of either horizontal or
+         *  vertical value towards the appropriate direction from the start point. This method simply draws the
+         *  arrow to display to the user a real-time response. Saving does not occur here. 
          * 
          * RETURNS
          *  Nothing
@@ -1196,7 +1198,7 @@ namespace My_Note
          *  Saves an arrow drawn by the user which is restricted to south east direction. This method saves
          *  all the points that form the arrow and not just the beginning and end. Such functionality
          *  is necessary in order to accomodate the erase functionality, where a user can erase only the
-         *  desired points of the arrow. This method is called by MouseUp event handler and stores each
+         *  desired points of the arrow. This method is called by _MouseUp event handler and stores each
          *  arrow as three shapes.
          * 
          * RETURNS
@@ -1238,7 +1240,7 @@ namespace My_Note
             m_isDrawing = false;
             transparentPanel.Refresh();
         } /* private void saveSouthEastArrow(MouseEventArgs e) */
-        
+
         /*
          * NAME
          *  drawSouthArrow() - draws an arrow pointing south
@@ -1248,10 +1250,10 @@ namespace My_Note
          *      e       -> used to get the current location of the cursor
          *      
          * DESCRIPTION
-         *  Draws an arrow with user desired rotButDist which is restricted to south direction. This method
-         *  is optimized and used by the MouseMove event handler when the user has a mouse button down
-         *  and is dragging the arrow to desired rotButDist. Drawing is very dynamic in order to respond to
-         *  user input, so saving does not occur here.
+         *  Draws an arrow restricted to south direction as the user has the mouse down and dragging it. The
+         *  location of endpoint of the arrow is dictated by the current value of the Y coordinate in the
+         *  appropriate direction away from the start point. This method simply draws the arrow to display to
+         *  the user a real-time response. Saving does not occur here.
          * 
          * RETURNS
          *  Nothing
@@ -1294,7 +1296,7 @@ namespace My_Note
          *  Saves an arrow drawn by the user which is restricted to south direction. This method saves
          *  all the points that form the arrow and not just the beginning and end. Such functionality
          *  is necessary in order to accomodate the erase functionality, where a user can erase only the
-         *  desired points of the arrow. This method is called by MouseUp event handler and stores each
+         *  desired points of the arrow. This method is called by _MouseUp event handler and stores each
          *  arrow as three shapes.
          * 
          * RETURNS
@@ -1350,10 +1352,10 @@ namespace My_Note
          *      e       -> used to get the current location of the cursor
          *      
          * DESCRIPTION
-         *  Draws an arrow with user desired rotButDist which is restricted to south west direction. This method
-         *  is optimized and used by the MouseMove event handler when the user has a mouse button down
-         *  and is dragging the arrow to desired rotButDist. Drawing is very dynamic in order to respond to
-         *  user input, so saving does not occur here.
+         *  Draws an arrow restricted to south west direction as the user has the mouse down and dragging it.
+         *  The location of endpoint of the arrow is dictated by the furthest point of either horizontal or
+         *  vertical value towards the appropriate direction from the start point. This method simply draws the
+         *  arrow to display to the user a real-time response. Saving does not occur here. 
          * 
          * RETURNS
          *  Nothing
@@ -1407,7 +1409,7 @@ namespace My_Note
          *  Saves an arrow drawn by the user which is restricted to south west direction. This method saves
          *  all the points that form the arrow and not just the beginning and end. Such functionality
          *  is necessary in order to accomodate the erase functionality, where a user can erase only the
-         *  desired points of the arrow. This method is called by MouseUp event handler and stores each
+         *  desired points of the arrow. This method is called by _MouseUp event handler and stores each
          *  arrow as three shapes.
          * 
          * RETURNS
@@ -1460,7 +1462,7 @@ namespace My_Note
          *      
          * DESCRIPTION
          *  Draws a rectangle in any direction with user desired size. This method is optimized and used by the
-         *  MouseMove event handler when the user has a mouse button down and is dragging it to desired rotButDist.
+         *  _MouseMove event handler when the user has a mouse button down and is dragging it to desired size.
          *  Drawing is very dynamic in order to respond to user input, so saving does not occur here. Rectangle
          *  constructor uses complex Math methods in order to allow the user to draw the rectangle in any direction.
          * 
@@ -1478,7 +1480,8 @@ namespace My_Note
             Int32 rectWidth = e.Location.X - m_drawStartPoint.X;
             Int32 rectHeight = e.Location.Y - m_drawStartPoint.Y;
 
-            Rectangle currentRect = new Rectangle(Math.Min(e.X, m_drawStartPoint.X), Math.Min(e.Y, m_drawStartPoint.Y), Math.Abs(e.X - m_drawStartPoint.X), Math.Abs(e.Y - m_drawStartPoint.Y));
+            Rectangle currentRect = new Rectangle(Math.Min(e.X, m_drawStartPoint.X), Math.Min(e.Y, m_drawStartPoint.Y), 
+                Math.Abs(e.X - m_drawStartPoint.X), Math.Abs(e.Y - m_drawStartPoint.Y));
             
             m_transparentPanelGraphics.DrawRectangle(m_transparentPanelPen, currentRect);
 
@@ -1500,7 +1503,7 @@ namespace My_Note
          *  not just origin + size. Such functionality is necessary in order to accomodate the erase
          *  functionality, where a user can erase only the desired points of the rectangle. rectOrigin
          *  variable gets coordinates that are the most upper left part of the rectangle. This method is 
-         *  called by MouseUp event handler, rectangle is saved as one shape.
+         *  called by _MouseUp event handler. Rectangle is saved as one shape with many points.
          * 
          * RETURNS
          *  Nothing
@@ -1551,7 +1554,7 @@ namespace My_Note
          *      
          * DESCRIPTION
          *  Draws an ellipse in any direction with user desired size. This method is optimized and used by the
-         *  MouseMove event handler when the user has a mouse button down and is dragging it to desired rotButDist.
+         *  _MouseMove event handler when the user has a mouse button down and is dragging it to desired size.
          *  Drawing is very dynamic in order to respond to user input, so saving does not occur here.
          * 
          * RETURNS
@@ -1585,18 +1588,19 @@ namespace My_Note
          *      e       -> used to get the current location of the cursor
          * 
          * DESCRIPTION
-         *  Saves points generated by an ellipse shape. First calculate the absolute width and height of
-         *  the ellipse based on m_drawStartPoint and e.Location (current point) variables. Second, use a
+         *  Saves points generated by an ellipse shape. First calculate the absolute values of width and height
+         *  of the ellipse based on m_drawStartPoint and e.Location (current point) variables. Second, use a
          *  GraphicsPath object to plot a set of points on the panel based on generated origin and size.
          *  Third, use GraphicsPathIterator object to extract a set of points from GraphicsPant object, this
          *  technique seems to be best for extracting the most points. Finally, save the generated points in the
-         *  m_shapesStorage object. The reason for saving a set of points is to accomodate erase functionality.
+         *  m_shapesStorage object. Ellipse is saved as one shape with many points The reason for saving a set of 
+         *  points is to accomodate erase functionality.
          * 
          * RETURNS
          *  Nothing
          *  
          * AUTHOR
-         *  Murat Zazi (proudly)
+         *  Murat Zazi
          *  
          * DATE
          *  9:00am 3/24/2015
@@ -1638,9 +1642,9 @@ namespace My_Note
          *      e       -> used to get the current location of the cursor
          *      
          * DESCRIPTION
-         *  Draws a solid line in any direction with user desired rotButDist. This method is optimized and used by
-         *  the MouseMove event handler when the user has a mouse button down and is dragging the line to desired
-         *  rotButDist. Drawing is very dynamic in order to respond to user input, so saving does not occur here.
+         *  Draws a solid line in any direction with user desired length. This method is optimized and used by
+         *  the _MouseMove event handler when the user has a mouse button down and is dragging the line to desired
+         *  length. Drawing is very dynamic in order to respond to user input, so saving does not occur here.
          * 
          * RETURNS
          *  Nothing
@@ -1669,9 +1673,10 @@ namespace My_Note
          *      e       -> used to get the current location of the cursor
          * 
          * DESCRIPTION
-         *  Saves points generated by a solid line. This methods uses a 'helper' method GetPointsOnLine to
-         *  generate a set of points based on start and end points and saves these points in a m_shapesStorage
-         *  object. The reason for saving a set of points is to accomodate erase functionality.
+         *  Saves points generated by a solid line. This methods uses a 'helper' method GetPointsOnLine to generate
+         *  a set of points based on start and end points and saves these points in a m_shapesStorage object. Solid
+         *  line is saved as one shape with many points. The reason for saving a set of points is to accomodate 
+         *  erase functionality.
          * 
          * RETURNS
          *  Nothing
@@ -1703,9 +1708,9 @@ namespace My_Note
          *      e       -> used to get the current location of the cursor
          *      
          * DESCRIPTION
-         *  Draws a dashed line in any direction with user desired rotButDist. This method is optimized and used by
-         *  the MouseMove event handler when the user has a mouse button down and is dragging the line to desired
-         *  rotButDist. Drawing is very dynamic in order to respond to user input, so saving does not occur here.
+         *  Draws a dashed line in any direction with user desired length. This method is optimized and used by
+         *  the _MouseMove event handler when the user has a mouse button down and is dragging the line to desired
+         *  length. Drawing is very dynamic in order to respond to user input, so saving does not occur here.
          * 
          * RETURNS
          *  Nothing
@@ -1740,7 +1745,8 @@ namespace My_Note
          *  Saves points generated by a dashed line. This methods uses a 'helper' method GetPointsOnLine to
          *  generate a set of points based on start and end points. A for-loop iterates over the newly generated set
          *  of points to selectively save only those points that form a dashed line. The newly selected points are
-         *  saved in m_shapesStorage object. The reason for saving a set of points is to accomodate erase functionality.
+         *  saved in m_shapesStorage object. Dashed line is saved as one shape with many points. The reason for saving
+         *  a set of points is to accomodate erase functionality.
          * 
          * RETURNS
          *  Nothing
@@ -1783,9 +1789,9 @@ namespace My_Note
          *      e       -> used to get the current location of the cursor
          *      
          * DESCRIPTION
-         *  Draws a dotted line in any direction with user desired rotButDist. This method is optimized and used by
-         *  the MouseMove event handler when the user has a mouse button down and is dragging the line to desired
-         *  rotButDist. Drawing is very dynamic in order to respond to user input, so saving does not occur here.
+         *  Draws a dotted line in any direction with user desired length. This method is optimized and used by
+         *  the _MouseMove event handler when the user has a mouse button down and is dragging the line to desired
+         *  length. Drawing is very dynamic in order to respond to user input, so saving does not occur here.
          * 
          * RETURNS
          *  Nothing
@@ -1820,7 +1826,8 @@ namespace My_Note
          *  Saves points generated by a dotted line. This methods uses a 'helper' method GetPointsOnLine to
          *  generate a set of points based on start and end points. A for-loop iterates over the newly generated set
          *  of points to selectively save only those points that form a dotted line. The newly selected points are
-         *  saved in m_shapesStorage object. The reason for saving a set of points is to accomodate erase functionality.
+         *  saved in m_shapesStorage object. Dotted line is saved as one shape with many points. The reason for saving
+         *  a set of points is to accomodate erase functionality.
          * 
          * RETURNS
          *  Nothing
@@ -1866,12 +1873,11 @@ namespace My_Note
          *      y1      -> y-coordinate of end point
          * 
          * DESCRIPTION
-         *  This method utilizes the famous Bresenham's line algorithms to calculate and return
-         *  a set of points between a start point and end point. This method is used by several
-         *  other methods that save solid, dashed, and dotted lines by using a set of points. The
-         *  reason for saving individual points is to accomodate erase functionality. This method
-         *  was taken from an author who customized this algorithm specifically for C#, the author's
-         *  credits are documented.
+         *  This method utilizes the famous Bresenham's line algorithms to calculate and return a set of points
+         *  between a start point and end point. This method is used by several other methods that save solid,
+         *  dashed, and dotted lines by using a set of points. The need to generate individual points is to 
+         *  accomodate erase functionality. This method was taken from an author who customized this algorithm
+         *  specifically for C#, the author's credits are documented.
          *  
          * RETURNS
          *  IEnumerable<Point> type, which is a list of Point structures
@@ -1967,3 +1973,214 @@ namespace My_Note
         #endregion
     }
 }
+/*private void transparentPanel_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+
+                if (m_currentSelectedControl == e_SelectedControl.TEXT)
+                {
+                    Point newPoint = new Point(e.X - 40, e.Y - 35); // This is because text box is a little bit offset
+                    m_richTextBoxSelectStartCharIndex = richTextBox.GetCharIndexFromPosition(newPoint);
+
+                    //int charIndex = richTextBox.GetCharIndexFromPosition(newPoint);
+                    //richTextBox.SelectionStart = charIndex;
+                    //m_richTextBoxSelectStartCharIndex = charIndex;
+                    //mslog("SelectionStart = " + richTextBox.SelectionStart);
+                }
+
+
+
+                if (m_currentSelectedControl == e_SelectedControl.PENCIL)
+                {
+                    m_isDrawing = true;
+                    m_shapeNumber++;
+                    m_lastPosition = new Point(0, 0);
+                }
+                if (m_currentSelectedControl == e_SelectedControl.ERASER)
+                {
+                    m_isErasing = true;
+                }
+
+                // below can all be combined with a bunch of or statements
+                // or it can be done to see if the selected control is within a certain value range
+
+                // Technique is used to save over 50 lines of code
+                if ((int)m_currentSelectedControl < 8)
+                {
+
+                }
+                if (m_currentSelectedControl == e_SelectedControl.WARROW)
+                {
+                    mslog("selected warrow = " + (int)e_SelectedControl.WARROW);
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.NWARROW)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.NARROW)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.NEARROW)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.EARROW)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.SEARROW)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.SARROW)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.SWARROW)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.RECTANGLE)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.ELLIPSE)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.SOLID)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.DASHED)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                    m_canDash = true;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.DOTTED)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                    m_canDash = true;
+                }
+            }
+        } /* private void transparentPanel_MouseDown(object sender, MouseEventArgs e) */
+
+/*private void transparentPanel_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                if (m_currentSelectedControl == e_SelectedControl.TEXT)
+                {
+                    m_isSelectingText = true;
+                    Point newPoint = new Point(e.X - 40, e.Y - 35);
+                    m_richTextBoxSelectCurrentCharIndex = richTextBox.GetCharIndexFromPosition(newPoint);
+                    // can't select going backwards
+                    richTextBox.SelectionStart = Math.Min(m_richTextBoxSelectStartCharIndex, m_richTextBoxSelectCurrentCharIndex);
+                    richTextBox.SelectionLength = Math.Abs(m_richTextBoxSelectCurrentCharIndex - m_richTextBoxSelectStartCharIndex);
+                    richTextBox.Select();
+                }
+
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.PENCIL))
+                {
+                    drawWithPencil(e);
+                }
+                if (m_isErasing && (m_currentSelectedControl == e_SelectedControl.ERASER))
+                {
+                    startErasing(e);
+                }
+
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.WARROW))
+                {
+                    if ((m_lastPosition != e.Location) && (e.Location.X < m_drawStartPoint.X))
+                    {
+                        drawWestArrow(e);
+                    }
+                }
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.NWARROW))
+                {
+                    if ((m_lastPosition != e.Location) && (e.Location.X < m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y))
+                    {
+                        drawNorthWestArrow(e);
+                    }
+                }
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.NARROW))
+                {
+                    if ((m_lastPosition != e.Location) && (e.Location.Y < m_drawStartPoint.Y))
+                    {
+                        drawNorthArrow(e);
+                    }
+                }
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.NEARROW))
+                {
+                    if ((m_lastPosition != e.Location) && (e.Location.X > m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y))
+                    {
+                        drawNorthEastArrow(e);
+                    }
+                }
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.EARROW))
+                {
+                    if ((m_lastPosition != e.Location) && (e.Location.X > m_drawStartPoint.X))
+                    {
+                        drawEastArrow(e);
+                    }
+                }
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.SEARROW))
+                {
+                    if ((m_lastPosition != e.Location) && (e.Location.X > m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y))
+                    {
+                        drawSouthEastArrow(e);
+                    }
+                }
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.SARROW))
+                {
+                    if ((m_lastPosition != e.Location) && (e.Location.Y > m_drawStartPoint.Y))
+                    {
+                        drawSouthArrow(e);
+                    }
+                }
+                if (m_isDrawing & (m_currentSelectedControl == e_SelectedControl.SWARROW))
+                {
+                    if ((m_lastPosition != e.Location) && (e.Location.X < m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y))
+                    {
+                        drawSouthWestArrow(e);
+                    }
+                }
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.RECTANGLE))
+                {
+                    drawRectangle(e);
+                }
+
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.ELLIPSE))
+                {
+                    drawEllipse(e);
+                }
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.SOLID))
+                {
+                    drawSolidLine(e);
+                }
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.DASHED))
+                {
+                    drawDashedLine(e);
+                }
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.DOTTED))
+                {
+                    drawDottedLine(e);
+                }
+            }
+        } /* private void transparentPanel_MouseMove(object sender, MouseEventArgs e) */

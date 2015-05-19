@@ -8,8 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-//  For readability: (Ctrl + m, Ctrl + o) to 'collapse', (Ctrl + m, Ctrl + l) to 'expand' definitions
-
 /*
  *  TITLE:
  *      MainForm : Form
@@ -41,6 +39,15 @@ using System.Windows.Forms;
  *                       Other components have been separated into regions each with appropriate comments.
  */
 
+
+/*
+ *  TODO: Add comments to code structure about some of the member variables created in order to avoid
+ *        recreating them to improve performance.
+ *  
+ *  Modified: MaiForm(),
+ * 
+ */
+
 namespace My_Note
 {
     public partial class MainForm : Form
@@ -66,6 +73,13 @@ namespace My_Note
             richTextBox.Font = new Font("Microsoft Sans Serif", 12);
             m_transparentPanelGraphics = this.transparentPanel.CreateGraphics();
             m_transparentPanelPen = new Pen(m_currentDrawColor);
+
+            /******************************************************************/
+            m_subjectOnePanelGraphics = subjectOnePanel.CreateGraphics();
+            m_subjectTwoPanelGraphics = subjectTwoPanel.CreateGraphics();
+            m_subjectThreePanelGraphics = subjectThreePanel.CreateGraphics();
+            m_subjectFourPanelGraphics = subjectFourPanel.CreateGraphics();
+            m_subjectFivePanelGraphics = subjectFivePanel.CreateGraphics();
         }
 
         /*
@@ -94,6 +108,7 @@ namespace My_Note
         private void MainForm_Load(object sender, System.EventArgs e)
         {
             textSelectButton.Select();
+            this.Invalidate();
         } /* private void MainForm_Load(object sender, System.EventArgs e) */
         
         /*
@@ -142,234 +157,138 @@ namespace My_Note
             }
         } /* private void fontComboBox_SelectedIndexChanged(object sender, System.EventArgs e) */
 
-        // Temp (Begin)
-        private void moveLogCursor()
+
+        /******************************************************************/
+        private string m_subjectOneTitle = "New Subject 1";
+        private string m_subjectTwoTitle = "New Subject 2";
+        private string m_subjectThreeTitle = "New Subject 3";
+        private string m_subjectFourTitle = "New Subject 4";
+        private string m_subjectFiveTitle = "New Subject 5";
+        private Graphics m_subjectOnePanelGraphics;
+        private Graphics m_subjectTwoPanelGraphics;
+        private Graphics m_subjectThreePanelGraphics;
+        private Graphics m_subjectFourPanelGraphics;
+        private Graphics m_subjectFivePanelGraphics;
+
+        private Font m_subjectPanelFont = new Font("Microsoft Sans Serif", 12);
+        private SolidBrush m_subjectPanelBrush = new SolidBrush(Color.Black);
+
+        /*
+         *  1:06pm 5/19/2015
+         */
+        private void updateSubjectTabs(PaintEventArgs e)
         {
-            logTextBox.SelectionStart = logTextBox.Text.Length;
-            logTextBox.SelectionLength = 0;
-            logTextBox.ScrollToCaret();
-        }
-        private void mslog(string a_str)
-        {
-            logTextBox.Text += a_str + "\r\n";
-            moveLogCursor();
-        }
-        private void clearLogButton_Click(object sender, EventArgs e)
-        {
-            logTextBox.Text = "";
+            subjectOnePanel.Refresh();
+            subjectTwoPanel.Refresh();
+            subjectThreePanel.Refresh();
+            subjectFourPanel.Refresh();
+            subjectFivePanel.Refresh();
+
+            drawSubjectTitle(m_subjectOneTitle, m_subjectOnePanelGraphics);
+            drawSubjectTitle(m_subjectTwoTitle, m_subjectTwoPanelGraphics);
+            drawSubjectTitle(m_subjectThreeTitle, m_subjectThreePanelGraphics);
+            drawSubjectTitle(m_subjectFourTitle, m_subjectFourPanelGraphics);
+            drawSubjectTitle(m_subjectFiveTitle, m_subjectFivePanelGraphics);
         }
 
-        // Temp (End)
+        /*
+         * 1:13pm 5/19/2015
+         */
+        private void drawSubjectTitle(string a_subjectTitleString, Graphics a_subjectPanelGraphics)
+        {
+            StringFormat drawFormat = new StringFormat();
+            drawFormat.FormatFlags = StringFormatFlags.DirectionVertical;
+            a_subjectPanelGraphics.DrawString(a_subjectTitleString, m_subjectPanelFont, m_subjectPanelBrush, 2, 2, drawFormat);
+        }
+
+        /*
+         *  1:00pm 5/19/2015
+         */
+        private void MainForm_Paint(object sender, PaintEventArgs e)
+        {
+            updateSubjectTabs(e);
+        }
+
+        /*
+         *  4:10pm 5/19/2015
+         */
+        private void subjectOnePanel_MouseDown(object sender, MouseEventArgs e)
+        {
+            setDefaultBackColorForTabs();
+            subjectOnePanel.BackColor = SystemColors.ControlDark;
+            this.Invalidate();
+        }
+
+        /*
+         *  4:12pm 5/19/2015
+         */
+        private void subjectTwoPanel_MouseDown(object sender, MouseEventArgs e)
+        {
+            setDefaultBackColorForTabs();
+            subjectTwoPanel.BackColor = SystemColors.ControlDark;
+            this.Invalidate();
+        }
+
+        /*
+         *  4:14pm 5/19/2015
+         */
+        private void subjectThreePanel_MouseDown(object sender, MouseEventArgs e)
+        {
+            setDefaultBackColorForTabs();
+            subjectThreePanel.BackColor = SystemColors.ControlDark;
+            this.Invalidate();
+        }
+
+        /*
+         *  4:15pm 5/19/2015
+         */
+        private void subjectFourPanel_MouseDown(object sender, MouseEventArgs e)
+        {
+            setDefaultBackColorForTabs();
+            subjectFourPanel.BackColor = SystemColors.ControlDark;
+            this.Invalidate();
+        }
+
+        /*
+         *  4:17pm 5/19/2015
+         */
+        private void subjectFivePanel_MouseDown(object sender, MouseEventArgs e)
+        {
+            setDefaultBackColorForTabs();
+            subjectFivePanel.BackColor = SystemColors.ControlDark;
+            this.Invalidate();
+        }
+
+        /*
+         *  4:20pm 5/19/2015
+         */
+        private void setDefaultBackColorForTabs()
+        {
+            subjectOnePanel.BackColor = SystemColors.ControlLight;
+            subjectTwoPanel.BackColor = SystemColors.ControlLight;
+            subjectThreePanel.BackColor = SystemColors.ControlLight;
+            subjectFourPanel.BackColor = SystemColors.ControlLight;
+            subjectFivePanel.BackColor = SystemColors.ControlLight;
+        }
+
+        /*
+         * 5:19pm 5/19/2015
+         */
+        private void prevPageButton_Click(object sender, EventArgs e)
+        {
+            if (m_currentPageNumber == 1) return;
+            m_currentPageNumber--;
+            pageNumberLabel.Text = Convert.ToString(m_currentPageNumber);
+        }
+
+        /*
+         *  5:23pm 5/20/2015
+         */
+        private void nextPageButton_Click(object sender, EventArgs e)
+        {
+            if (m_currentPageNumber == 50) return;
+            m_currentPageNumber++;
+            pageNumberLabel.Text = Convert.ToString(m_currentPageNumber);
+        }
     }
 }
-/*private void transparentPanel_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-
-                if (m_currentSelectedControl == e_SelectedControl.TEXT)
-                {
-                    Point newPoint = new Point(e.X - 40, e.Y - 35); // This is because text box is a little bit offset
-                    m_richTextBoxSelectStartCharIndex = richTextBox.GetCharIndexFromPosition(newPoint);
-
-                    //int charIndex = richTextBox.GetCharIndexFromPosition(newPoint);
-                    //richTextBox.SelectionStart = charIndex;
-                    //m_richTextBoxSelectStartCharIndex = charIndex;
-                    //mslog("SelectionStart = " + richTextBox.SelectionStart);
-                }
-
-
-
-                if (m_currentSelectedControl == e_SelectedControl.PENCIL)
-                {
-                    m_isDrawing = true;
-                    m_shapeNumber++;
-                    m_lastPosition = new Point(0, 0);
-                }
-                if (m_currentSelectedControl == e_SelectedControl.ERASER)
-                {
-                    m_isErasing = true;
-                }
-
-                // below can all be combined with a bunch of or statements
-                // or it can be done to see if the selected control is within a certain value range
-
-                // Technique is used to save over 50 lines of code
-                if ((int)m_currentSelectedControl < 8)
-                {
-
-                }
-                if (m_currentSelectedControl == e_SelectedControl.WARROW)
-                {
-                    mslog("selected warrow = " + (int)e_SelectedControl.WARROW);
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.NWARROW)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.NARROW)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.NEARROW)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.EARROW)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.SEARROW)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.SARROW)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.SWARROW)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.RECTANGLE)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.ELLIPSE)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.SOLID)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.DASHED)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                    m_canDash = true;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.DOTTED)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                    m_canDash = true;
-                }
-            }
-        } /* private void transparentPanel_MouseDown(object sender, MouseEventArgs e) */
-
-/*private void transparentPanel_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                if (m_currentSelectedControl == e_SelectedControl.TEXT)
-                {
-                    m_isSelectingText = true;
-                    Point newPoint = new Point(e.X - 40, e.Y - 35);
-                    m_richTextBoxSelectCurrentCharIndex = richTextBox.GetCharIndexFromPosition(newPoint);
-                    // can't select going backwards
-                    richTextBox.SelectionStart = Math.Min(m_richTextBoxSelectStartCharIndex, m_richTextBoxSelectCurrentCharIndex);
-                    richTextBox.SelectionLength = Math.Abs(m_richTextBoxSelectCurrentCharIndex - m_richTextBoxSelectStartCharIndex);
-                    richTextBox.Select();
-                }
-
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.PENCIL))
-                {
-                    drawWithPencil(e);
-                }
-                if (m_isErasing && (m_currentSelectedControl == e_SelectedControl.ERASER))
-                {
-                    startErasing(e);
-                }
-
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.WARROW))
-                {
-                    if ((m_lastPosition != e.Location) && (e.Location.X < m_drawStartPoint.X))
-                    {
-                        drawWestArrow(e);
-                    }
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.NWARROW))
-                {
-                    if ((m_lastPosition != e.Location) && (e.Location.X < m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y))
-                    {
-                        drawNorthWestArrow(e);
-                    }
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.NARROW))
-                {
-                    if ((m_lastPosition != e.Location) && (e.Location.Y < m_drawStartPoint.Y))
-                    {
-                        drawNorthArrow(e);
-                    }
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.NEARROW))
-                {
-                    if ((m_lastPosition != e.Location) && (e.Location.X > m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y))
-                    {
-                        drawNorthEastArrow(e);
-                    }
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.EARROW))
-                {
-                    if ((m_lastPosition != e.Location) && (e.Location.X > m_drawStartPoint.X))
-                    {
-                        drawEastArrow(e);
-                    }
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.SEARROW))
-                {
-                    if ((m_lastPosition != e.Location) && (e.Location.X > m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y))
-                    {
-                        drawSouthEastArrow(e);
-                    }
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.SARROW))
-                {
-                    if ((m_lastPosition != e.Location) && (e.Location.Y > m_drawStartPoint.Y))
-                    {
-                        drawSouthArrow(e);
-                    }
-                }
-                if (m_isDrawing & (m_currentSelectedControl == e_SelectedControl.SWARROW))
-                {
-                    if ((m_lastPosition != e.Location) && (e.Location.X < m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y))
-                    {
-                        drawSouthWestArrow(e);
-                    }
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.RECTANGLE))
-                {
-                    drawRectangle(e);
-                }
-
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.ELLIPSE))
-                {
-                    drawEllipse(e);
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.SOLID))
-                {
-                    drawSolidLine(e);
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.DASHED))
-                {
-                    drawDashedLine(e);
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.DOTTED))
-                {
-                    drawDottedLine(e);
-                }
-            }
-        } /* private void transparentPanel_MouseMove(object sender, MouseEventArgs e) */

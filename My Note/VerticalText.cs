@@ -17,9 +17,7 @@ using System.Windows.Forms;
  *      around the screen. Second button is to allow the user to enter an options pop-up window where they can set the
  *      text and its properties. Third button lets the user delete this instance from the panel in which it is used.
  *      Fourth button is to allow the user to rotate the text to set it to a desired angle. Buttons and their locations
- *      are created dynamically and their event handler are assigned programmatically in the constructor. The mechanics
- *      of this class can become confusing very quickly, that is why a great deal of effort has been put in to ensure
- *      helpful commenting and code structure.
+ *      are created dynamically and their event handler are assigned programmatically in the constructor.
  *      
  *  CODE STRUCTURE:
  *      Variables were created and initialized immediately in the declaration section for reusability, to avoid repetition of
@@ -57,8 +55,8 @@ namespace My_Note
         private float m_rotButDistF = 96;                               /* Distance between move and rotate buttons, used in
                                                                            udpateButtonLocations(), updated in drawVerticalText() */
 
-        private List<VerticalText> m_ownerVerticalTextList;              /* Used to access container in which 'this' will be in, to assist the
-                                                                            removal of 'this' from the container. (m_deleteButton region) */
+        private List<VerticalText> m_ownerVerticalTextList;             /* Used to access container in which 'this' will be in, to assist the
+                                                                           removal of 'this' from the container. (m_deleteButton region) */
 
         /* Next three member variables point to the objects that live in the form (in formTextbox.cs) which owns this (VerticalText)
            object as well. They are declared here only to assist the 'm_optionsButton_MouseUp' event handler with repainting this object
