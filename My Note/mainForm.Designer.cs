@@ -96,13 +96,15 @@
             this.subjectThreePanel = new System.Windows.Forms.Panel();
             this.subjectFourPanel = new System.Windows.Forms.Panel();
             this.subjectFivePanel = new System.Windows.Forms.Panel();
+            this.restoreButton = new System.Windows.Forms.Button();
+            this.logTextBox = new System.Windows.Forms.TextBox();
+            this.clearButton = new System.Windows.Forms.Button();
             this.transparentPanel = new My_Note.TransparentPanel();
-            this.pageNumberLabel = new System.Windows.Forms.Label();
+            this.clearPageButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.toolbarPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox18)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox17)).BeginInit();
-            this.transparentPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -132,6 +134,7 @@
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // printToolStripMenuItem
             // 
@@ -786,9 +789,38 @@
             this.subjectFivePanel.TabIndex = 51;
             this.subjectFivePanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.subjectFivePanel_MouseDown);
             // 
+            // restoreButton
+            // 
+            this.restoreButton.Location = new System.Drawing.Point(12, 94);
+            this.restoreButton.Name = "restoreButton";
+            this.restoreButton.Size = new System.Drawing.Size(75, 23);
+            this.restoreButton.TabIndex = 52;
+            this.restoreButton.Text = "Restore";
+            this.restoreButton.UseVisualStyleBackColor = true;
+            this.restoreButton.Click += new System.EventHandler(this.restoreButton_Click);
+            // 
+            // logTextBox
+            // 
+            this.logTextBox.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.logTextBox.Location = new System.Drawing.Point(0, 123);
+            this.logTextBox.Multiline = true;
+            this.logTextBox.Name = "logTextBox";
+            this.logTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.logTextBox.Size = new System.Drawing.Size(140, 474);
+            this.logTextBox.TabIndex = 53;
+            // 
+            // clearButton
+            // 
+            this.clearButton.Location = new System.Drawing.Point(28, 603);
+            this.clearButton.Name = "clearButton";
+            this.clearButton.Size = new System.Drawing.Size(75, 23);
+            this.clearButton.TabIndex = 54;
+            this.clearButton.Text = "Clear Log";
+            this.clearButton.UseVisualStyleBackColor = true;
+            this.clearButton.Click += new System.EventHandler(this.clearButton_Click);
+            // 
             // transparentPanel
             // 
-            this.transparentPanel.Controls.Add(this.pageNumberLabel);
             this.transparentPanel.Location = new System.Drawing.Point(146, 90);
             this.transparentPanel.Name = "transparentPanel";
             this.transparentPanel.Size = new System.Drawing.Size(520, 605);
@@ -800,21 +832,25 @@
             this.transparentPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseMove);
             this.transparentPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseUp);
             // 
-            // pageNumberLabel
+            // clearPageButton
             // 
-            this.pageNumberLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.pageNumberLabel.Location = new System.Drawing.Point(4, 4);
-            this.pageNumberLabel.Name = "pageNumberLabel";
-            this.pageNumberLabel.Size = new System.Drawing.Size(20, 13);
-            this.pageNumberLabel.TabIndex = 0;
-            this.pageNumberLabel.Text = "1";
-            this.pageNumberLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.clearPageButton.Location = new System.Drawing.Point(28, 644);
+            this.clearPageButton.Name = "clearPageButton";
+            this.clearPageButton.Size = new System.Drawing.Size(75, 23);
+            this.clearPageButton.TabIndex = 55;
+            this.clearPageButton.Text = "Clear Page";
+            this.clearPageButton.UseVisualStyleBackColor = true;
+            this.clearPageButton.Click += new System.EventHandler(this.clearPageButton_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(812, 717);
+            this.Controls.Add(this.clearPageButton);
+            this.Controls.Add(this.clearButton);
+            this.Controls.Add(this.logTextBox);
+            this.Controls.Add(this.restoreButton);
             this.Controls.Add(this.subjectFivePanel);
             this.Controls.Add(this.subjectFourPanel);
             this.Controls.Add(this.subjectThreePanel);
@@ -838,7 +874,6 @@
             this.toolbarPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox18)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox17)).EndInit();
-            this.transparentPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -914,7 +949,10 @@
         private System.Windows.Forms.Panel subjectThreePanel;
         private System.Windows.Forms.Panel subjectFourPanel;
         private System.Windows.Forms.Panel subjectFivePanel;
-        private System.Windows.Forms.Label pageNumberLabel;
+        private System.Windows.Forms.Button restoreButton;
+        private System.Windows.Forms.TextBox logTextBox;
+        private System.Windows.Forms.Button clearButton;
+        private System.Windows.Forms.Button clearPageButton;
     }
 }
 

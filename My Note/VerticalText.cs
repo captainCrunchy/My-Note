@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 /*
  *  TITLE:
@@ -28,33 +30,49 @@ using System.Windows.Forms;
 
 namespace My_Note
 {
-    class VerticalText
+    [Serializable()]
+    class VerticalText : ISerializable
     {
-        private String m_textString = "Enter Text";                     // Actual text, used in drawVerticalText(), updated from options
-        private Font m_textFont = new Font("Microsoft Sans Serif", 12); // Font of text, used in drawVerticalText(), updated from options
-        private SolidBrush m_textBrush = new SolidBrush(Color.Black);   // Brush of text, used in drawVerticalText(), updated from options
-        private Point m_textOrigin;                                     // Origin of text, used in drawVerticalText(), updated with m_moveButton
-        private Int32 m_textAngle = 0;                                  /* Text angle in degrees, used in drawVerticalText() and updateButtonLocations(), 
+        /*S*/private String m_textString = "Enter Text";                     // Actual text, used in drawVerticalText(), updated from options
+        /*S*/private Font m_textFont = new Font("Microsoft Sans Serif", 12); // Font of text, used in drawVerticalText(), updated from options
+        
+        // created because solid brush cannot be serialized but we still want to create it only once to optimize performance
+        /*S*/private Color m_textBrushColor = Color.Black;
+        //private SolidBrush m_textBrush;// Assigned in constructor
+        private SolidBrush m_textBrush = new SolidBrush(Color.Black);
+
+        ///*S??*/private SolidBrush m_textBrush = new SolidBrush(Color.Black);   // Brush of text, used in drawVerticalText(), updated from options
+        /*S*/public Point m_textOrigin;                                     // Origin of text, used in drawVerticalText(), updated with m_moveButton
+        /*S*/private Int32 m_textAngle = 0;                                  /* Text angle in degrees, used in drawVerticalText() and updateButtonLocations(), 
                                                                            updated in m_rotateButton_MouseMove(). */
         
         private Button m_moveButton = new Button();                     // Button that moves the text around the panel
+        // added
+        private Point m_moveButtonLocation = new Point();
         private bool m_isMoving = false;                                // Indicates whether the text is currently being moved
         private Point m_alteringButtonOffsetPoint = new Point();        /* Offset point calculated by subtracting 'm_moveButton.Location' or the
                                                                            'm_rotateButton.Location' minus 'current point' (captured from entire screen) */
 
         private Button m_optionsButton = new Button();                  // Brings up options window to modify text properties
+        // added
+        private Point m_optionsButtonLocation = new Point();
         private VertTextOptionsForm m_optionsForm = new VertTextOptionsForm();  // Options window to modify text properties
-        private float m_optButDistF = 32;                               // Distance between move and options buttons, used in
+        /*S*/private float m_optButDistF = 32;                               // Distance between move and options buttons, used in
                                                                         // updateButtonLocations(), updated in drawVerticalText()
 
         private Button m_deleteButton = new Button();
-        private float m_delButDistF = 64;
+        // added
+        private Point m_deleteButtonLocation = new Point();
+        /*S*/private float m_delButDistF = 64;
 
         private Button m_rotateButton = new Button();                   // Button that rotates text to user desired angles
+        // added
+        private Point m_rotateButtonLocation = new Point();
         private bool m_isRotating = false;                              // Indicates whether the text is being rotated
-        private float m_rotButDistF = 96;                               /* Distance between move and rotate buttons, used in
+        /*S*/private float m_rotButDistF = 96;                               /* Distance between move and rotate buttons, used in
                                                                            udpateButtonLocations(), updated in drawVerticalText() */
 
+        // essentially this is a pointer to a variable living in MainForm class
         private List<VerticalText> m_ownerVerticalTextList;             /* Used to access container in which 'this' will be in, to assist the
                                                                            removal of 'this' from the container. (m_deleteButton region) */
 
@@ -62,9 +80,29 @@ namespace My_Note
            object as well. They are declared here only to assist the 'm_optionsButton_MouseUp' event handler with repainting this object
            when changes are made to it. This technique seems to be the only way to access objects that are outside of this object without
            breaking the rules of encapsulation. These member variables are accessed via their properties defined in m_optionsButton region. */
+        // essentially these are pointers to variables and UI objects living in MainFormClass
         private TransparentPanel m_ownerTranspPanel;
         private RichTextBox m_ownerRichTextBox;
         private Panel m_ownerBackPanel;
+        /*
+         *  TODO: The above three member variables may not be able to be saved because they are references
+         *        need to think of a different way to assign their values. That is, maybe thy should not be
+         *        assigned when they are first created, instead let them be assigned as the options button is
+         *        clicked. This can be captured with the help of transparentPanelEvent
+         *        More comments were added to references from previous class.
+         *        Data persistence was added on the bottom.
+         *        Brush serialized?
+         *        Modified drawVertical text by udpating its brush color
+         *        Modified m_optionsButton_MouseUp
+         *        added setButtonProperties()
+         *        added m_textBrushColor
+         *        added m_moveButtonLocation
+         *        added m_optionsButtonLocation
+         *        added m_deleteButtonLocation
+         *        added m_rotateButtonLocation
+         *        modified m_moveButtonMouseMove
+         *        modified updateButtonLocations();
+         */
 
         /*
          * NAME
@@ -102,14 +140,12 @@ namespace My_Note
 
             m_optionsButton.BackColor = Color.Transparent;
             m_optionsButton.BackgroundImage = Properties.Resources.optionsImg;
-
             m_optionsButton.Location = new Point(m_moveButton.Location.X + (Int32)m_optButDistF, m_moveButton.Location.Y);
             m_optionsButton.Size = new Size(16, 16);
             m_optionsButton.MouseUp += m_optionsButton_MouseUp;
 
             m_deleteButton.BackColor = Color.White;
             m_deleteButton.BackgroundImage = Properties.Resources.removeX;
-
             m_deleteButton.Location = new Point(m_moveButton.Location.X + (Int32)m_delButDistF, m_moveButton.Location.Y);
             m_deleteButton.Size = new Size(16, 16);
             m_deleteButton.MouseUp += m_deleteButton_MouseUp;
@@ -121,7 +157,44 @@ namespace My_Note
             m_rotateButton.MouseDown += m_rotateButton_MouseDown;
             m_rotateButton.MouseMove += m_rotateButton_MouseMove;
             m_rotateButton.MouseUp += m_rotateButton_MouseUp;
+
+            //m_textBrush = new SolidBrush(m_textBrushColor);
         } /* public VerticalText(MouseEventArgs e) */
+        
+        /*
+         * 2:32pm 5/20/2015
+         * maybe this is better here because it will also be used in data persistence
+         */
+        public void setButtonProperties()
+        {
+            m_moveButton.BackColor = Color.Transparent;
+            m_moveButton.BackgroundImage = Properties.Resources.moveArrow;
+            m_moveButton.Location = m_moveButtonLocation;
+            m_moveButton.Size = new Size(16, 16);
+            m_moveButton.MouseDown += m_moveButton_MouseDown;
+            m_moveButton.MouseMove += m_moveButton_MouseMove;
+            m_moveButton.MouseUp += m_moveButton_MouseUp;
+
+            m_optionsButton.BackColor = Color.Transparent;
+            m_optionsButton.BackgroundImage = Properties.Resources.optionsImg;
+            m_optionsButton.Location = m_optionsButtonLocation;
+            m_optionsButton.Size = new Size(16, 16);
+            m_optionsButton.MouseUp += m_optionsButton_MouseUp;
+
+            m_deleteButton.BackColor = Color.White;
+            m_deleteButton.BackgroundImage = Properties.Resources.removeX;
+            m_deleteButton.Location = m_deleteButtonLocation;
+            m_deleteButton.Size = new Size(16, 16);
+            m_deleteButton.MouseUp += m_deleteButton_MouseUp;
+
+            m_rotateButton.BackColor = Color.Transparent;
+            m_rotateButton.BackgroundImage = Properties.Resources.rotateArrow;
+            m_rotateButton.Location = m_rotateButtonLocation;
+            m_rotateButton.Size = new Size(16, 16);
+            m_rotateButton.MouseDown += m_rotateButton_MouseDown;
+            m_rotateButton.MouseMove += m_rotateButton_MouseMove;
+            m_rotateButton.MouseUp += m_rotateButton_MouseUp;
+        }
 
         // This region contains m_moveButton Property and Event Handlers
         #region m_moveButton methods
@@ -227,6 +300,8 @@ namespace My_Note
 
                     // Assign new location
                     m_moveButton.Location = newPoint;
+                    // added this for data persistence
+                    m_moveButtonLocation = newPoint;
                     m_textOrigin = new Point(newPoint.X + 8, newPoint.Y + 8);
                 }
             }
@@ -355,6 +430,9 @@ namespace My_Note
                 m_optionsForm.CaptureUIAttributes(m_textFont, m_textString, m_textBrush);
                 m_optionsForm.ShowDialog();
                 m_optionsForm.UpdateUIAttributes(ref m_textFont, ref m_textString, ref m_textBrush);
+                
+                // added this 'for data persistence'
+                m_textBrushColor = m_textBrush.Color;
                 
                 m_ownerTranspPanel.Invalidate();
                 m_ownerRichTextBox.Invalidate();
@@ -621,6 +699,8 @@ namespace My_Note
             e.Graphics.TranslateTransform(m_textOrigin.X, m_textOrigin.Y);
             e.Graphics.RotateTransform(m_textAngle);
             e.Graphics.TranslateTransform(-m_moveButton.Location.X, -m_moveButton.Location.Y);
+            // added this for data persistence
+            m_textBrush.Color = m_textBrushColor;
             e.Graphics.DrawString(m_textString, m_textFont, m_textBrush, m_textOrigin);
             e.Graphics.ResetTransform();
 
@@ -681,18 +761,25 @@ namespace My_Note
             float newOptLocY = (float)(Y + Math.Sin(radAngleF) * optButDistF);
             PointF newOptButPtF = new PointF(newOptLocX, newOptLocY);
             m_optionsButton.Location = Point.Round(newOptButPtF);
+            // added for data persistence
+            m_optionsButtonLocation = m_optionsButton.Location;
 
             float delButDistF = m_delButDistF;
             float newDelLocX = (float)(X + Math.Cos(radAngleF) * delButDistF);
             float newDelLocY = (float)(Y + Math.Sin(radAngleF) * delButDistF);
             PointF newDelButPtF = new PointF(newDelLocX, newDelLocY);
             m_deleteButton.Location = Point.Round(newDelButPtF);
+            // added for data persistence
+            m_deleteButtonLocation = m_deleteButton.Location;
 
             float rotButDistF = m_rotButDistF;
             float newRotLocX = (float)(X + Math.Cos(radAngleF) * rotButDistF);
             float newRotLocY = (float)(Y + Math.Sin(radAngleF) * rotButDistF);
             PointF newRotButPtF = new PointF(newRotLocX, newRotLocY);
             m_rotateButton.Location = Point.Round(newRotButPtF);
+            // added for data persistence
+            m_rotateButtonLocation = m_rotateButton.Location;
+
         } /* private void updateButtonLocations() */
 
         /*
@@ -788,5 +875,42 @@ namespace My_Note
         } /* public void showButtons() */
 
         #endregion
+
+        // Data persistence
+        /* 10:51am 5/20/2015
+         *  // used in deserializer 
+         */
+        public VerticalText(SerializationInfo a_info, StreamingContext a_context)
+        {
+            m_textString = (String)a_info.GetValue("TextString", typeof(String));
+            m_textFont = (Font)a_info.GetValue("TextFont", typeof(Font));
+            //m_textBrush = (SolidBrush)a_info.GetValue("TextBrush", typeof(SolidBrush));
+            m_textBrushColor = (Color)a_info.GetValue("TextBrushColor", typeof(Color));
+            m_textOrigin = (Point)a_info.GetValue("TextOrigin", typeof(Point));
+            m_textAngle = (Int32)a_info.GetValue("TextAngle", typeof(Int32));
+            m_optButDistF = (float)a_info.GetValue("OptButDist", typeof(float));
+            m_delButDistF = (float)a_info.GetValue("DelButDist", typeof(float));
+            m_rotButDistF = (float)a_info.GetValue("RotButDist", typeof(float));
+            //m_moveButton = (Button)a_info.GetValue("MoveButton", typeof(Button));
+            m_moveButtonLocation = (Point)a_info.GetValue("MoveButtonLocation", typeof(Point));
+        }
+        /*
+         *  11:08am 5/20/15
+         *  
+         */
+        public void GetObjectData(SerializationInfo a_info, StreamingContext a_context)
+        {
+            a_info.AddValue("TextString", m_textString);
+            a_info.AddValue("TextFont", m_textFont);
+            //a_info.AddValue("TextBrush", m_textBrush);
+            a_info.AddValue("TextBrushColor", m_textBrushColor);
+            a_info.AddValue("TextOrigin", m_textOrigin);
+            a_info.AddValue("TextAngle", m_textAngle);
+            a_info.AddValue("OptButDist", m_optButDistF);
+            a_info.AddValue("DelButDist", m_delButDistF);
+            a_info.AddValue("RotButDist", m_delButDistF);
+            //a_info.AddValue("MoveButton", m_moveButton);
+            a_info.AddValue("MoveButtonLocation", m_moveButtonLocation);
+        }
     }
 }

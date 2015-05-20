@@ -69,10 +69,18 @@ namespace My_Note
         private bool m_isSelectingText = false;                             // Is the mouse currently down and selecting text
 
         /*  TODO: Added page number
-         * 
+         *        Better comments in MouseMove for when Text control is selected?
+         *        Modified richTextBoxTextChanged()
+         *        added saveCurrentPage()
+         *        added cearCurrentPage()
+         *        added m_currentPageNumber
+         *        added m_totalNumberOfPages
+         *        added m_pageNumberLabel
         */
 
         private int m_currentPageNumber = 1;
+        private int m_totalNumberOfPages = 1;
+        private Label m_pageNumberLabel = new Label();
 
         // This region contains methods for richTextBox
         #region richTextBoxMethods
@@ -101,9 +109,43 @@ namespace My_Note
          */
         private void richTextBox_TextChanged(object sender, EventArgs e)
         {
+            if (richTextBox.Text.Length > 850)
+            {
+                mslog("text length = " + richTextBox.Text.Length);
+            }
+            if (m_currentPageNumber == m_totalNumberOfPages)
+            {
+
+            }
             richTextBox.Invalidate();
             transparentPanel.Invalidate();
         } /* private void richTextBox_TextChanged(object sender, EventArgs e) */
+
+        /*
+         *  4:03pm 5/20/2015
+         *  this should probably be moved to 'helper methods' region
+         */
+        private void clearCurrentPage()
+        {
+            richTextBox.Text = "";
+            transparentPanel.Controls.Clear();
+            m_shapesStorage.Shapes.Clear();
+            m_verticalTextList.Clear();
+            backPanel.Refresh();
+        }
+
+        /*
+         *  4:31pm 5/20/2015
+         */
+        private void addNewPage()
+        {
+
+        }
+
+        private void clearPageButton_Click(object sender, EventArgs e)
+        {
+            clearCurrentPage();
+        }
 
         #endregion
 
@@ -540,6 +582,7 @@ namespace My_Note
             for (int i = 0; i < m_verticalTextList.Count; i++)
             {
                 m_verticalTextList[i].drawVerticalText(e);
+                //mslog("textOrigin = " + m_verticalTextList[i].m_textOrigin);
             }
         } /* private void transparentPanel_Paint(object sender, PaintEventArgs e) */
 

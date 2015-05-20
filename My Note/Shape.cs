@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 /*
  *  TITLE:
@@ -28,9 +30,14 @@ using System.Drawing;
  *      This class contains a custom constructor and member variables along with their properties.
  */
 
+/*  TODO: Update code because I added data persistence?
+ * 
+ */
+
 namespace My_Note
 {
-    public class Shape
+    [Serializable()]
+    public class Shape : ISerializable
     {
         private Point m_pointLocation;          // position of the point
         private float m_lineWidth;              // width of the line
@@ -96,6 +103,27 @@ namespace My_Note
             {
                 m_shapeNumber = value;
             }
+        }
+
+        /*
+         *  Gets called by deserializer
+         *  9:37am 5/20/2015
+         */
+        public Shape(SerializationInfo a_info, StreamingContext a_context)
+        {
+            m_pointLocation = (Point)a_info.GetValue("PointLocation", typeof(Point));
+            m_lineWidth = (float)a_info.GetValue("LineWidth", typeof(float));
+            m_lineColor = (Color)a_info.GetValue("LineColor", typeof(Color));
+            m_shapeNumber = (int)a_info.GetValue("ShapeNumber", typeof(int));
+        }
+
+        // Data persistence 9:21am 5/20/2015
+        public void GetObjectData(SerializationInfo a_info, StreamingContext a_context)
+        {
+            a_info.AddValue("PointLocation", m_pointLocation);
+            a_info.AddValue("LineWidth", m_lineWidth);
+            a_info.AddValue("LineColor", m_lineColor);
+            a_info.AddValue("ShapeNumber", m_shapeNumber);
         }
     }
 }

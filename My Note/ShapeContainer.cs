@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 /*
  *  TITLE:
@@ -26,15 +28,35 @@ using System.Drawing;
  *      This class has a basic layout with member variables and methods.
  */
 
+/*  TODO: Update code because I added data persistence?
+ * 
+ */
+
 namespace My_Note
 {
-    public class ShapeContainer
+    [Serializable()]
+    public class ShapeContainer : ISerializable
     {
         private List<Shape> m_shapes;           // stores all the shapes
 
         public ShapeContainer()
         {
             m_shapes = new List<Shape>();
+        }
+
+        /*
+         *  9:12am 5/20/2015 Used to assist data persistence
+         */
+        public List<Shape> Shapes
+        {
+            get
+            {
+                return m_shapes;
+            }
+            set
+            {
+                m_shapes = value;
+            }
         }
 
         // Returns the number of shapes being stored
@@ -76,6 +98,20 @@ namespace My_Note
                     i -= 1;
                 }
             }
+        }
+
+        /*
+         *  9:33am 5/20/2015 Gets used by the deserializer
+         */
+        public ShapeContainer(SerializationInfo a_info, StreamingContext a_context)
+        {
+            m_shapes = (List<Shape>)a_info.GetValue("Shapes", typeof(List<Shape>));
+        }
+
+        // Save/restore 9:18am 5/20/2015
+        public void GetObjectData(SerializationInfo a_info, StreamingContext a_context)
+        {
+            a_info.AddValue("Shapes", m_shapes);
         }
     }
 }
