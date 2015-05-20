@@ -9,11 +9,11 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace My_Note
 {
-    class StoreHandler // storeHandler == serializer
+    class StoreHandler // StoreHandler == Serializer
     {
         /*
          *  5:37pm 5/19/2015
-         */ 
+         */
         public StoreHandler()
         {
 
@@ -21,8 +21,8 @@ namespace My_Note
 
         /*
          *  5:47pm 5/19/2015
-         */ 
-        public void SaveMyNoteStore (string a_fileName, MyNoteStore a_myNoteStore)
+         */
+        public void SaveMyNoteStore(string a_fileName, MyNoteStore a_myNoteStore)
         {
             Stream saveStream = File.Open(a_fileName, FileMode.Create);
             BinaryFormatter bFormatter = new BinaryFormatter();
@@ -32,8 +32,8 @@ namespace My_Note
 
         /*
          *  5:53pm 5/19/2015
-         */ 
-        public MyNoteStore OpenMyNoteStore (string a_fileName, MyNoteStore a_myNoteStore)
+         */
+        public MyNoteStore OpenMyNoteStore(string a_fileName, MyNoteStore a_myNoteStore)
         {
             MyNoteStore retStore;
             Stream openStream = File.Open(a_fileName, FileMode.Open);

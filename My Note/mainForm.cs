@@ -43,6 +43,7 @@ using System.Windows.Forms;
 /*
  *  TODO: Add comments to code structure about some of the member variables created in order to avoid
  *        recreating them to improve performance.
+ *        Maybe I need to redo the entire CODE STRUCURE SEGMENT
  *  
  *  Modified: MaiForm(),
  * 
