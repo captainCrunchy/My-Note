@@ -28,14 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.printToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.eidtToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.newSubjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addNewSubjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.renameNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteSubjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.autoSaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.minuteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -99,8 +99,8 @@
             this.restoreButton = new System.Windows.Forms.Button();
             this.logTextBox = new System.Windows.Forms.TextBox();
             this.clearButton = new System.Windows.Forms.Button();
-            this.transparentPanel = new My_Note.TransparentPanel();
             this.clearPageButton = new System.Windows.Forms.Button();
+            this.transparentPanel = new My_Note.TransparentPanel();
             this.menuStrip1.SuspendLayout();
             this.toolbarPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox18)).BeginInit();
@@ -151,23 +151,32 @@
             // eidtToolStripMenuItem
             // 
             this.eidtToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.newSubjectToolStripMenuItem,
+            this.addNewSubjectToolStripMenuItem,
+            this.renameNameToolStripMenuItem,
             this.deleteSubjectToolStripMenuItem,
             this.autoSaveToolStripMenuItem});
             this.eidtToolStripMenuItem.Name = "eidtToolStripMenuItem";
             this.eidtToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.eidtToolStripMenuItem.Text = "Edit";
             // 
-            // newSubjectToolStripMenuItem
+            // addNewSubjectToolStripMenuItem
             // 
-            this.newSubjectToolStripMenuItem.Name = "newSubjectToolStripMenuItem";
-            this.newSubjectToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
-            this.newSubjectToolStripMenuItem.Text = "New Subject";
+            this.addNewSubjectToolStripMenuItem.Name = "addNewSubjectToolStripMenuItem";
+            this.addNewSubjectToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.addNewSubjectToolStripMenuItem.Text = "Add New Subject";
+            this.addNewSubjectToolStripMenuItem.Click += new System.EventHandler(this.addNewSubjectToolStripMenuItem_Click);
+            // 
+            // renameNameToolStripMenuItem
+            // 
+            this.renameNameToolStripMenuItem.Name = "renameNameToolStripMenuItem";
+            this.renameNameToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.renameNameToolStripMenuItem.Text = "Rename Subject";
+            this.renameNameToolStripMenuItem.Click += new System.EventHandler(this.renameSubjectToolStripMenuItem_Click);
             // 
             // deleteSubjectToolStripMenuItem
             // 
             this.deleteSubjectToolStripMenuItem.Name = "deleteSubjectToolStripMenuItem";
-            this.deleteSubjectToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.deleteSubjectToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.deleteSubjectToolStripMenuItem.Text = "Delete Subject";
             // 
             // autoSaveToolStripMenuItem
@@ -178,7 +187,7 @@
             this.minutesToolStripMenuItem1,
             this.noneToolStripMenuItem});
             this.autoSaveToolStripMenuItem.Name = "autoSaveToolStripMenuItem";
-            this.autoSaveToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.autoSaveToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.autoSaveToolStripMenuItem.Text = "Auto Save";
             // 
             // minuteToolStripMenuItem
@@ -707,7 +716,7 @@
             this.richTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.richTextBox.Size = new System.Drawing.Size(480, 570);
             this.richTextBox.TabIndex = 2;
-            this.richTextBox.Text = resources.GetString("richTextBox.Text");
+            this.richTextBox.Text = "";
             this.richTextBox.TextChanged += new System.EventHandler(this.richTextBox_TextChanged);
             // 
             // backPanel
@@ -819,6 +828,16 @@
             this.clearButton.UseVisualStyleBackColor = true;
             this.clearButton.Click += new System.EventHandler(this.clearButton_Click);
             // 
+            // clearPageButton
+            // 
+            this.clearPageButton.Location = new System.Drawing.Point(28, 644);
+            this.clearPageButton.Name = "clearPageButton";
+            this.clearPageButton.Size = new System.Drawing.Size(75, 23);
+            this.clearPageButton.TabIndex = 55;
+            this.clearPageButton.Text = "Clear Page";
+            this.clearPageButton.UseVisualStyleBackColor = true;
+            this.clearPageButton.Click += new System.EventHandler(this.clearPageButton_Click);
+            // 
             // transparentPanel
             // 
             this.transparentPanel.Location = new System.Drawing.Point(146, 90);
@@ -831,16 +850,6 @@
             this.transparentPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseDown);
             this.transparentPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseMove);
             this.transparentPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseUp);
-            // 
-            // clearPageButton
-            // 
-            this.clearPageButton.Location = new System.Drawing.Point(28, 644);
-            this.clearPageButton.Name = "clearPageButton";
-            this.clearPageButton.Size = new System.Drawing.Size(75, 23);
-            this.clearPageButton.TabIndex = 55;
-            this.clearPageButton.Text = "Clear Page";
-            this.clearPageButton.UseVisualStyleBackColor = true;
-            this.clearPageButton.Click += new System.EventHandler(this.clearPageButton_Click);
             // 
             // MainForm
             // 
@@ -867,6 +876,7 @@
             this.Name = "MainForm";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.MainForm_Load);
+            this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.MainForm_Paint);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -933,7 +943,7 @@
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem printToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem newSubjectToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addNewSubjectToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteSubjectToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem autoSaveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem minuteToolStripMenuItem;
@@ -953,6 +963,7 @@
         private System.Windows.Forms.TextBox logTextBox;
         private System.Windows.Forms.Button clearButton;
         private System.Windows.Forms.Button clearPageButton;
+        private System.Windows.Forms.ToolStripMenuItem renameNameToolStripMenuItem;
     }
 }
 

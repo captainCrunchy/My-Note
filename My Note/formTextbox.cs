@@ -78,7 +78,7 @@ namespace My_Note
          *        added m_pageNumberLabel
         */
 
-        private int m_currentPageNumber = 1;
+        //private int m_currentPageNumber = 1; moved to mainForm.cs for clarity
         private int m_totalNumberOfPages = 1;
         private Label m_pageNumberLabel = new Label();
 

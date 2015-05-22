@@ -14,6 +14,8 @@ namespace My_Note
     [Serializable()]
     class Page : ISerializable // Page == Owner
     {
+        // I may not need to save this page number here because the subject
+        // keeps track of pages as well.
         private int m_pageNumber = 1;
         private ShapeContainer m_shapeContainer = new ShapeContainer();
         private List<VerticalText> m_verticalTextList = new List<VerticalText>();

@@ -20,6 +20,7 @@ namespace My_Note
         private Subject subjectFour = new Subject();
         private Subject subjectFive = new Subject();
         private List<Subject> m_savedSubjects; // Subjects == Cars
+
         /*
          *  6:05pm 5/19/2015
          */
@@ -34,13 +35,31 @@ namespace My_Note
                 m_savedSubjects = value;
             }
         }
+        /*
+         *  5:32pm 5/21/2015 
+         */
+        public int NumberOfSubjects()
+        {
+            int currentSubjectCount = 0;
+            foreach (Subject s in m_savedSubjects)
+            {
+                if (s.SubjectTitle != "New Subject")
+                {
+                    currentSubjectCount++;
+                }
+            }
+            return currentSubjectCount;
+        }
 
-        // Consider rebuilding this, get based on subject title
+
+        // Each notebook starts with five subjects
         public MyNoteStore()
         {
             m_savedSubjects = new List<Subject>();
             m_savedSubjects.Add(subjectOne);
+            //subjectOne.SubjectTitle = "Calculus";
             m_savedSubjects.Add(subjectTwo);
+            //subjectTwo.SubjectTitle = "Geometry";
             m_savedSubjects.Add(subjectThree);
             m_savedSubjects.Add(subjectFour);
             m_savedSubjects.Add(subjectFive);

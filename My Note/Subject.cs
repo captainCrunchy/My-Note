@@ -15,6 +15,59 @@ namespace My_Note
     {
         private string m_subjectTitle = "New Subject";
         private List<Page> m_pages = new List<Page>();
+        private Page m_firstPage = new Page();
+        private int m_currentPageNumber = 1;
+        /*
+         *  Think about how page numbers should be. Maybe I should have a
+         *  current page for each subject? Possibly current page shown?
+         *  Possibly total number of pages? Maybe when user returns they
+         *  go to the page from where they left off (save current page)?
+         */
+
+        /*
+         *  8:42am 5/21/2015
+         */
+        public Page getPageForPageNumber(int a_pageNumber)
+        {
+            int index = a_pageNumber - 1;
+            Page retPage;
+            if (a_pageNumber > m_pages.Count)
+            {
+                retPage = new Page();
+                m_pages.Add(retPage);
+            }
+            else
+            {
+                retPage = m_pages[index];
+            }
+            return retPage;
+        }
+
+        public void savePageWithPageNumber(Page a_page, int a_pageNumber)
+        {
+            int index = a_pageNumber - 1;
+            m_pages[index] = a_page;
+        }
+        
+        public int TotalNumberOfPages
+        {
+            get
+            {
+                return m_pages.Count;
+            }
+        }
+
+        public int CurrentPageNumber
+        {
+            get
+            {
+                return m_currentPageNumber;
+            }
+            set
+            {
+                m_currentPageNumber = value;
+            }
+        }
 
         public string SubjectTitle
         {
@@ -51,10 +104,11 @@ namespace My_Note
 
         /*
          *  6:00pm 5/19/2015
+         *  Each subject starts with first page
          */
         public Subject()
         {
-
+            m_pages.Add(m_firstPage);
         }
 
         /*

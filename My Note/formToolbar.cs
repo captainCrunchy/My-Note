@@ -40,7 +40,8 @@ using System.Drawing;
  */
 
 /*  TODO: update CODE STRUCTURE comments in this class and in other partial classes to match this class
- * 
+ *  
+ *  Added: fontComboBox_SelectedIndexChaned() at the bottom, if this is not needed then handle it appropriately
  */
 
 namespace My_Note
@@ -448,6 +449,57 @@ namespace My_Note
             drawColorButton.BackColor = m_currentDrawColor;
         }
 
+        /*
+         * NAME
+         *  fontComboBox_SelectedIndexChanged() - changes the text font
+         *  
+         * SYNOPSIS
+         *  private void fontComboBox_SelectedIndexChanged(object sender, System.EventArgs e);
+         *      sender  -> does nothing
+         *      e       -> does nothing
+         * 
+         * DESCRIPTION
+         *  This method gets called upon selecting a choice of font style from a combo box. This will
+         *  only happen before the user types anything in the text box. This is because each font has
+         *  specific line spacing assigned to it. Furthermore, text has to stay coordinated with any
+         *  drawing on the panel. Modifying text font will change its size and spacing relative to any
+         *  drawing. After the user makes initial modification to the text box or the panel, the combo
+         *  box will be disabled and this method will no longer be called.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  10:30am 3/17/2015
+         */
+        private void fontComboBox_SelectedIndexChanged(object sender, System.EventArgs e)
+        {
+            int selectedIndex = fontComboBox.SelectedIndex;
+            switch (selectedIndex)
+            {
+                case 0:
+                    richTextBox.Font = new Font("Calibri", 12);
+                    break;
+                case 1:
+                    richTextBox.Font = new Font("Consolas", 12);
+                    break;
+                case 2:
+                    richTextBox.Font = new Font("Microsoft Sans Serif", 12);
+                    break;
+                case 3:
+                    richTextBox.SelectionFont = new Font("Times New Roman", 12);
+                    break;
+            }
+        } /* private void fontComboBox_SelectedIndexChanged(object sender, System.EventArgs e) */
+
+        #endregion
+
+        // This region contains 'helper' methods
+        #region Helper Methods
+
         /*  This method gets called to reset the BackColor of all controls to default and set current
          *  control's BackColor to a color to indicate 'selected'. If vertTextButton was the last
          *  control selected, then it hides the buttons associated with all instances of VerticalText.
@@ -455,12 +507,6 @@ namespace My_Note
          *  Murat Zazi
          *  7:12pm 3/9/2015
          */
-
-        #endregion
-
-        // This region contains 'helper' methods
-        #region Helper Methods
-
         private void setDefaultBackColorForControls()
         {
             textSelectButton.BackColor = Color.Transparent;
