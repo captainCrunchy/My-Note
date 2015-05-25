@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
-// class to help data persistence
+// class to help data persistence, organize it by creating Data Persistence Regions
 
 namespace My_Note
 {
@@ -15,13 +15,18 @@ namespace My_Note
     {
         private string m_subjectTitle = "New Subject";
         private List<Page> m_pages = new List<Page>();
-        private Page m_firstPage = new Page();
+        //private Page m_firstPage = new Page();
         private int m_currentPageNumber = 1;
+
         /*
          *  Think about how page numbers should be. Maybe I should have a
          *  current page for each subject? Possibly current page shown?
          *  Possibly total number of pages? Maybe when user returns they
          *  go to the page from where they left off (save current page)?
+         *  
+         *  DESCRIPTION: This method is used to access a page based on page
+         *  number. It is also used to add a new page to the end of the subject
+         *  by creating a new page, saving it, and returning its reference.
          */
 
         /*
@@ -108,7 +113,10 @@ namespace My_Note
          */
         public Subject()
         {
-            m_pages.Add(m_firstPage);
+            int tempx = 1;
+            int delTempx = 1 + tempx;
+            //Page m_firstPage = new Page();
+            //m_pages.Add(m_firstPage);
         }
 
         /*

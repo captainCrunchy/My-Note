@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 
-/*
+/*  // 5/25/2015 (latest) finished mainForm_Shown comments
  *  TITLE:
  *      MainForm : Form
  *      
@@ -21,7 +21,9 @@ using System.IO;
  *  CODE STRUCTURE:
  *      This class is divided into several files, which are all responsible for performing a specific
  *      task. The files are simply extensions of this class, i.e. '... partial class...'. Below is a
- *      description of each 'partial class' and its purpose.
+ *      description of each 'partial class' and its purpose. Each one contains member variables specific
+ *      to their task. Variables that need to be initialized in the constructor are done so in the main
+ *      constructor in mainForm.cs
  * 
  *      mainForm.cs - (YOU ARE HERE) This file is the starting point of the MainForm class. It
  *                    contains the constructor and is responsible for coordinating interactions
@@ -41,7 +43,7 @@ using System.IO;
  */
 
 
-/* 5/22/2015 (morning)latest
+/*  
  *  TODO: Add comments to code structure about some of the member variables created in order to avoid
  *        recreating them to improve performance.
  *        Need to add a method to load pages or start new page
@@ -61,93 +63,111 @@ namespace My_Note
 {
     public partial class MainForm : Form
     {
-        private e_SelectedControl m_currentSelectedControl;     // Used to indicate the type of control the user selected
-        private Color m_selectedControlButtonColor;             // Used to indicate the current color to be used by a control
-        // This was added, it does not need to be a Singleton.
-        private MyNoteStore m_mainMyNoteStore;// = new MyNoteStore();
-        // this was added, this can probably be initialized here
-        private StoreHandler m_mainStoreHandler = new StoreHandler();
+        // Member variables for this class
+        #region Member Variables
+
+        // The types of text and drawing controls available to the user
+        private enum e_SelectedControl
+        {
+            TEXT, PENCIL, ERASER, WARROW, NWARROW, NARROW, NEARROW, EARROW, SEARROW,
+            SARROW, SWARROW, RECTANGLE, ELLIPSE, SOLID, DASHED, DOTTED, VERTTEXT
+        }
+        private e_SelectedControl m_currentSelectedControl;                 // Current control selected
+        private Color m_selectedControlButtonColor;                         // Current color for current control
+
+        private MyNoteStore m_mainMyNoteStore;                              // Holds data before it is written to disk
+        private StoreHandler m_mainStoreHandler = new StoreHandler();       // Writes data to disk
+
+        // Member variables for each 'Subject' are created to help
+        // optimize performance during drawing, saving, and loading
         private Subject m_subjectOne;
         private Subject m_subjectTwo;
         private Subject m_subjectThree;
         private Subject m_subjectFour;
         private Subject m_subjectFive;
-        // these are created to optimize redrawing
-        private string m_subjectOneTitle;
-        private string m_subjectTwoTitle;
-        private string m_subjectThreeTitle;
-        private string m_subjectFourTitle;
-        private string m_subjectFiveTitle;
-        // these are created to optimize redrawing (must be initialized in the constructor)
         private Graphics m_subjectOnePanelGraphics;
         private Graphics m_subjectTwoPanelGraphics;
         private Graphics m_subjectThreePanelGraphics;
         private Graphics m_subjectFourPanelGraphics;
         private Graphics m_subjectFivePanelGraphics;
-        // these are created to optimize redrawing
-        private Font m_subjectPanelFont = new Font("Microsoft Sans Serif", 12);
-        private SolidBrush m_subjectPanelBrush = new SolidBrush(Color.Black);
-        private SolidBrush m_emptySubjectPanelBrush = new SolidBrush(Color.DarkGray);
-        private int m_currentPageNumber = 1;
-        private Subject m_currentSubject;
+        private string m_subjectOneTitle;
+        private string m_subjectTwoTitle;
+        private string m_subjectThreeTitle;
+        private string m_subjectFourTitle;
+        private string m_subjectFiveTitle;
+        
+        private Font m_subjectPanelFont = new Font("Microsoft Sans Serif", 12);         // Font for 'Subject' title
+        private SolidBrush m_fullSubjectPanelBrush = new SolidBrush(Color.Black);       // Brush for used 'Subject' title
+        private SolidBrush m_emptySubjectPanelBrush = new SolidBrush(Color.DarkGray);   // Brush for empty 'Subject' title
+        private Label m_pageNumberLabel = new Label();                      // Indicates current page number in 'Subject'
+        private int m_currentPageNumber = 1;                                // Used for save/load data and UI objects
+        private Subject m_currentSubject;                                   // Reference to current subject on screen
+        private const string m_savePath = "savedNotes.txt";                 // References save path on disk 
+        private const string m_newSubjectTitle = "New Subject";             // Used to assign and compare labels
+
+        #endregion
+
+        // Methods for MainForm load, save, and general functionality
+        #region MainForm Methods
 
         /*
-         *  7:57am 5/21/15
+         * NAME
+         *  MainForm() - initializes this class and its elements
+         *  
+         * SYNOPSIS
+         *  public void MainForm();
+         * 
+         * DESCRIPTION
+         *  This constructor is responsible for initializig and assigning values to its self, member variables, and
+         *  UI elements of this class. Some variables initialized here are declared in different files, which are
+         *  part of this class.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  11:32am 3/1/2015
          */
-        private void refreshUISubjectTitles()
-        {
-            m_subjectOne = m_mainMyNoteStore.SavedSubjects[0];
-            m_subjectOneTitle = m_subjectOne.SubjectTitle;
-            //m_subjectOneTitle = "Software Des.";
-            m_subjectTwo = m_mainMyNoteStore.SavedSubjects[1];
-            m_subjectTwoTitle = m_subjectTwo.SubjectTitle;
-            //m_subjectTwoTitle = "Comp Sci";
-            m_subjectThree = m_mainMyNoteStore.SavedSubjects[2];
-            m_subjectThreeTitle = m_subjectThree.SubjectTitle;
-            m_subjectFour = m_mainMyNoteStore.SavedSubjects[3];
-            m_subjectFourTitle = m_subjectFour.SubjectTitle;
-            m_subjectFive = m_mainMyNoteStore.SavedSubjects[4];
-            m_subjectFiveTitle = m_subjectFive.SubjectTitle;
-        }
-        // The types of text and drawing controls available to the user
-        private enum e_SelectedControl
-        {
-            TEXT, PENCIL, ERASER, WARROW, NWARROW, NARROW,
-            NEARROW, EARROW, SEARROW, SARROW, SWARROW,
-            RECTANGLE, ELLIPSE, SOLID, DASHED, DOTTED, VERTTEXT
-        }
-
-        // this is the first method created so go back to the original file and add date
         public MainForm()
         {
             InitializeComponent();
+            // fix start position and prevent resizing
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.FormBorderStyle = FormBorderStyle.Fixed3D;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+
             m_currentSelectedControl = e_SelectedControl.TEXT;
             m_selectedControlButtonColor = Color.SandyBrown;
+
             textSelectButton.BackColor = m_selectedControlButtonColor;
             fontComboBox.Text = "Microsoft Sans Serif";
             richTextBox.Font = new Font("Microsoft Sans Serif", 12);
+
             m_transparentPanelGraphics = this.transparentPanel.CreateGraphics();
             m_transparentPanelPen = new Pen(m_currentDrawColor);
 
-            /******************************************************************/
             m_subjectOnePanelGraphics = subjectOnePanel.CreateGraphics();
             m_subjectTwoPanelGraphics = subjectTwoPanel.CreateGraphics();
             m_subjectThreePanelGraphics = subjectThreePanel.CreateGraphics();
             m_subjectFourPanelGraphics = subjectFourPanel.CreateGraphics();
             m_subjectFivePanelGraphics = subjectFivePanel.CreateGraphics();
-
-            m_pageNumberLabel.Location = new Point(2, 2);
+            
             m_pageNumberLabel.Text = "1";
             m_pageNumberLabel.TextAlign = ContentAlignment.MiddleCenter;
-            backPanel.Controls.Add(m_pageNumberLabel);
-            Size newLabelSize = new Size(m_pageNumberLabel.Size.Width, m_pageNumberLabel.Size.Height);
-            newLabelSize.Width = 30;
-            m_pageNumberLabel.Size = newLabelSize;
-        }
+            m_pageNumberLabel.BackColor = Color.Transparent;
+            m_pageNumberLabel.BorderStyle = BorderStyle.Fixed3D;
+            m_pageNumberLabel.Location = new Point(406, 697);
+            m_pageNumberLabel.Size = new Size(30, 18);
+            this.Controls.Add(m_pageNumberLabel);
+        } /* public MainForm() */
 
         /*
          * NAME
-         *  private void MainForm_Load() - prepares elements before the form is shown on screen
+         *  MainForm_Load() - prepares elements before the form is shown on screen
          *  
          * SYNOPSIS
          *  private void MainForm_Load(object sender, System.EventArgs e);
@@ -155,9 +175,11 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This method gets called before elements are shown on screen. It is used to update and
-         *  assign properties to elements before they are shown on screen. This is done here because
-         *  it could not be accomplished in the constructor.
+         *  This method gets called before elements are shown on screen. It is used to update and assign
+         *  properties to elements before they are shown on screen after they have been initialized in the
+         *  in the constructor. It also prepares the 'data persistence' object by creating it or getting
+         *  it from disk using the data persistence handler object. If file exists, then it is loaded into
+         *  memory. Otherwise 'data store' is created and will be populated in MainForm_Shown().
          *  
          * RETURNS
          *  Nothing
@@ -170,47 +192,52 @@ namespace My_Note
          */
         private void MainForm_Load(object sender, System.EventArgs e)
         {
-            textSelectButton.Select();
-            this.Invalidate();
-
-            /************************************/
-            // ATTN: Can some of these be moved to the constructor?
-            // This is to set the first subject as selected tab when the system loads up
             setDefaultBackColorForTabs();
             subjectOnePanel.BackColor = SystemColors.ControlDark;
-            
-            this.Invalidate();
-            
 
-            // Added below, it should probably be moved to be by itself in a method that gets called
-            // from constructor in order to initialize the mainMyNoteStore, if needed.
-            string savedNotes = "savedNotes.txt";
-            if (File.Exists(savedNotes))
+            if (File.Exists(m_savePath))
             {
-                mslog("File Exists");
-                m_mainMyNoteStore = m_mainStoreHandler.OpenMyNoteStore(savedNotes);
+                m_mainMyNoteStore = m_mainStoreHandler.OpenMyNoteStore(m_savePath);
+                assignSubjectsAndTitles();
+                m_currentSubject = m_subjectOne;
+                updateCurrentPageDisplayForSubject(m_currentSubject, m_currentSubject.CurrentPageNumber);
             }
             else
             {
-               mslog("File does not exist");
-                // No file exists so create it
-                m_mainMyNoteStore = new MyNoteStore(); // Created with empty subjects
-                //m_mainStoreHandler.SaveMyNoteStore(savedNotes, m_mainMyNoteStore);
+                m_mainMyNoteStore = new MyNoteStore();
             }
-            refreshUISubjectTitles();
-            m_currentSubject = m_subjectOne;
+            selectTextControl();
         } /* private void MainForm_Load(object sender, System.EventArgs e) */
 
-
-        /*  Intended to execute the very first time. It will be tested each time after that but will not execute
-         *  anything. The reason for loading the form first is and not declaring this functionality in the _Load method is to
-         *  show the user some interface while they are choosing a title for their first subject.
-         *  3:36 5/21/2015
+        /*
+         * NAME
+         *  MainForm_Shown() - handles data as form is being shown on screen
+         *  
+         * SYNOPSIS
+         *  private void MainForm_Shown(object sender, EventArgs e);
+         *      sender  -> does nothing
+         *      e       -> does nothing
+         * 
+         * DESCRIPTION
+         *  The functionality of this method will be applied the very first time the user runs this
+         *  application. It asks the user to enter a title for the first 'Subject' in the notebook. A data
+         *  file is then created and written to disk for the very first time. Reason for performing this
+         *  task here is for appearances; i.e. to show to the user the background and an empty notebook with
+         *  subject tabs that have no titles. It uses a custom rename form to which an existing 'Subject'
+         *  title is passed, which returns a non-default title.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  3:36pm 5/21/2015
          */
         private void MainForm_Shown(object sender, EventArgs e)
         {
-            string savedNotes = "savedNotes.txt";
-            if (!File.Exists(savedNotes))
+            if (!File.Exists(m_savePath))
             {
                 string newMyNoteMessage = "Thank you for trying My Note!\r\n" +
                 "Prepare to enter a title for the first subject.\r\n" +
@@ -219,17 +246,22 @@ namespace My_Note
                     MessageBoxButtons.OKCancel);
                 if (newNoteBookDialog == DialogResult.OK)
                 {
+                    m_currentSubject = m_mainMyNoteStore.SavedSubjects[0];
                     DialogResult renameDialog = new DialogResult();
                     RenameSubjectForm renameSubjectForm = new RenameSubjectForm();
                     renameSubjectForm.SubjectTitle = m_currentSubject.SubjectTitle;
                     renameSubjectForm.FormTitle = "Create Subject Title";
+                    renameSubjectForm.StartPosition = FormStartPosition.CenterParent;
+                    renameSubjectForm.FormBorderStyle = FormBorderStyle.Fixed3D;
+                    renameSubjectForm.MaximizeBox = false;
+                    renameSubjectForm.MinimizeBox = false;
                     renameDialog = renameSubjectForm.ShowDialog();
                     if (renameDialog == DialogResult.OK)
                     {
                         m_currentSubject.SubjectTitle = renameSubjectForm.SubjectTitle;
-                        refreshUISubjectTitles();
-                        // Create data storage file
-                        m_mainStoreHandler.SaveMyNoteStore(savedNotes, m_mainMyNoteStore);
+                        assignSubjectsAndTitles();
+                        m_mainStoreHandler.SaveMyNoteStore(m_savePath, m_mainMyNoteStore);
+                        updateToolStripMenuItems();
                         this.Invalidate();
                     }
                     else
@@ -242,13 +274,70 @@ namespace My_Note
                     this.Close();
                 }
             }
-            // This gets called here because it depends on if the first item was created, because
-            // then the DeleteSubject toolMenuStrip item will be disabled.
-            updateToolStripMenuItems();
         }
 
-        /* // this needs to stay minimum because it gets called by _Paint event method
+        /*
+         *  1:00pm 5/19/2015
+         */
+        private void MainForm_Paint(object sender, PaintEventArgs e)
+        {
+            updateSubjectTabs(e);
+        }
+
+        /*
+         *  3:04pm 5/25/2015
+         */
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            string saveNoteString = "Do you want to save your work?";
+            DialogResult saveNoteDialog = MessageBox.Show(saveNoteString, "Save Changes", MessageBoxButtons.YesNoCancel);
+            if (saveNoteDialog == DialogResult.Yes)
+            {
+                saveAllContent();
+            }
+            else if (saveNoteDialog == DialogResult.Cancel)
+            {
+                e.Cancel = true;
+            }
+        }
+
+
+        /*
+         *  3:09pm 5/25/2015
+         */
+        private void saveAllContent()
+        {
+            saveCurrentPageDisplayed();
+            m_mainStoreHandler.SaveMyNoteStore(m_savePath, m_mainMyNoteStore);
+        }
+
+        #endregion
+
+        // Methods that handle Subjects in the notebook
+        #region Subject Methods
+
+        /*  This can be called refresh subjects and titles, if assigning subjects is not necessary
+         *  then assign subjecttTitles more directly and eliminate subject assignment
+         *  7:57am 5/21/15
+         *  Called from MainForm_Load(), MainForm_Shown(), renameSubjectToolStripMenuItem_Click()
+         */
+        private void assignSubjectsAndTitles()
+        {
+            m_subjectOne = m_mainMyNoteStore.SavedSubjects[0];
+            m_subjectOneTitle = m_subjectOne.SubjectTitle;
+            m_subjectTwo = m_mainMyNoteStore.SavedSubjects[1];
+            m_subjectTwoTitle = m_subjectTwo.SubjectTitle;
+            m_subjectThree = m_mainMyNoteStore.SavedSubjects[2];
+            m_subjectThreeTitle = m_subjectThree.SubjectTitle;
+            m_subjectFour = m_mainMyNoteStore.SavedSubjects[3];
+            m_subjectFourTitle = m_subjectFour.SubjectTitle;
+            m_subjectFive = m_mainMyNoteStore.SavedSubjects[4];
+            m_subjectFiveTitle = m_subjectFive.SubjectTitle;
+        }
+
+        /*  this needs to stay minimum because it gets called by _Paint event method
          *  1:06pm 5/19/2015
+         *  Called from MainForm_Paint()
          */
         private void updateSubjectTabs(PaintEventArgs e)
         {
@@ -265,96 +354,54 @@ namespace My_Note
             drawSubjectTitle(m_subjectFiveTitle, m_subjectFivePanelGraphics);
         }
 
-        /*
+        /*  
          * 1:13pm 5/19/2015
+         * Called from updateSubjectTabs() x 5
          */
         private void drawSubjectTitle(string a_subjectTitleString, Graphics a_subjectPanelGraphics)
         {
             StringFormat drawFormat = new StringFormat();
             drawFormat.FormatFlags = StringFormatFlags.DirectionVertical;
-            if (a_subjectTitleString == "New Subject")
+            //if (a_subjectTitleString == "New Subject")
+            if (a_subjectTitleString == m_newSubjectTitle)
             {
                 a_subjectPanelGraphics.DrawString(a_subjectTitleString, m_subjectPanelFont, m_emptySubjectPanelBrush, 2, 2, drawFormat);
             }
             else
             {
-                a_subjectPanelGraphics.DrawString(a_subjectTitleString, m_subjectPanelFont, m_subjectPanelBrush, 2, 2, drawFormat);
+                a_subjectPanelGraphics.DrawString(a_subjectTitleString, m_subjectPanelFont, m_fullSubjectPanelBrush, 2, 2, drawFormat);
             }
-            //a_subjectPanelGraphics.DrawString(a_subjectTitleString, m_subjectPanelFont, m_subjectPanelBrush, 2, 2, drawFormat);
+            //a_subjectPanelGraphics.DrawString(a_subjectTitleString, m_subjectPanelFont, m_fullSubjectPanelBrush, 2, 2, drawFormat);
         }
 
-        /*
-         *  1:00pm 5/19/2015
-         */
-        private void MainForm_Paint(object sender, PaintEventArgs e)
-        {
-            updateSubjectTabs(e);
-        }
 
-        /*  a_pageNumber may be able to be eliminated since it will point to current page anyway
-         *  In fact, the name of this method can be changed to be more descriptive to the situation to
-         *  something like 'updateCurrentPageDisplayForSubject'
-         *  8:40am 5/21/15
-         */
-        private void updatePageDisplayForSubject(Subject a_subject, int a_pageNumber)
-        {
-            Page pageToDisplay = a_subject.getPageForPageNumber(a_pageNumber);
-            richTextBox.Text = pageToDisplay.PageText;
-            m_shapesStorage = pageToDisplay.ShapeContainer;
-            m_verticalTextList = pageToDisplay.VerticalTextList;
-            transparentPanel.Controls.Clear();
-            foreach(VerticalText v in m_verticalTextList)
-            {
-                v.setButtonProperties();
-                transparentPanel.Controls.Add(v.MoveButton);
-                transparentPanel.Controls.Add(v.OptionsButton);
-                transparentPanel.Controls.Add(v.DeleteButton);
-                transparentPanel.Controls.Add(v.RotateButton);
-            }
-            m_currentSubject = a_subject;
-            m_currentPageNumber = a_pageNumber;
-            m_pageNumberLabel.Text = Convert.ToString(m_currentPageNumber);
-            transparentPanel.Invalidate();
-            richTextBox.Invalidate();
-            backPanel.Invalidate();
-        }
-
-        /*
-         *  10:04am 5/21/2015
-         */
-        private void saveCurrentPageDisplayed()
-        {
-            Page pageToSave = m_currentSubject.getPageForPageNumber(m_currentPageNumber);
-            pageToSave.PageText = richTextBox.Text;
-            pageToSave.ShapeContainer = m_shapesStorage;
-            pageToSave.VerticalTextList = m_verticalTextList;
-            m_currentSubject.savePageWithPageNumber(pageToSave, m_currentPageNumber);
-        }
-
-        /*
-         *  12:12pm 5/21/2015
+        /*  This may be able to be ELIMINATED because saveCurrentPageDisplayed() may perform equivalent
+         *  functionality? This means moving the update of current subject's page to the method suggested.
          *  
+         *  DESCRIPTION: Calls
+         *  12:12pm 5/21/2015
+         *  Called from:
+         *  addNewSubjectToolStripMenuItem_Click(),
+         *  subjectOnePanel_MouseDown(),
+         *  subjectTwoPanel_MouseDown(),
+         *  ...
          */
-        private void saveCurrentSubjectDisplayed()
-        {
-            saveCurrentPageDisplayed();
-            m_currentSubject.CurrentPageNumber = m_currentPageNumber;
-        }
+        //private void saveCurrentSubjectDisplayed()
+        //{
+        //    saveCurrentPageDisplayed();
+        //    m_currentSubject.CurrentPageNumber = m_currentPageNumber;
+        //}
 
         /*
          *  4:10pm 5/19/2015
          */
         private void subjectOnePanel_MouseDown(object sender, MouseEventArgs e)
         {
-            if (m_subjectOneTitle == "New Subject") return;
-            saveCurrentSubjectDisplayed();
-
-            // save current page number in each subject for convenience
-            //m_currentSubject = m_subjectOne;
-            //m_currentPageNumber = m_subjectOne.CurrentPageNumber;
-
-            updatePageDisplayForSubject(m_subjectOne, m_subjectOne.CurrentPageNumber);
-
+            if (m_subjectOneTitle == m_newSubjectTitle) return;
+            if (m_subjectOneTitle == m_currentSubject.SubjectTitle) return;
+            //saveCurrentSubjectDisplayed();
+            saveCurrentPageDisplayed();
+            updateCurrentPageDisplayForSubject(m_subjectOne, m_subjectOne.CurrentPageNumber);
             setDefaultBackColorForTabs();
             subjectOnePanel.BackColor = SystemColors.ControlDark;
             this.Invalidate();
@@ -365,14 +412,11 @@ namespace My_Note
          */
         private void subjectTwoPanel_MouseDown(object sender, MouseEventArgs e)
         {
-            if (m_subjectTwoTitle == "New Subject") return;
-            saveCurrentSubjectDisplayed();
-            // save current page number in each subject for convenience
-            //m_currentSubject = m_subjectTwo;
-            //m_currentPageNumber = m_subjectTwo.CurrentPageNumber;
-
-            updatePageDisplayForSubject(m_subjectTwo, m_subjectTwo.CurrentPageNumber);
-
+            if (m_subjectTwoTitle == m_newSubjectTitle) return;
+            if (m_subjectTwoTitle == m_currentSubject.SubjectTitle) return;
+            //saveCurrentSubjectDisplayed();
+            saveCurrentPageDisplayed();
+            updateCurrentPageDisplayForSubject(m_subjectTwo, m_subjectTwo.CurrentPageNumber);
             setDefaultBackColorForTabs();
             subjectTwoPanel.BackColor = SystemColors.ControlDark;
             this.Invalidate();
@@ -383,7 +427,11 @@ namespace My_Note
          */
         private void subjectThreePanel_MouseDown(object sender, MouseEventArgs e)
         {
-            if (m_subjectThreeTitle == "New Subject") return;
+            if (m_subjectThreeTitle == m_newSubjectTitle) return;
+            if (m_subjectThreeTitle == m_currentSubject.SubjectTitle) return;
+            //saveCurrentSubjectDisplayed();
+            saveCurrentPageDisplayed();
+            updateCurrentPageDisplayForSubject(m_subjectThree, m_subjectThree.CurrentPageNumber);
             setDefaultBackColorForTabs();
             subjectThreePanel.BackColor = SystemColors.ControlDark;
             this.Invalidate();
@@ -394,7 +442,11 @@ namespace My_Note
          */
         private void subjectFourPanel_MouseDown(object sender, MouseEventArgs e)
         {
-            if (m_subjectFourTitle == "New Subject") return;
+            if (m_subjectFourTitle == m_newSubjectTitle) return;
+            if (m_subjectFourTitle == m_currentSubject.SubjectTitle) return;
+            //saveCurrentSubjectDisplayed();
+            saveCurrentPageDisplayed();
+            updateCurrentPageDisplayForSubject(m_subjectFour, m_subjectFour.CurrentPageNumber);
             setDefaultBackColorForTabs();
             subjectFourPanel.BackColor = SystemColors.ControlDark;
             this.Invalidate();
@@ -405,7 +457,11 @@ namespace My_Note
          */
         private void subjectFivePanel_MouseDown(object sender, MouseEventArgs e)
         {
-            if (m_subjectFourTitle == "New Subject") return;
+            if (m_subjectFiveTitle == m_newSubjectTitle) return;
+            if (m_subjectFiveTitle == m_currentSubject.SubjectTitle) return;
+            //saveCurrentSubjectDisplayed();
+            saveCurrentPageDisplayed();
+            updateCurrentPageDisplayForSubject(m_subjectFive, m_subjectFive.CurrentPageNumber);
             setDefaultBackColorForTabs();
             subjectFivePanel.BackColor = SystemColors.ControlDark;
             this.Invalidate();
@@ -413,6 +469,11 @@ namespace My_Note
 
         /*
          *  4:20pm 5/19/2015
+         *  Called from: MainFormLoad(),
+         *  addNewSubjectToolStripMenuItem_Click(),
+         *  subjectOnePanel_MouseDown(),
+         *  subjectTwoPanel_MouseDown(),
+         *  ...
          */
         private void setDefaultBackColorForTabs()
         {
@@ -423,23 +484,102 @@ namespace My_Note
             subjectFivePanel.BackColor = SystemColors.ControlLight;
         }
 
+        #endregion
+
+        // Methods that handle Pages in each subject
+        #region Pages Methods
+
+        /*  DESCRIPTION: This method loads a page to be displayed. When switching between existing subjects
+         *  full of pages, it loads the last page viewed by the user in the subject to enhance user experience.
+         *  If user clicks 'next page' and page does not exist, then one is created and added to the subject.
+         *  The working 'engine' for this functionality is 'getPageForPageNumber()' method.
+         *  8:40am 5/21/15
+         *  Called from:
+         *  addNewSubjectToolStripMenuItem_Click(),
+         *  prevPageButon_Click(),
+         *  nextPageButton_Click(),
+         *  subjectOnePanel_MouseDown(),
+         *  subjectTwoPanel_MouseDown(),
+         *  ...
+         *  TODO - Consider adding setDefaultBackColorForTabs() and backColor = SystemColors.ControlDark in this
+         *  method for professional looking code
+         */
+        private void updateCurrentPageDisplayForSubject(Subject a_subject, int a_pageNumber)
+        {
+            Page pageToDisplay = a_subject.getPageForPageNumber(a_pageNumber);
+            richTextBox.Text = pageToDisplay.PageText;
+            m_shapesStorage = pageToDisplay.ShapeContainer;
+            //m_verticalTextList = pageToDisplay.VerticalTextList;
+            m_verticalTextList.Clear();
+            foreach (VerticalText vOne in pageToDisplay.VerticalTextList)
+            {
+                m_verticalTextList.Add(vOne);
+            }
+            transparentPanel.Controls.Clear();
+            foreach (VerticalText vTwo in m_verticalTextList)
+            {
+                vTwo.setButtonProperties();
+                vTwo.OwnerTranspPanel = transparentPanel;
+                vTwo.OwnerRichTextBox = richTextBox;
+                vTwo.OwnerBackPanel = backPanel;
+                vTwo.OwnerVerticalTextList = m_verticalTextList;
+                transparentPanel.Controls.Add(vTwo.MoveButton);
+                transparentPanel.Controls.Add(vTwo.OptionsButton);
+                transparentPanel.Controls.Add(vTwo.DeleteButton);
+                transparentPanel.Controls.Add(vTwo.RotateButton);
+            }
+            m_currentSubject = a_subject;
+            m_currentPageNumber = a_pageNumber;
+            m_pageNumberLabel.Text = Convert.ToString(m_currentPageNumber);
+            transparentPanel.Invalidate();
+            richTextBox.Invalidate();
+            backPanel.Invalidate();
+            selectTextControl();
+        }
+
+        /*  DESCRIPTION: Saves UI elements on current page to current Page object. It gets the existing Page
+         *  object instead of creating a new one every time a new or an existing page needs to be saved. This
+         *  is done in order to minimize the use of resources.
+         *  10:04am 5/21/2015
+         *  Called from:
+         *  prevPageButton_Click(),
+         *  nextPageButton_Click()
+         *  saveCurrentSubjectDisplayed(),
+         *  saveTooStripMenuItem_Click()
+         */
+        private void saveCurrentPageDisplayed()
+        {
+            Page pageToSave = m_currentSubject.getPageForPageNumber(m_currentPageNumber);
+            pageToSave.PageText = richTextBox.Text;
+            pageToSave.ShapeContainer = m_shapesStorage;
+            //pageToSave.VerticalTextList = m_verticalTextList;
+            // Populate with new or 'refresh' existing data
+            pageToSave.VerticalTextList.Clear();
+            foreach(VerticalText v in m_verticalTextList)
+            {
+                pageToSave.VerticalTextList.Add(v);
+            }
+            m_currentSubject.savePageWithPageNumber(pageToSave, m_currentPageNumber);
+            m_currentSubject.CurrentPageNumber = m_currentPageNumber;
+        }
+
         /*
          * 5:19pm 5/19/2015
          */
         private void prevPageButton_Click(object sender, EventArgs e)
         {
             if (m_currentPageNumber == 1) return;
-            
+
             // Save current page
             saveCurrentPageDisplayed();
 
             // 'Turn' to next page
             m_currentPageNumber--;
             m_pageNumberLabel.Text = Convert.ToString(m_currentPageNumber);
-            updatePageDisplayForSubject(m_currentSubject, m_currentPageNumber);
+            updateCurrentPageDisplayForSubject(m_currentSubject, m_currentPageNumber);
         }
 
-        /*
+        /*  
          *  5:23pm 5/20/2015
          */
         private void nextPageButton_Click(object sender, EventArgs e)
@@ -450,12 +590,17 @@ namespace My_Note
                 string endOfSubjectString = "Subject cannot exceed 50 pages. " +
                 "Please start a new subject if you wish to continue.";
                 MessageBox.Show(endOfSubjectString, "Maximum Page Error", MessageBoxButtons.OK);
+                selectTextControl();
                 return;
             }
-            if (currentPageIsEmpty())
+            //if (currentPageIsEmpty())
+            // Prevent from adding blank pages at the end of the subject. One blank page is allowed. Also
+            // if somehow 
+            if (currentPageIsEmpty() && m_currentPageNumber == m_currentSubject.TotalNumberOfPages)
             {
                 string blankPageString = "Current page is blank, please enter some content before you continue.";
                 MessageBox.Show(blankPageString, "Blank Page Error", MessageBoxButtons.OK);
+                selectTextControl();
                 return;
             }
 
@@ -465,8 +610,13 @@ namespace My_Note
             // 'Turn' to next page
             m_currentPageNumber++;
             m_pageNumberLabel.Text = Convert.ToString(m_currentPageNumber);
-            updatePageDisplayForSubject(m_currentSubject, m_currentPageNumber);
+            updateCurrentPageDisplayForSubject(m_currentSubject, m_currentPageNumber);
         }
+
+        /*
+         *  5:27pm 5/20/2015
+         *  Called from: nextPageButton_Click()
+         */
         private bool currentPageIsEmpty()
         {
             if (richTextBox.TextLength != 0) return false;
@@ -474,178 +624,33 @@ namespace My_Note
             if (m_verticalTextList.Count != 0) return false;
             return true;
         }
-        // Temp (Begin)
+
+        #endregion
+
+        // Temporary methods
+        #region Temporary Methods
+
+        // Temp
         private void moveLogCursor()
         {
             logTextBox.SelectionStart = logTextBox.Text.Length;
             logTextBox.SelectionLength = 0;
             logTextBox.ScrollToCaret();
         }
+        
+        // Temp
         private void mslog(string a_str)
         {
             logTextBox.Text += a_str + "\r\n";
             moveLogCursor();
         }
-        private void clearLogButton_Click(object sender, EventArgs e)
-        {
-            logTextBox.Text = "";
-        }
 
-        // Temp (End)
-
-        /*
-         * 8:02am 5/20/2015
-         */
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
-        {   // Save based on subject?
-            string textToSave = richTextBox.Text;
-            ShapeContainer shapesToSave = m_shapesStorage;
-            List<VerticalText> verticalTextListToSave = m_verticalTextList;
-
-            Page pageToSave = new Page();
-            pageToSave.PageText = textToSave;
-            pageToSave.ShapeContainer = shapesToSave;
-            pageToSave.VerticalTextList = verticalTextListToSave;
-            
-            Subject subjectToSave = new Subject();
-            subjectToSave.Pages.Add(pageToSave);
-            
-            MyNoteStore myNoteToSave = new MyNoteStore();
-            myNoteToSave.SavedSubjects.Add(subjectToSave);
-            
-            StoreHandler storeHandler = new StoreHandler();
-            storeHandler.SaveMyNoteStore("savedNotes.txt", myNoteToSave);
-        }
-        /*
-         *  8:04am 5/20/2015
-         */
-        private void restoreButton_Click(object sender, EventArgs e)
-        {
-            MyNoteStore myNoteToRestore = new MyNoteStore();
-            StoreHandler storeHandler = new StoreHandler();
-            myNoteToRestore = storeHandler.OpenMyNoteStore("savedNotes.txt");
-            
-            // Restore based on subject?
-            Subject subjectToRestore = myNoteToRestore.SavedSubjects[0];
-            
-            Page pageToRestore = subjectToRestore.Pages[0];
-            richTextBox.Text = pageToRestore.PageText;
-            m_shapesStorage = pageToRestore.ShapeContainer;
-            m_verticalTextList = pageToRestore.VerticalTextList;
-
-            // quick fix
-            transparentPanel.Controls.Clear();
-            foreach (VerticalText v in m_verticalTextList)
-            {
-                v.setButtonProperties();
-                transparentPanel.Controls.Add(v.MoveButton);
-                transparentPanel.Controls.Add(v.OptionsButton);
-                transparentPanel.Controls.Add(v.DeleteButton);
-                transparentPanel.Controls.Add(v.RotateButton);
-            }
-        }
-
+        // Temp
         private void clearButton_Click(object sender, EventArgs e)
         {
             logTextBox.Text = "";
         }
 
-        /*
-         *  1:41pm 5/21/2015
-         */
-        private void renameSubjectToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // This can be created 'on the fly' because it will not be done very often
-            DialogResult renameDialog = new DialogResult();
-            RenameSubjectForm renameSubjectForm = new RenameSubjectForm();
-            renameSubjectForm.SubjectTitle = m_currentSubject.SubjectTitle;
-            renameSubjectForm.FormTitle = "Rename Subject Title";
-            renameDialog = renameSubjectForm.ShowDialog(); 
-            if (renameDialog == DialogResult.OK)
-            {
-                m_currentSubject.SubjectTitle = renameSubjectForm.SubjectTitle;
-                refreshUISubjectTitles();
-                this.Invalidate();
-            }
-        }
-
-        /*  This belongs in the formMenuStrip.cs
-         *  5:08pm 5/21/2015
-         */
-        private void addNewSubjectToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // if last subject was added, then delete subject is disabled
-            updateToolStripMenuItems();
-
-            // This can be created 'on the fly' because it will not be done very often
-            DialogResult renameDialog = new DialogResult();
-            RenameSubjectForm renameSubjectForm = new RenameSubjectForm();
-            renameSubjectForm.SubjectTitle = "New Subject";
-            renameSubjectForm.FormTitle = "New Subject Title";
-            renameDialog = renameSubjectForm.ShowDialog();
-            if (renameDialog == DialogResult.OK)
-            {
-                // Create new subject
-                  // get count of subjects
-                int nextSubjectIndex = m_mainMyNoteStore.NumberOfSubjects();
-                  // use that count as index for next subject to be created
-                m_currentSubject = m_mainMyNoteStore.SavedSubjects[nextSubjectIndex];
-                m_currentSubject.SubjectTitle = renameSubjectForm.SubjectTitle;
-                saveCurrentSubjectDisplayed();
-                updatePageDisplayForSubject(m_currentSubject, m_currentSubject.CurrentPageNumber);
-                setDefaultBackColorForTabs();
-                // adding these below, since it is not much work it may not be need to be in its own method
-                switch (nextSubjectIndex)
-                {
-                    case 1:
-                        subjectTwoPanel.BackColor = SystemColors.ControlDark;
-                        m_subjectTwoTitle = m_currentSubject.SubjectTitle;
-                        break;
-                    case 2:
-                        subjectThreePanel.BackColor = SystemColors.ControlDark;
-                        m_subjectThreeTitle = m_currentSubject.SubjectTitle;
-                        break;
-                    case 3:
-                        subjectFourPanel.BackColor = SystemColors.ControlDark;
-                        m_subjectFourTitle = m_currentSubject.SubjectTitle;
-                        break;
-                    case 4:
-                        subjectFivePanel.BackColor = SystemColors.ControlDark;
-                        m_subjectFiveTitle = m_currentSubject.SubjectTitle;
-                        break;
-                }
-                this.Invalidate();
-                //m_currentSubject.SubjectTitle = renameSubjectForm.SubjectTitle;
-                //refreshUISubjectTitles();
-                //this.Invalidate();
-            }
-            //updateToolStripMenuItems();
-        }
-        
-        /*  This belongs in the formMenuStrip.cs
-         *  If there is only one subject that, then disable DeleteSubject menu item
-         *  If there are already Five Subjects, then disable AddSubject menu item.
-         *  5:11pm 5/21/2015
-         */
-        private void updateToolStripMenuItems()
-        {
-            int numberOfSubjects = m_mainMyNoteStore.NumberOfSubjects();
-            if (numberOfSubjects == 1)
-            {
-                deleteSubjectToolStripMenuItem.Enabled = false;
-            }
-            else
-            {
-                deleteSubjectToolStripMenuItem.Enabled = true;
-            }
-            if (numberOfSubjects == 5)
-            {
-                addNewSubjectToolStripMenuItem.Enabled = false;
-            }
-            else
-            {
-                addNewSubjectToolStripMenuItem.Enabled = true;
-            }
-        }
+        #endregion
     }
 }

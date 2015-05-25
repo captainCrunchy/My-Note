@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
-// This is data persistence
+// This is data persistence, does not need to be a singleton
 
 
 namespace My_Note
@@ -14,11 +14,13 @@ namespace My_Note
     [Serializable()]
     class MyNoteStore : ISerializable // MyNoteStore == ObjectToSerialize
     {
-        private Subject subjectOne = new Subject();
-        private Subject subjectTwo = new Subject();
-        private Subject subjectThree = new Subject();
-        private Subject subjectFour = new Subject();
-        private Subject subjectFive = new Subject();
+        // do these need to be created here? can they be created in the constructor
+        // since they are not being used anywhere else?
+        //private Subject subjectOne = new Subject();
+        //private Subject subjectTwo = new Subject();
+        //private Subject subjectThree = new Subject();
+        //private Subject subjectFour = new Subject();
+        //private Subject subjectFive = new Subject();
         private List<Subject> m_savedSubjects; // Subjects == Cars
 
         /*
@@ -55,11 +57,14 @@ namespace My_Note
         // Each notebook starts with five subjects
         public MyNoteStore()
         {
+            Subject subjectOne = new Subject();
+            Subject subjectTwo = new Subject();
+            Subject subjectThree = new Subject();
+            Subject subjectFour = new Subject();
+            Subject subjectFive = new Subject();
             m_savedSubjects = new List<Subject>();
             m_savedSubjects.Add(subjectOne);
-            //subjectOne.SubjectTitle = "Calculus";
             m_savedSubjects.Add(subjectTwo);
-            //subjectTwo.SubjectTitle = "Geometry";
             m_savedSubjects.Add(subjectThree);
             m_savedSubjects.Add(subjectFour);
             m_savedSubjects.Add(subjectFive);

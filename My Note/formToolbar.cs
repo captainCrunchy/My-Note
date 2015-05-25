@@ -48,7 +48,7 @@ namespace My_Note
 {
     public partial class MainForm : Form
     {
-        private bool canHideVertTextButtons = false;    /* Used to assist in hiding the buttons for VerticalText
+        private bool canHideVertTextButtons = true;    /* Used to assist in hiding the buttons for VerticalText
                                                            object when its control is not selected */
 
         // This region contains methods that update UI when new control is selected
@@ -62,10 +62,11 @@ namespace My_Note
          */
         private void textSelectButton_Click(object sender, EventArgs e)
         {
-            transparentPanel.Cursor = Cursors.IBeam;
-            m_currentSelectedControl = e_SelectedControl.TEXT;
-            setDefaultBackColorForControls();
-            textSelectButton.BackColor = m_selectedControlButtonColor;
+            selectTextControl();
+            //transparentPanel.Cursor = Cursors.IBeam;
+            //m_currentSelectedControl = e_SelectedControl.TEXT;
+            //setDefaultBackColorForControls();
+            //textSelectButton.BackColor = m_selectedControlButtonColor;
         }
 
         /*  This method sets the current control to pencil editing. Updates the panel's
@@ -539,6 +540,23 @@ namespace My_Note
                 richTextBox.Invalidate();
                 backPanel.Invalidate();
             }
+        }
+        /*  Called here to respond to UI event handler. Also selects text control on startup and
+         *  when changing pages and subjects.
+         * 
+         *  2:53pm 5/25/2015
+         */
+        private void selectTextControl()
+        {
+            transparentPanel.Cursor = Cursors.IBeam;
+            m_currentSelectedControl = e_SelectedControl.TEXT;
+            setDefaultBackColorForControls();
+            textSelectButton.BackColor = m_selectedControlButtonColor;
+
+            int charIndex = richTextBox.Text.Length;
+            richTextBox.SelectionStart = charIndex;
+            richTextBox.SelectionLength = 0;
+            richTextBox.Select();
         }
 
         #endregion

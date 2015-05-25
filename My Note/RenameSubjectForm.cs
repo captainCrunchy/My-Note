@@ -14,6 +14,7 @@ namespace My_Note
     {
         public string SubjectTitle = "";
         public string FormTitle = "";
+        public List<string> InvalidTitles = new List<string>();
 
         public RenameSubjectForm()
         {
@@ -68,10 +69,21 @@ namespace My_Note
         }
 
         /*  Validate the new title
+         *  Bigger description is probably ok
          * 3:02pm 5/21/2015
          */
         private void checkValidTitle()
         {
+            // to prevent same title subjects
+            foreach (string s in InvalidTitles)
+            {
+                if (s == renameTextBox.Text)
+                {
+                    renameOKButton.Enabled = false;
+                    return;
+                }
+            }
+            // to prevent default name for a real subject title
             if (renameTextBox.Text == "New Subject" ||
                 String.IsNullOrWhiteSpace(renameTextBox.Text))
             {

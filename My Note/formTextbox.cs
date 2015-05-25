@@ -8,6 +8,9 @@ using System.Drawing;
 using System.Collections;
 using System.Drawing.Drawing2D;
 
+// ATTN TOWARDS THE END: On mouse move during pencil drawing 3 items can be invalidated to draw 'nicer'
+// with a performance penalty
+
 /*
  *  TITLE:
  *      MainForm : Form
@@ -68,19 +71,11 @@ namespace My_Note
         private int m_richTextBoxSelectCurrentCharIndex = 0;                // Record current index during text selection using mouse
         private bool m_isSelectingText = false;                             // Is the mouse currently down and selecting text
 
-        /*  TODO: Added page number
-         *        Better comments in MouseMove for when Text control is selected?
-         *        Modified richTextBoxTextChanged()
-         *        added saveCurrentPage()
-         *        added cearCurrentPage()
-         *        added m_currentPageNumber
+        /*  TODO: Modified richTextBoxTextChanged()
          *        added m_totalNumberOfPages
-         *        added m_pageNumberLabel
         */
 
-        //private int m_currentPageNumber = 1; moved to mainForm.cs for clarity
-        private int m_totalNumberOfPages = 1;
-        private Label m_pageNumberLabel = new Label();
+        private int m_totalNumberOfPages = 1; // right now it is doing nothing
 
         // This region contains methods for richTextBox
         #region richTextBoxMethods
@@ -115,37 +110,13 @@ namespace My_Note
             }
             if (m_currentPageNumber == m_totalNumberOfPages)
             {
-
+                // && if at the end of text
+                // add code to go to the next page
+                
             }
             richTextBox.Invalidate();
             transparentPanel.Invalidate();
         } /* private void richTextBox_TextChanged(object sender, EventArgs e) */
-
-        /*
-         *  4:03pm 5/20/2015
-         *  this should probably be moved to 'helper methods' region
-         */
-        private void clearCurrentPage()
-        {
-            richTextBox.Text = "";
-            transparentPanel.Controls.Clear();
-            m_shapesStorage.Shapes.Clear();
-            m_verticalTextList.Clear();
-            backPanel.Refresh();
-        }
-
-        /*
-         *  4:31pm 5/20/2015
-         */
-        private void addNewPage()
-        {
-
-        }
-
-        private void clearPageButton_Click(object sender, EventArgs e)
-        {
-            clearCurrentPage();
-        }
 
         #endregion
 
@@ -271,11 +242,12 @@ namespace My_Note
          *      
          * DESCRIPTION
          *  Based on the control selected start drawing, saving, or erasing. Some of the shapes are drawn
-         *  and saved in this method (pencil, eraser). Other shapes (lines, arrows, ovals, rectangles) are
-         *  only drawn here to display to the user a dynamic response. They get saved on MouseUp event.
+         *  and saved immediately in this method (pencil, eraser). Other shapes (lines, arrows, ovals, rectangles)
+         *  are only drawn here to display to the user a dynamic response. They get saved on MouseUp event.
          *  Eraser only removes anything that is not text. When text control is selected this method is used
          *  for multi-character and/or multi-line selection in the richTextBox, as the mouse is down and being
-         *  dragged.
+         *  dragged. Such technique is necessary because the richTextBox is 'under' the transparentPanel and is
+         *  capturing a Point 'through' the trasparentPanel, which it then translates into a character index.
          * 
          * RETURNS
          *  Nothing
@@ -385,8 +357,8 @@ namespace My_Note
          * DESCRIPTION
          *  Updates values, saves data, redraws transparentPanel and richTextBox. Pencil and eraser
          *  actions are already saved up to this point. Lines, arrows, and other shapes use special
-         *  methods for saving, which are triggered by this method. Some conditions test for
-         *  several values to ensure/restrict the direction of the arrow being drawn. When adding a
+         *  methods for saving, which are triggered by this method. Some conditions test for several
+         *  values at once to ensure/restrict the direction of the arrow being drawn. When adding a
          *  VerticalText object (rotatable text feature) a condition tests to see if one has been recently
          *  created and modified. Such mechanism is used to ensure that the user does not accidentally
          *  create too many such objects.
@@ -424,7 +396,7 @@ namespace My_Note
                     transparentPanel.Invalidate();
                     richTextBox.Invalidate();
                 }
-                if (m_isDrawing) // Draw one of the arrows
+                if (m_isDrawing) // Draw an arrow
                 {
                     if (m_currentSelectedControl == e_SelectedControl.WARROW && (e.Location.X < m_drawStartPoint.X))
                     {
@@ -582,7 +554,6 @@ namespace My_Note
             for (int i = 0; i < m_verticalTextList.Count; i++)
             {
                 m_verticalTextList[i].drawVerticalText(e);
-                //mslog("textOrigin = " + m_verticalTextList[i].m_textOrigin);
             }
         } /* private void transparentPanel_Paint(object sender, PaintEventArgs e) */
 

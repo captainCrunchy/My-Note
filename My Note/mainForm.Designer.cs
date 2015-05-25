@@ -99,7 +99,6 @@
             this.restoreButton = new System.Windows.Forms.Button();
             this.logTextBox = new System.Windows.Forms.TextBox();
             this.clearButton = new System.Windows.Forms.Button();
-            this.clearPageButton = new System.Windows.Forms.Button();
             this.transparentPanel = new My_Note.TransparentPanel();
             this.menuStrip1.SuspendLayout();
             this.toolbarPanel.SuspendLayout();
@@ -178,6 +177,7 @@
             this.deleteSubjectToolStripMenuItem.Name = "deleteSubjectToolStripMenuItem";
             this.deleteSubjectToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.deleteSubjectToolStripMenuItem.Text = "Delete Subject";
+            this.deleteSubjectToolStripMenuItem.Click += new System.EventHandler(this.deleteSubjectToolStripMenuItem_Click);
             // 
             // autoSaveToolStripMenuItem
             // 
@@ -828,16 +828,6 @@
             this.clearButton.UseVisualStyleBackColor = true;
             this.clearButton.Click += new System.EventHandler(this.clearButton_Click);
             // 
-            // clearPageButton
-            // 
-            this.clearPageButton.Location = new System.Drawing.Point(28, 644);
-            this.clearPageButton.Name = "clearPageButton";
-            this.clearPageButton.Size = new System.Drawing.Size(75, 23);
-            this.clearPageButton.TabIndex = 55;
-            this.clearPageButton.Text = "Clear Page";
-            this.clearPageButton.UseVisualStyleBackColor = true;
-            this.clearPageButton.Click += new System.EventHandler(this.clearPageButton_Click);
-            // 
             // transparentPanel
             // 
             this.transparentPanel.Location = new System.Drawing.Point(146, 90);
@@ -856,7 +846,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(812, 717);
-            this.Controls.Add(this.clearPageButton);
             this.Controls.Add(this.clearButton);
             this.Controls.Add(this.logTextBox);
             this.Controls.Add(this.restoreButton);
@@ -875,6 +864,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
             this.Text = "Form1";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.MainForm_Paint);
@@ -962,7 +952,6 @@
         private System.Windows.Forms.Button restoreButton;
         private System.Windows.Forms.TextBox logTextBox;
         private System.Windows.Forms.Button clearButton;
-        private System.Windows.Forms.Button clearPageButton;
         private System.Windows.Forms.ToolStripMenuItem renameNameToolStripMenuItem;
     }
 }

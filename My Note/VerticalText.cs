@@ -102,6 +102,7 @@ namespace My_Note
          *        added m_rotateButtonLocation
          *        modified m_moveButtonMouseMove
          *        modified updateButtonLocations();
+         *        altered the constructor with the move button location restriction and new text origin assignment
          */
 
         /*
@@ -128,11 +129,23 @@ namespace My_Note
          */
         public VerticalText(MouseEventArgs e)
         {
-            m_textOrigin = e.Location;
+            //m_textOrigin = e.Location;
 
             m_moveButton.BackColor = Color.Transparent;
             m_moveButton.BackgroundImage = Properties.Resources.moveArrow;
-            m_moveButton.Location = new Point(e.Location.X-8, e.Location.Y-8); // important
+
+            // Center the m_moveButton.Location with the mouse cursor location,
+            // and ensure that it is not placed outside the bounds of its container
+            Point newMoveButtonLocation = new Point(e.Location.X - 8, e.Location.Y - 8);
+            if (newMoveButtonLocation.X < 0) newMoveButtonLocation.X = 0;
+            if (newMoveButtonLocation.X > 504) newMoveButtonLocation.X = 504;
+            if (newMoveButtonLocation.Y < 0) newMoveButtonLocation.Y = 0;
+            if (newMoveButtonLocation.Y > 589) newMoveButtonLocation.Y = 589;
+            m_moveButton.Location = newMoveButtonLocation;
+            //m_moveButton.Location = new Point(e.Location.X-8, e.Location.Y-8);
+
+            m_textOrigin = new Point(m_moveButton.Location.X + 8, m_moveButton.Location.Y + 8);
+
             m_moveButton.Size = new Size(16, 16);
             m_moveButton.MouseDown += m_moveButton_MouseDown;
             m_moveButton.MouseMove += m_moveButton_MouseMove;
@@ -144,7 +157,9 @@ namespace My_Note
             m_optionsButton.Size = new Size(16, 16);
             m_optionsButton.MouseUp += m_optionsButton_MouseUp;
 
-            m_deleteButton.BackColor = Color.White;
+            //m_deleteButton.BackColor = Color.White;
+            m_deleteButton.BackColor = Color.Transparent;
+
             m_deleteButton.BackgroundImage = Properties.Resources.removeX;
             m_deleteButton.Location = new Point(m_moveButton.Location.X + (Int32)m_delButDistF, m_moveButton.Location.Y);
             m_deleteButton.Size = new Size(16, 16);
@@ -171,6 +186,13 @@ namespace My_Note
             m_moveButton.BackgroundImage = Properties.Resources.moveArrow;
             m_moveButton.Location = m_moveButtonLocation;
             m_moveButton.Size = new Size(16, 16);
+
+            // Best solution, it is not professional looking but it is safe,
+            // effective, and efficient. Helps with data persistence between when
+            // the application is running, closed, or switching between subjects and pages.
+            m_moveButton.MouseDown -= m_moveButton_MouseDown;
+            m_moveButton.MouseMove -= m_moveButton_MouseMove;
+            m_moveButton.MouseUp -= m_moveButton_MouseUp;
             m_moveButton.MouseDown += m_moveButton_MouseDown;
             m_moveButton.MouseMove += m_moveButton_MouseMove;
             m_moveButton.MouseUp += m_moveButton_MouseUp;
@@ -179,18 +201,27 @@ namespace My_Note
             m_optionsButton.BackgroundImage = Properties.Resources.optionsImg;
             m_optionsButton.Location = m_optionsButtonLocation;
             m_optionsButton.Size = new Size(16, 16);
+
+            m_optionsButton.MouseUp -= m_optionsButton_MouseUp;
             m_optionsButton.MouseUp += m_optionsButton_MouseUp;
 
-            m_deleteButton.BackColor = Color.White;
+            //m_deleteButton.BackColor = Color.White;
+            m_deleteButton.BackColor = Color.Transparent;
             m_deleteButton.BackgroundImage = Properties.Resources.removeX;
             m_deleteButton.Location = m_deleteButtonLocation;
             m_deleteButton.Size = new Size(16, 16);
+
+            m_deleteButton.MouseUp -= m_deleteButton_MouseUp;
             m_deleteButton.MouseUp += m_deleteButton_MouseUp;
 
             m_rotateButton.BackColor = Color.Transparent;
             m_rotateButton.BackgroundImage = Properties.Resources.rotateArrow;
             m_rotateButton.Location = m_rotateButtonLocation;
             m_rotateButton.Size = new Size(16, 16);
+
+            m_rotateButton.MouseDown -= m_rotateButton_MouseDown;
+            m_rotateButton.MouseMove -= m_rotateButton_MouseMove;
+            m_rotateButton.MouseUp -= m_rotateButton_MouseUp;
             m_rotateButton.MouseDown += m_rotateButton_MouseDown;
             m_rotateButton.MouseMove += m_rotateButton_MouseMove;
             m_rotateButton.MouseUp += m_rotateButton_MouseUp;
@@ -428,9 +459,12 @@ namespace My_Note
             if (e.Button == MouseButtons.Left)
             {
                 m_optionsForm.CaptureUIAttributes(m_textFont, m_textString, m_textBrush);
+                m_optionsForm.StartPosition = FormStartPosition.CenterParent;
+                m_optionsForm.FormBorderStyle = FormBorderStyle.Fixed3D;
+                m_optionsForm.MaximizeBox = false;
+                m_optionsForm.MinimizeBox = false;
                 m_optionsForm.ShowDialog();
                 m_optionsForm.UpdateUIAttributes(ref m_textFont, ref m_textString, ref m_textBrush);
-                
                 // added this 'for data persistence'
                 m_textBrushColor = m_textBrush.Color;
                 
@@ -477,7 +511,7 @@ namespace My_Note
          * SYNOPSIS
          *  private void m_deleteButton_MouseUp(object sender, MouseEventArgs e);
          *      sender  -> does nothing
-         *      e       -> does nothing
+         *      e       -> used to confirm that left mouse button was clicked
          * 
          * DESCRIPTION
          *  This method triggers the options to delete 'this' instance of VerticalText. It uses the
@@ -499,20 +533,23 @@ namespace My_Note
          */
         private void m_deleteButton_MouseUp(object sender, MouseEventArgs e)
         {
-            DialogResult dialogResult = MessageBox.Show("Are you sure you want to delete this text?",
-                "Click yes or no", MessageBoxButtons.OKCancel);
-            if (dialogResult == DialogResult.OK)
+            if (e.Button == MouseButtons.Left)
             {
-                foreach (VerticalText v in m_ownerVerticalTextList)
+                DialogResult dialogResult = MessageBox.Show("Are you sure you want to delete this text?",
+                    "Click yes or no", MessageBoxButtons.OKCancel);
+                if (dialogResult == DialogResult.OK)
                 {
-                    if (v == this)
+                    foreach (VerticalText v in m_ownerVerticalTextList)
                     {
-                        m_ownerTranspPanel.Controls.Remove(m_moveButton);
-                        m_ownerTranspPanel.Controls.Remove(m_optionsButton);
-                        m_ownerTranspPanel.Controls.Remove(m_deleteButton);
-                        m_ownerTranspPanel.Controls.Remove(m_rotateButton);
-                        m_ownerVerticalTextList.Remove(v);
-                        return;
+                        if (v == this)
+                        {
+                            m_ownerTranspPanel.Controls.Remove(m_moveButton);
+                            m_ownerTranspPanel.Controls.Remove(m_optionsButton);
+                            m_ownerTranspPanel.Controls.Remove(m_deleteButton);
+                            m_ownerTranspPanel.Controls.Remove(m_rotateButton);
+                            m_ownerVerticalTextList.Remove(v);
+                            return;
+                        }
                     }
                 }
             }
@@ -755,6 +792,7 @@ namespace My_Note
             float X = m_moveButton.Location.X;
             float Y = m_moveButton.Location.Y;
             float radAngleF = (float)(Math.PI * (double)m_textAngle / 180.0);
+            m_moveButtonLocation = m_moveButton.Location;
 
             float optButDistF = m_optButDistF;
             float newOptLocX = (float)(X + Math.Cos(radAngleF) * optButDistF);

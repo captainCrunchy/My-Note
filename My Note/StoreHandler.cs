@@ -7,6 +7,8 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
+// writes data to disk
+
 namespace My_Note
 {
     class StoreHandler // StoreHandler == Serializer
