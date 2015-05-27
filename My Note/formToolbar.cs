@@ -5,57 +5,63 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
-
-/*
+// TODO: fontComboBox_SelectedIndexChanged() may not be used in the future
+/* 
  *  TITLE:
  *      MainForm : Form
  *      
  *  DESCRIPTION:
- *      This class is the main form, it is the starting point of the application, and it is always
- *      visible. It provides common controls such as 'File' and 'Help' menu options, text and draw
- *      controls, and a 'combined' panel for text editing and drawing.
+ *    MainForm class:
+ *      This class represents the main form for the application. It is the starting point and is always visible. It provides
+ *      common controls such as 'File' and 'Help' menu options, text editing and drawing controls, and a 'combined' panel
+ *      for text editing and drawing shapes. This MainForm class is divided into four (.cs) files, which are simply extensions
+ *      of this class; i.e. each is a 'public partial class MainForm : Form'. This was done to keep the code organized and
+ *      readable. The user is interacting with some part of this class at all times.
+ *    mainForm.cs:
+ *      This file implements tasks that are responsible for starting and running the application. It performs general tasks
+ *      like handling the user inteface elements of the form and communication with data persistence objects. It is also
+ *      responsible for coordinating tasks between other 'partial class' files.
+ *    formMenuStrip.cs:
+ *      This file handles events that are triggered by elements of the menu strip in the form and their appearances based on
+ *      current data. Example: File, Edit, ..., Help.
+ *    formToolbar.cs: (YOU ARE HERE)
+ *      This file is responsible for appearance of controls in the toolbar and their events. These controls trigger such tasks
+ *      as text editing, drawing shapes, and erasing.
+ *    formTextBox.cs:
+ *      This file is responsible for appearances and events of the richTextBox and its layers. Such additional layers are
+ *      transparent and background panels. Events handled in this files are tasks such as applying text editing and drawing
+ *      shapes onto the panels, and erasing them based on currently selected controls and options.
  *      
  *  CODE STRUCTURE:
- *      This class is divided into several files, which are all responsible for performing a specific
- *      task. The files are simply extensions of this class, i.e. '... partial class...'. Below is a
- *      description of each 'partial class' and its purpose.
- * 
- *      mainForm.cs - This file is the starting point of the MainForm class. It contains the
- *                    constructor and is responsible for coordinating interactions between
- *                    other parts of the class and the application.
- *               
- *      formMenuStrip.cs - This file handles events that are triggered by elements
- *                         of the menu strip in the form. (Ex: File, Edit, ... Help)
- *                    
- *      formToolbar.cs - (YOU ARE HERE) This file is responsible for controls in the toolbar and their
- *                       events in the main form. (Ex: Font, Text, Color, Line...). Due to the amount of
- *                       event methods and simplicity of their functionality, not all methods are fully
- *                       commented.
- *                  
- *      formTextbox.cs - This file is responsible for appearance and events of the richTextBox and its
- *                       layers. Variables were created and initialized immediately in the declaration
- *                       section for reusability, to avoid repetition of creation in order to increase
- *                       drawing performance. Some variables are initialized in the main constructor.
- *                       Other components have been separated into regions each with appropriate comments.
- */
-
-/*  TODO: update CODE STRUCTURE comments in this class and in other partial classes to match this class
- *  
- *  Added: fontComboBox_SelectedIndexChaned() at the bottom, if this is not needed then handle it appropriately
+ *    MainForm class:
+ *      This class is divided into four (.cs) files based on functionality. Each is responsible for performing specific tasks
+ *      based on the user interface elements and controls. Each (.cs) file declares and initializes member variables that are
+ *      needed in that file. Some member variables can only be initialized in the constructor, which is in the mainForm.cs file.
+ *    formToolbar.cs: (YOU ARE HERE)
+ *      This file is organized by separating methods into regions based on their collective functinality. Comments for these
+ *      methods do not follow the same coding standards used by the rest of the files in this application. This is because
+ *      these methods perform very simple tasks and there is a plethora of methods with similar functionality. Additional
+ *      commenting will greatly increase the amount of lines of code, which will lead to a less readable and a more confusing
+ *      than a beneficial code structure.
  */
 
 namespace My_Note
 {
     public partial class MainForm : Form
     {
+        // Region contains member variables for this class
+        #region Member Variables
+
         private bool canHideVertTextButtons = true;    /* Used to assist in hiding the buttons for VerticalText
                                                            object when its control is not selected */
 
-        // This region contains methods that update UI when new control is selected
-        #region Control Selection Changed
+        #endregion
 
-        /*  This method sets the current control to text editing. Updates the panel's
-         *  cursor to match the current control. Updates selection colors for controls.
+        // Region contains methods that update UI when new control is selected
+        #region Control Selection Changed Methods
+
+        /*  This method calls another method that sets the current control to text editing. Updates
+         *  the panel's cursor to match the current control. Updates selection colors for controls.
          *  
          *  Murat Zazi
          *  12:12pm 3/17/2015
@@ -63,10 +69,6 @@ namespace My_Note
         private void textSelectButton_Click(object sender, EventArgs e)
         {
             selectTextControl();
-            //transparentPanel.Cursor = Cursors.IBeam;
-            //m_currentSelectedControl = e_SelectedControl.TEXT;
-            //setDefaultBackColorForControls();
-            //textSelectButton.BackColor = m_selectedControlButtonColor;
         }
 
         /*  This method sets the current control to pencil editing. Updates the panel's
@@ -498,7 +500,7 @@ namespace My_Note
 
         #endregion
 
-        // This region contains 'helper' methods
+        // Region contains 'helper' methods
         #region Helper Methods
 
         /*  This method gets called to reset the BackColor of all controls to default and set current
@@ -541,9 +543,13 @@ namespace My_Note
                 backPanel.Invalidate();
             }
         }
-        /*  Called here to respond to UI event handler. Also selects text control on startup and
-         *  when changing pages and subjects.
+
+        /*  This method sets the current control to 'text' edit control. It updates the mouse cursor to match one for text
+         *  editing. It then sets richTextBox as the 'focus' of the user interface with the character index at the end of
+         *  the text on the page. This method gets called upon changing editing control, 'flipping' pages, changing subjects,
+         *  and during start of the application.
          * 
+         *  Murat Zazi
          *  2:53pm 5/25/2015
          */
         private void selectTextControl()

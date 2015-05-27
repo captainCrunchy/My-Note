@@ -7,21 +7,67 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
-// writes data to disk
+/*
+ *  TITLE:
+ *      StoreHandler
+ *      
+ *  DESCRIPTION:
+ *      This class is used to write the current data persistence object to disk. It uses a save path provided by the caller
+ *      when saving to or restoring from a disk. It is designed to work with MyNoteStore object to serialize it when saving
+ *      to disk, or deserialize it when restoring from disk.
+ *      
+ *  CODE STRUCTURE:
+ *      There is no specific code structure in this class.
+ */
 
 namespace My_Note
 {
-    class StoreHandler // StoreHandler == Serializer
+    class StoreHandler
     {
         /*
+         * NAME
+         *  StoreHandler() - gets called to construct this object
+         *  
+         * SYNOPSIS
+         *  public StoreHandler();
+         *      
+         * DESCRIPTION
+         *  This constructor gets called when an instance of this object is created and used in the application.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
          *  5:37pm 5/19/2015
          */
         public StoreHandler()
         {
 
-        }
+        } /* public StoreHandler() */
 
         /*
+         * NAME
+         *  SaveMyNoteStore() - saves data to disk
+         *  
+         * SYNOPSIS
+         *  public void SaveMyNoteStore(string a_fileName, MyNoteStore a_myNoteStore)
+         *      a_fileName      -> the path to a file on disk
+         *      a_myNoteStore   -> the object to be serialized and written to disk
+         *      
+         * DESCRIPTION
+         *  This method serializes and saves an instance of MyNoteStore object to disk to
+         *  a specified path. The file is saved in binary format.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
          *  5:47pm 5/19/2015
          */
         public void SaveMyNoteStore(string a_fileName, MyNoteStore a_myNoteStore)
@@ -30,9 +76,26 @@ namespace My_Note
             BinaryFormatter binFormatter = new BinaryFormatter();
             binFormatter.Serialize(saveStream, a_myNoteStore);
             saveStream.Close();
-        }
+        } /* public void SaveMyNoteStore(string a_fileName, MyNoteStore a_myNoteStore) */
 
         /*
+         * NAME
+         *  OpenMyNoteStore() - restores data from disk
+         *  
+         * SYNOPSIS
+         *  public MyNoteStore OpenMyNoteStore(string a_fileName);
+         *      a_fileName  -> a path used to get object on disk
+         *      
+         * DESCRIPTION
+         *  This method uses a given path to locate a binary file on disk and deserialize it.
+         *  
+         * RETURNS
+         *  MyNoteStore object containing saved data
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
          *  5:53pm 5/19/2015
          */
         public MyNoteStore OpenMyNoteStore(string a_fileName)
@@ -43,52 +106,6 @@ namespace My_Note
             retStore = (MyNoteStore)binFormatter.Deserialize(openStream);
             openStream.Close();
             return retStore;
-        }
+        } /* public MyNoteStore OpenMyNoteStore(string a_fileName) */
     }
 }
-
-/*
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
-        {   // Save based on subject?
-            string textToSave = richTextBox.Text;
-            ShapeContainer shapesToSave = m_shapesStorage;
-            List<VerticalText> verticalTextListToSave = m_verticalTextList;
-
-            Page pageToSave = new Page();
-            pageToSave.PageText = textToSave;
-            pageToSave.ShapeContainer = shapesToSave;
-            pageToSave.VerticalTextList = verticalTextListToSave;
-            
-            Subject subjectToSave = new Subject();
-            subjectToSave.Pages.Add(pageToSave);
-            
-            MyNoteStore myNoteToSave = new MyNoteStore();
-            myNoteToSave.SavedSubjects.Add(subjectToSave);
-            
-            StoreHandler storeHandler = new StoreHandler();
-            storeHandler.SaveMyNoteStore("savedNotes.txt", myNoteToSave);
-        }
-        private void restoreButton_Click(object sender, EventArgs e)
-        {
-            MyNoteStore myNoteToRestore = new MyNoteStore();
-            StoreHandler storeHandler = new StoreHandler();
-            myNoteToRestore = storeHandler.OpenMyNoteStore("savedNotes.txt");
-            
-            // Restore based on subject?
-            Subject subjectToRestore = myNoteToRestore.SavedSubjects[0];
-            
-            Page pageToRestore = subjectToRestore.Pages[0];
-            richTextBox.Text = pageToRestore.PageText;
-            m_shapesStorage = pageToRestore.ShapeContainer;
-            m_verticalTextList = pageToRestore.VerticalTextList;
-
-            // quick fix
-            transparentPanel.Controls.Clear();
-            foreach (VerticalText v in m_verticalTextList)
-            {
-                v.setButtonProperties();
-                transparentPanel.Controls.Add(v.MoveButton);
-                transparentPanel.Controls.Add(v.OptionsButton);
-                transparentPanel.Controls.Add(v.DeleteButton);
-                transparentPanel.Controls.Add(v.RotateButton);
-            } */

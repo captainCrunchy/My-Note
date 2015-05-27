@@ -96,7 +96,6 @@
             this.subjectThreePanel = new System.Windows.Forms.Panel();
             this.subjectFourPanel = new System.Windows.Forms.Panel();
             this.subjectFivePanel = new System.Windows.Forms.Panel();
-            this.restoreButton = new System.Windows.Forms.Button();
             this.logTextBox = new System.Windows.Forms.TextBox();
             this.clearButton = new System.Windows.Forms.Button();
             this.transparentPanel = new My_Note.TransparentPanel();
@@ -131,20 +130,20 @@
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // printToolStripMenuItem
             // 
             this.printToolStripMenuItem.Name = "printToolStripMenuItem";
-            this.printToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.printToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.printToolStripMenuItem.Text = "Print";
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.closeToolStripMenuItem.Text = "Close";
             // 
             // eidtToolStripMenuItem
@@ -798,16 +797,6 @@
             this.subjectFivePanel.TabIndex = 51;
             this.subjectFivePanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.subjectFivePanel_MouseDown);
             // 
-            // restoreButton
-            // 
-            this.restoreButton.Location = new System.Drawing.Point(12, 94);
-            this.restoreButton.Name = "restoreButton";
-            this.restoreButton.Size = new System.Drawing.Size(75, 23);
-            this.restoreButton.TabIndex = 52;
-            this.restoreButton.Text = "Restore";
-            this.restoreButton.UseVisualStyleBackColor = true;
-            this.restoreButton.Click += new System.EventHandler(this.restoreButton_Click);
-            // 
             // logTextBox
             // 
             this.logTextBox.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -848,7 +837,6 @@
             this.ClientSize = new System.Drawing.Size(812, 717);
             this.Controls.Add(this.clearButton);
             this.Controls.Add(this.logTextBox);
-            this.Controls.Add(this.restoreButton);
             this.Controls.Add(this.subjectFivePanel);
             this.Controls.Add(this.subjectFourPanel);
             this.Controls.Add(this.subjectThreePanel);
@@ -949,7 +937,6 @@
         private System.Windows.Forms.Panel subjectThreePanel;
         private System.Windows.Forms.Panel subjectFourPanel;
         private System.Windows.Forms.Panel subjectFivePanel;
-        private System.Windows.Forms.Button restoreButton;
         private System.Windows.Forms.TextBox logTextBox;
         private System.Windows.Forms.Button clearButton;
         private System.Windows.Forms.ToolStripMenuItem renameNameToolStripMenuItem;

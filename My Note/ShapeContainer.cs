@@ -12,51 +12,34 @@ using System.Runtime.Serialization.Formatters.Binary;
  *      ShapeContainer
  *      
  *  DESCRIPTION:
- *      The purpose of this class is to store instances of the Shape class. Shapes in the container are related
- *      based on a shape number. An object of this class is intended to be used in a (someObject_Paint) event method
- *      by using a for-loop and connecting shapes based on their shape number. This class contains methods that
- *      accomodate the creation of shapes using points and removal of points upon erase execution by the user. Initial
- *      code for this class was taken from an existing project on the web with pencil and eraser functionality and
- *      extended to work with other shapes like lines, ellipses, and rectangles. The only changes to this class were
- *      made to member variables and arguments in methods by udpating the naming conventions to match this application.
- *      Public member variables were converted to private and were assigned properties.
+ *      The purpose of this class is to store instances of the Shape class. 'Shapes' in the container are related based on a 
+ *      shape number. An object of this class is intended to be used in a (someObject_Paint) event method by using a for-loop
+ *      and connecting shapes based on their shape number. This class contains methods that accomodate the creation of shapes
+ *      using points and removal of points upon erase execution by the user. Initial code for this class was taken from an
+ *      existing project on the web with pencil and eraser functionality and extended to work with other shapes like lines,
+ *      ellipses, and rectangles. The only changes to this class were made to member variables and arguments in methods by
+ *      udpating the naming conventions to match this application. Public member variables were converted to private and were
+ *      assigned properties. This class now implements 'ISerializable' interface, which allows this object to control its own
+ *      serialization and deserialization. This class is marked with the 'SerializableAttribute' and is 'sealed' to prevent
+ *      inheritance. 
  *      A link to the author and site is provided below:
  *      Geoff Samuel, May 23, 2011
  *      http://www.codeproject.com/Articles/198419/Painting-on-a-panel
  * 
  *  CODE STRUCTURE:
- *      This class has a basic layout with member variables and methods.
- */
-
-/*  TODO: Update code because I added data persistence?
- * 
+ *      This class maintains much of original code structure with the addition of data persistence methods at the end.
  */
 
 namespace My_Note
 {
     [Serializable()]
-    public class ShapeContainer : ISerializable
+    sealed public class ShapeContainer : ISerializable
     {
         private List<Shape> m_shapes;           // stores all the shapes
 
         public ShapeContainer()
         {
             m_shapes = new List<Shape>();
-        }
-
-        /*
-         *  9:12am 5/20/2015 Used to assist data persistence
-         */
-        public List<Shape> Shapes
-        {
-            get
-            {
-                return m_shapes;
-            }
-            set
-            {
-                m_shapes = value;
-            }
         }
 
         // Returns the number of shapes being stored
@@ -101,17 +84,55 @@ namespace My_Note
         }
 
         /*
-         *  9:33am 5/20/2015 Gets used by the deserializer
+         * NAME
+         *  ShapeContainer() - gets called to deserialize this object
+         *  
+         * SYNOPSIS
+         *  public ShapeContainer(SerializationInfo a_info, StreamingContext a_context);
+         *      a_info      -> provides data it has stored
+         *      a_context   -> does nothing (required)
+         *      
+         * DESCRIPTION
+         *  This constructor gets called when instances of this object are to be deserialized.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  9:33am 5/20/2015
          */
         public ShapeContainer(SerializationInfo a_info, StreamingContext a_context)
         {
             m_shapes = (List<Shape>)a_info.GetValue("Shapes", typeof(List<Shape>));
-        }
+        } /* public ShapeContainer(SerializationInfo a_info, StreamingContext a_context) */
 
-        // Save/restore 9:18am 5/20/2015
+        /*
+         * NAME
+         *  GetObjectData() - used to serialize this object
+         *  
+         * SYNOPSIS
+         *  public void GetObjectData(SerializationInfo a_info, StreamingContext a_context);
+         *      a_info      -> stores data needed to serialize an object
+         *      a_context   -> does nothing (required)
+         *      
+         * DESCRIPTION
+         *  This method is used to serialize this object by storing member variables into SerializationInfo object.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  9:18am 5/20/2015
+         */
         public void GetObjectData(SerializationInfo a_info, StreamingContext a_context)
         {
             a_info.AddValue("Shapes", m_shapes);
-        }
+        } /* public void GetObjectData(SerializationInfo a_info, StreamingContext a_context) */
     }
 }

@@ -9,61 +9,48 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 
-/*  // 5/25/2015 (latest) finished mainForm_Shown comments
+/* 
  *  TITLE:
  *      MainForm : Form
  *      
  *  DESCRIPTION:
- *      This class is the main form, it is the starting point of the application, and it is always
- *      visible. It provides common controls such as 'File' and 'Help' menu options, text and draw
- *      controls, and a 'combined' panel for text editing and drawing.
+ *    MainForm class:
+ *      This class represents the main form for the application. It is the starting point and is always visible. It provides
+ *      common controls such as 'File' and 'Help' menu options, text editing and drawing controls, and a 'combined' panel
+ *      for text editing and drawing shapes. This MainForm class is divided into four (.cs) files, which are simply extensions
+ *      of this class; i.e. each is a 'public partial class MainForm : Form'. This was done to keep the code organized and
+ *      readable. The user is interacting with some part of this class at all times.
+ *    mainForm.cs: (YOU ARE HERE)
+ *      This file implements tasks that are responsible for starting and running the application. It performs general tasks
+ *      like handling the user inteface elements of the form and communication with data persistence objects. It is also
+ *      responsible for coordinating tasks between other 'partial class' files.
+ *    formMenuStrip.cs:
+ *      This file handles events that are triggered by elements of the menu strip in the form and their appearances based on
+ *      current data. Example: File, Edit, ..., Help.
+ *    formToolbar.cs:
+ *      This file is responsible for appearance of controls in the toolbar and their events. These controls trigger such tasks
+ *      as text editing, drawing shapes, and erasing.
+ *    formTextBox.cs:
+ *      This file is responsible for appearances and events of the richTextBox and its layers. Such additional layers are
+ *      transparent and background panels. Events handled in this files are tasks such as applying text editing and drawing
+ *      shapes onto the panels, and erasing them based on currently selected controls and options.
  *      
  *  CODE STRUCTURE:
- *      This class is divided into several files, which are all responsible for performing a specific
- *      task. The files are simply extensions of this class, i.e. '... partial class...'. Below is a
- *      description of each 'partial class' and its purpose. Each one contains member variables specific
- *      to their task. Variables that need to be initialized in the constructor are done so in the main
- *      constructor in mainForm.cs
- * 
- *      mainForm.cs - (YOU ARE HERE) This file is the starting point of the MainForm class. It
- *                    contains the constructor and is responsible for coordinating interactions
- *                    between other parts of the class and the application.
- *               
- *      formMenuStrip.cs - This file handles events that are triggered by elements
- *                         of the menu strip in the form. (Ex: File, Edit, ... Help)
- *                    
- *      formToolbar.cs - This file is responsible for controls in the toolbar and
- *                       their events in the main form. (Ex: Font, Text, Color, Line...)
- *                  
- *      formTextbox.cs - This file is responsible for appearance and events of the richTextBox and its
- *                       layers. Variables were created and initialized immediately in the declaration
- *                       section for reusability, to avoid repetition of creation in order to increase
- *                       drawing performance. Some variables are initialized in the main constructor.
- *                       Other components have been separated into regions each with appropriate comments.
- */
-
-
-/*  
- *  TODO: Add comments to code structure about some of the member variables created in order to avoid
- *        recreating them to improve performance.
- *        Need to add a method to load pages or start new page
- *        Maybe I need to redo the entire CODE STRUCURE SEGMENT
- *        Make sure everything gets initialized and assigned at the right times in this file
- *  
- *  Modified: Added some code at the bottom, 
- *            Modified MaiForm(),
- *            Modified MainFormLoad()
- *            Added m_mainMyNoteStore
- *            Added m_mainStoreHandler
- *            Added subjects
- *            Added a lot, need to update the description of this .cs in the comments
+ *    MainForm class:
+ *      This class is divided into four (.cs) files based on functionality. Each is responsible for performing specific tasks
+ *      based on the user interface elements and controls. Each (.cs) file declares and initializes member variables that are
+ *      needed in that file. Some member variables can only be initialized in the constructor, which is in the mainForm.cs file.
+ *    mainForm.cs: (YOU ARE HERE)
+ *      This file is organized by separating code into 'regions' based on specific functionalities. It contains member variables
+ *      used in this file. It initializes member variables used in other files, which are parts of this 'partial class', because
+ *      the main constructor is in this file. Regions contain code that is specific to elements of this file and this application. 
  */
 
 namespace My_Note
 {
     public partial class MainForm : Form
     {
-        // Member variables for this class
+        // Region contains member variables for this class
         #region Member Variables
 
         // The types of text and drawing controls available to the user
@@ -78,8 +65,8 @@ namespace My_Note
         private MyNoteStore m_mainMyNoteStore;                              // Holds data before it is written to disk
         private StoreHandler m_mainStoreHandler = new StoreHandler();       // Writes data to disk
 
-        // Member variables for each 'Subject' are created to help
-        // optimize performance during drawing, saving, and loading
+        // Member variables for each 'Subject' are created here in order to reduce dynamic creation
+        // of drawing objects in order to optimize performance during drawing, saving, and loading
         private Subject m_subjectOne;
         private Subject m_subjectTwo;
         private Subject m_subjectThree;
@@ -99,6 +86,8 @@ namespace My_Note
         private Font m_subjectPanelFont = new Font("Microsoft Sans Serif", 12);         // Font for 'Subject' title
         private SolidBrush m_fullSubjectPanelBrush = new SolidBrush(Color.Black);       // Brush for used 'Subject' title
         private SolidBrush m_emptySubjectPanelBrush = new SolidBrush(Color.DarkGray);   // Brush for empty 'Subject' title
+        private StringFormat m_drawFormat = new StringFormat();             // Format for drawing a title string vertically
+
         private Label m_pageNumberLabel = new Label();                      // Indicates current page number in 'Subject'
         private int m_currentPageNumber = 1;                                // Used for save/load data and UI objects
         private Subject m_currentSubject;                                   // Reference to current subject on screen
@@ -107,7 +96,7 @@ namespace My_Note
 
         #endregion
 
-        // Methods for MainForm load, save, and general functionality
+        // Region contains methods for MainForm load, save, and other general functionality
         #region MainForm Methods
 
         /*
@@ -115,12 +104,12 @@ namespace My_Note
          *  MainForm() - initializes this class and its elements
          *  
          * SYNOPSIS
-         *  public void MainForm();
+         *  public MainForm();
          * 
          * DESCRIPTION
-         *  This constructor is responsible for initializig and assigning values to its self, member variables, and
-         *  UI elements of this class. Some variables initialized here are declared in different files, which are
-         *  part of this class.
+         *  This constructor is responsible for initializig and assigning values to member variables and
+         *  UI elements of this class. Some variables initialized here are declared in different files, which
+         *  are also parts of this class.
          *  
          * RETURNS
          *  Nothing
@@ -155,6 +144,7 @@ namespace My_Note
             m_subjectThreePanelGraphics = subjectThreePanel.CreateGraphics();
             m_subjectFourPanelGraphics = subjectFourPanel.CreateGraphics();
             m_subjectFivePanelGraphics = subjectFivePanel.CreateGraphics();
+            m_drawFormat.FormatFlags = StringFormatFlags.DirectionVertical;
             
             m_pageNumberLabel.Text = "1";
             m_pageNumberLabel.TextAlign = ContentAlignment.MiddleCenter;
@@ -219,7 +209,7 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  The functionality of this method will be applied the very first time the user runs this
+         *  The main functionality of this method will be applied the very first time the user runs this
          *  application. It asks the user to enter a title for the first 'Subject' in the notebook. A data
          *  file is then created and written to disk for the very first time. Reason for performing this
          *  task here is for appearances; i.e. to show to the user the background and an empty notebook with
@@ -247,21 +237,20 @@ namespace My_Note
                 if (newNoteBookDialog == DialogResult.OK)
                 {
                     m_currentSubject = m_mainMyNoteStore.SavedSubjects[0];
-                    DialogResult renameDialog = new DialogResult();
-                    RenameSubjectForm renameSubjectForm = new RenameSubjectForm();
-                    renameSubjectForm.SubjectTitle = m_currentSubject.SubjectTitle;
-                    renameSubjectForm.FormTitle = "Create Subject Title";
-                    renameSubjectForm.StartPosition = FormStartPosition.CenterParent;
-                    renameSubjectForm.FormBorderStyle = FormBorderStyle.Fixed3D;
-                    renameSubjectForm.MaximizeBox = false;
-                    renameSubjectForm.MinimizeBox = false;
-                    renameDialog = renameSubjectForm.ShowDialog();
-                    if (renameDialog == DialogResult.OK)
+                    DialogResult newNameDialog = new DialogResult();
+                    RenameSubjectForm newNameSubjectForm = new RenameSubjectForm();
+                    newNameSubjectForm.SubjectTitle = m_currentSubject.SubjectTitle;
+                    newNameSubjectForm.FormTitle = "New Subject Title";
+                    newNameSubjectForm.StartPosition = FormStartPosition.CenterParent;
+                    newNameSubjectForm.FormBorderStyle = FormBorderStyle.Fixed3D;
+                    newNameSubjectForm.MaximizeBox = false;
+                    newNameSubjectForm.MinimizeBox = false;
+                    newNameDialog = newNameSubjectForm.ShowDialog();
+                    if (newNameDialog == DialogResult.OK)
                     {
-                        m_currentSubject.SubjectTitle = renameSubjectForm.SubjectTitle;
+                        m_currentSubject.SubjectTitle = newNameSubjectForm.SubjectTitle;
                         assignSubjectsAndTitles();
                         m_mainStoreHandler.SaveMyNoteStore(m_savePath, m_mainMyNoteStore);
-                        updateToolStripMenuItems();
                         this.Invalidate();
                     }
                     else
@@ -274,17 +263,60 @@ namespace My_Note
                     this.Close();
                 }
             }
-        }
+            updateToolStripMenuItems();
+        } /* private void MainForm_Shown(object sender, EventArgs e) */
 
         /*
+         * NAME
+         *  MainForm_Paint() - repaints the elements on the form
+         *  
+         * SYNOPSIS
+         *  private void MainForm_Paint(object sender, PaintEventArgs e);
+         *      sender  -> does nothing
+         *      e       -> does nothing
+         * 
+         * DESCRIPTION
+         *  This method gets called automatically based on the events within the form to repaint the form. The
+         *  amount of tasks performed by this event handler are kept to a minimum due to the frequency of this
+         *  method call. It triggers other methods that update and repaint the 'tabs' for 'Subject' titles.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
          *  1:00pm 5/19/2015
          */
         private void MainForm_Paint(object sender, PaintEventArgs e)
         {
-            updateSubjectTabs(e);
-        }
+            updateSubjectTabs();
+        } /* private void MainForm_Paint(object sender, PaintEventArgs e) */
 
         /*
+         * NAME
+         *  MainForm_FormClosing() - asks the user if they want to save changes
+         *  
+         * SYNOPSIS
+         *  private void MainForm_FormClosing(object sender, FormClosingEventArgs e);
+         *      sender  -> does nothing
+         *      e       -> does nothing
+         * 
+         * DESCRIPTION
+         *  This method gets called automatically when the user is exiting the application, regardless of the method they
+         *  used to exit; i.e. by clicking the 'x', using Alt+F4, etc... It presents to the user a dialog asking them if
+         *  they would like to save changes to their work. The user has three options to choose from: Yes, No, or Cancel.
+         *  Selecting 'Yes' saves changes and exits the program. Selecting 'No' exits the application without saving any
+         *  changes. Selecting 'Cancel' aborts the operation; that is, does not save or exit the application.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
          *  3:04pm 5/25/2015
          */
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -299,27 +331,65 @@ namespace My_Note
             {
                 e.Cancel = true;
             }
-        }
+        } /* private void MainForm_FormClosing(object sender, FormClosingEventArgs e) */
 
 
         /*
+         *  3:09pm 5/25/2015
+         */
+        /*
+         * NAME
+         *  saveAllContent() - saves all content to data persistence object and saves it to disk
+         *  
+         * SYNOPSIS
+         *  private void saveAllContent();
+         * 
+         * DESCRIPTION
+         *  The purpose of this method is to save all changes in the application and write them to a
+         *  binary file on disk. First, current page and subject are saved by calling the appropriate
+         *  method. Then, the main data persistence handler object is called to perform a write to disk.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
          *  3:09pm 5/25/2015
          */
         private void saveAllContent()
         {
             saveCurrentPageDisplayed();
             m_mainStoreHandler.SaveMyNoteStore(m_savePath, m_mainMyNoteStore);
-        }
+        } /* private void saveAllContent() */
 
         #endregion
 
-        // Methods that handle Subjects in the notebook
-        #region Subject Methods
+        // Region contains methods that handle functionality for Subjects in the notebook
+        #region Subjects Methods
 
-        /*  This can be called refresh subjects and titles, if assigning subjects is not necessary
-         *  then assign subjecttTitles more directly and eliminate subject assignment
-         *  7:57am 5/21/15
-         *  Called from MainForm_Load(), MainForm_Shown(), renameSubjectToolStripMenuItem_Click()
+        /*
+         * NAME
+         *  assignSubjectsAndTitles() - assigns 'Subject(s)' and their titles
+         *  
+         * SYNOPSIS
+         *  private void assignSubjectsAndTitles();
+         * 
+         * DESCRIPTION
+         *  This method assigns values to member variables that represent current 'Subject(s)'. These
+         *  new values are then used when processing data, like saving and loading, and to update the
+         *  values for 'Subject' title tabs so that they can be repainted with the right titles. This
+         *  method gets called during the application startup and as subjects are added or deleted.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  7:57am 5/21/2015
          */
         private void assignSubjectsAndTitles()
         {
@@ -333,13 +403,30 @@ namespace My_Note
             m_subjectFourTitle = m_subjectFour.SubjectTitle;
             m_subjectFive = m_mainMyNoteStore.SavedSubjects[4];
             m_subjectFiveTitle = m_subjectFive.SubjectTitle;
-        }
+        } /* private void assignSubjectsAndTitles() */
 
-        /*  this needs to stay minimum because it gets called by _Paint event method
+        /*
+         * NAME
+         *  updateSubjectTabs() - updates subject titles on the subject 'tab' panels
+         *  
+         * SYNOPSIS
+         *  private void updateSubjectTabs();
+         * 
+         * DESCRIPTION
+         *  This method repaints the subject titles on the panels that are used like subject 'tabs'
+         *  in a real notebook. It gets called from MainForm_Paint() and is kept as simple as it can
+         *  possibly be in order to minimize resource usage.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
          *  1:06pm 5/19/2015
-         *  Called from MainForm_Paint()
          */
-        private void updateSubjectTabs(PaintEventArgs e)
+        private void updateSubjectTabs()
         {
             subjectOnePanel.Refresh();
             subjectTwoPanel.Refresh();
@@ -352,128 +439,252 @@ namespace My_Note
             drawSubjectTitle(m_subjectThreeTitle, m_subjectThreePanelGraphics);
             drawSubjectTitle(m_subjectFourTitle, m_subjectFourPanelGraphics);
             drawSubjectTitle(m_subjectFiveTitle, m_subjectFivePanelGraphics);
-        }
+        } /* private void updateSubjectTabs() */
 
-        /*  
-         * 1:13pm 5/19/2015
-         * Called from updateSubjectTabs() x 5
+        /*
+         * NAME
+         *  drawSubjectTitle() - draws a 'Subject' title as a vertical string
+         *  
+         * SYNOPSIS
+         *  private void drawSubjectTitle(string a_subjectTitleString, Graphics a_subjectPanelGraphics);
+         *      a_subjectTitleString        -> the string to be used for the drawing
+         *      a_subjectPanelGraphics      -> panel representing the 'Subject' tab on which to draw string
+         * 
+         * DESCRIPTION
+         *  This method is used to draw 'Subject' titles vertically on the panels that are used like subject tabs in a
+         *  regular notebook. It specifically draws the string using two different colors based on the availability of the
+         *  'Subject'. If the subject has a regular title, then string is drawn using a darker brush. If the 'Subject'
+         *  is empty and has not been assigned a non-default title, then the string is drawn using a lighter brush to
+         *  help visually indicate so. Many of the variables used for the DrawString() method have already been declared
+         *  and initialized in this class to prevent creating and assigning them dynamically in order to increase
+         *  drawing performance. The original code used in this method was taken from Microsoft's .NET website and
+         *  modified to fit the needs of this application. Credits have been documented.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi using code from Microsoft's website:
+         *  https://msdn.microsoft.com/en-us/library/k7282y7x(v=vs.110).aspx
+         *  
+         *  
+         * DATE
+         *  1:13pm 5/19/2015
          */
         private void drawSubjectTitle(string a_subjectTitleString, Graphics a_subjectPanelGraphics)
         {
-            StringFormat drawFormat = new StringFormat();
-            drawFormat.FormatFlags = StringFormatFlags.DirectionVertical;
-            //if (a_subjectTitleString == "New Subject")
             if (a_subjectTitleString == m_newSubjectTitle)
             {
-                a_subjectPanelGraphics.DrawString(a_subjectTitleString, m_subjectPanelFont, m_emptySubjectPanelBrush, 2, 2, drawFormat);
+                a_subjectPanelGraphics.DrawString(a_subjectTitleString, m_subjectPanelFont, m_emptySubjectPanelBrush, 2, 2, m_drawFormat);
             }
             else
             {
-                a_subjectPanelGraphics.DrawString(a_subjectTitleString, m_subjectPanelFont, m_fullSubjectPanelBrush, 2, 2, drawFormat);
+                a_subjectPanelGraphics.DrawString(a_subjectTitleString, m_subjectPanelFont, m_fullSubjectPanelBrush, 2, 2, m_drawFormat);
             }
-            //a_subjectPanelGraphics.DrawString(a_subjectTitleString, m_subjectPanelFont, m_fullSubjectPanelBrush, 2, 2, drawFormat);
-        }
-
-
-        /*  This may be able to be ELIMINATED because saveCurrentPageDisplayed() may perform equivalent
-         *  functionality? This means moving the update of current subject's page to the method suggested.
-         *  
-         *  DESCRIPTION: Calls
-         *  12:12pm 5/21/2015
-         *  Called from:
-         *  addNewSubjectToolStripMenuItem_Click(),
-         *  subjectOnePanel_MouseDown(),
-         *  subjectTwoPanel_MouseDown(),
-         *  ...
-         */
-        //private void saveCurrentSubjectDisplayed()
-        //{
-        //    saveCurrentPageDisplayed();
-        //    m_currentSubject.CurrentPageNumber = m_currentPageNumber;
-        //}
+        } /* private void drawSubjectTitle(string a_subjectTitleString, Graphics a_subjectPanelGraphics) */
 
         /*
+         * NAME
+         *  subjectOnePanel_MouseDown() - presents first subject UI and its data
+         *  
+         * SYNOPSIS
+         *  private void subjectOnePanel_MouseDown(object sender, MouseEventArgs e);
+         *      sender  -> does nothing
+         *      e       -> does nothing
+         * 
+         * DESCRIPTION
+         *  This event handler is triggered upon clickig the panel representing the first 'Subject' in the
+         *  notebook. It checks to see if this subject is currently empty or if it is already presented before
+         *  it performs its tasks. Its tasks include saving the current page, updating the user interface to the
+         *  first 'Subject', and updating the colors for 'Subject' tabs and their titles. It presents the page
+         *  that was last used in this 'Subject' in order to deliver a more appealing functionality to the user.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
          *  4:10pm 5/19/2015
          */
         private void subjectOnePanel_MouseDown(object sender, MouseEventArgs e)
         {
             if (m_subjectOneTitle == m_newSubjectTitle) return;
             if (m_subjectOneTitle == m_currentSubject.SubjectTitle) return;
-            //saveCurrentSubjectDisplayed();
             saveCurrentPageDisplayed();
             updateCurrentPageDisplayForSubject(m_subjectOne, m_subjectOne.CurrentPageNumber);
             setDefaultBackColorForTabs();
             subjectOnePanel.BackColor = SystemColors.ControlDark;
             this.Invalidate();
-        }
+        } /* private void subjectOnePanel_MouseDown(object sender, MouseEventArgs e) */
 
         /*
+         *  4:12pm 5/19/2015
+         */
+        /*
+         * NAME
+         *  subjectTwoPanel_MouseDown() - presents second subject UI and its data
+         *  
+         * SYNOPSIS
+         *  private void subjectTwoPanel_MouseDown(object sender, MouseEventArgs e);
+         *      sender  -> does nothing
+         *      e       -> does nothing
+         * 
+         * DESCRIPTION
+         *  This event handler is triggered upon clickig the panel representing the second 'Subject' in the
+         *  notebook. It checks to see if this subject is currently empty or if it is already presented before
+         *  it performs its tasks. Its tasks include saving the current page, updating the user interface to the
+         *  second 'Subject', and updating the colors for 'Subject' tabs and their titles. It presents the page
+         *  that was last used in this 'Subject' in order to deliver a more appealing functionality to the user.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
          *  4:12pm 5/19/2015
          */
         private void subjectTwoPanel_MouseDown(object sender, MouseEventArgs e)
         {
             if (m_subjectTwoTitle == m_newSubjectTitle) return;
             if (m_subjectTwoTitle == m_currentSubject.SubjectTitle) return;
-            //saveCurrentSubjectDisplayed();
             saveCurrentPageDisplayed();
             updateCurrentPageDisplayForSubject(m_subjectTwo, m_subjectTwo.CurrentPageNumber);
             setDefaultBackColorForTabs();
             subjectTwoPanel.BackColor = SystemColors.ControlDark;
             this.Invalidate();
-        }
+        } /* private void subjectTwoPanel_MouseDown(object sender, MouseEventArgs e) */
 
         /*
+         * NAME
+         *  subjectThreePanel_MouseDown() - presents third subject UI and its data
+         *  
+         * SYNOPSIS
+         *  private void subjectThreePanel_MouseDown(object sender, MouseEventArgs e);
+         *      sender  -> does nothing
+         *      e       -> does nothing
+         * 
+         * DESCRIPTION
+         *  This event handler is triggered upon clickig the panel representing the third 'Subject' in the
+         *  notebook. It checks to see if this subject is currently empty or if it is already presented before
+         *  it performs its tasks. Its tasks include saving the current page, updating the user interface to the
+         *  third 'Subject', and updating the colors for 'Subject' tabs and their titles. It presents the page
+         *  that was last used in this 'Subject' in order to deliver a more appealing functionality to the user.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
          *  4:14pm 5/19/2015
          */
         private void subjectThreePanel_MouseDown(object sender, MouseEventArgs e)
         {
             if (m_subjectThreeTitle == m_newSubjectTitle) return;
             if (m_subjectThreeTitle == m_currentSubject.SubjectTitle) return;
-            //saveCurrentSubjectDisplayed();
             saveCurrentPageDisplayed();
             updateCurrentPageDisplayForSubject(m_subjectThree, m_subjectThree.CurrentPageNumber);
             setDefaultBackColorForTabs();
             subjectThreePanel.BackColor = SystemColors.ControlDark;
             this.Invalidate();
-        }
+        } /* private void subjectThreePanel_MouseDown(object sender, MouseEventArgs e) */
 
         /*
+         * NAME
+         *  subjectFourPanel_MouseDown() - presents fourth subject UI and its data
+         *  
+         * SYNOPSIS
+         *  private void subjectFourPanel_MouseDown(object sender, MouseEventArgs e);
+         *      sender  -> does nothing
+         *      e       -> does nothing
+         * 
+         * DESCRIPTION
+         *  This event handler is triggered upon clickig the panel representing the fourth 'Subject' in the
+         *  notebook. It checks to see if this subject is currently empty or if it is already presented before
+         *  it performs its tasks. Its tasks include saving the current page, updating the user interface to the
+         *  fourth 'Subject', and updating the colors for 'Subject' tabs and their titles. It presents the page
+         *  that was last used in this 'Subject' in order to deliver a more appealing functionality to the user.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
          *  4:15pm 5/19/2015
          */
         private void subjectFourPanel_MouseDown(object sender, MouseEventArgs e)
         {
             if (m_subjectFourTitle == m_newSubjectTitle) return;
             if (m_subjectFourTitle == m_currentSubject.SubjectTitle) return;
-            //saveCurrentSubjectDisplayed();
             saveCurrentPageDisplayed();
             updateCurrentPageDisplayForSubject(m_subjectFour, m_subjectFour.CurrentPageNumber);
             setDefaultBackColorForTabs();
             subjectFourPanel.BackColor = SystemColors.ControlDark;
             this.Invalidate();
-        }
+        } /* private void subjectFourPanel_MouseDown(object sender, MouseEventArgs e) */
 
         /*
+         * NAME
+         *  subjectFivePanel_MouseDown() - presents fifth subject UI and its data
+         *  
+         * SYNOPSIS
+         *  private void subjectFivePanel_MouseDown(object sender, MouseEventArgs e);
+         *      sender  -> does nothing
+         *      e       -> does nothing
+         * 
+         * DESCRIPTION
+         *  This event handler is triggered upon clickig the panel representing the fifth 'Subject' in the
+         *  notebook. It checks to see if this subject is currently empty or if it is already presented before
+         *  it performs its tasks. Its tasks include saving the current page, updating the user interface to the
+         *  fifth 'Subject', and updating the colors for 'Subject' tabs and their titles. It presents the page
+         *  that was last used in this 'Subject' in order to deliver a more appealing functionality to the user.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
          *  4:17pm 5/19/2015
          */
         private void subjectFivePanel_MouseDown(object sender, MouseEventArgs e)
         {
             if (m_subjectFiveTitle == m_newSubjectTitle) return;
             if (m_subjectFiveTitle == m_currentSubject.SubjectTitle) return;
-            //saveCurrentSubjectDisplayed();
             saveCurrentPageDisplayed();
             updateCurrentPageDisplayForSubject(m_subjectFive, m_subjectFive.CurrentPageNumber);
             setDefaultBackColorForTabs();
             subjectFivePanel.BackColor = SystemColors.ControlDark;
             this.Invalidate();
-        }
+        } /* private void subjectFivePanel_MouseDown(object sender, MouseEventArgs e) */
 
         /*
+         * NAME
+         *  setDefaultBackColorForTabs() - sets default colors for 'Subject' tabs
+         *  
+         * SYNOPSIS
+         *  private void setDefaultBackColorForTabs();
+         * 
+         * DESCRIPTION
+         *  This method is called to update the default back color for panels that represent 'Subject' tabs in
+         *  the notebook. It gets called upon startup and during the application usage.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
          *  4:20pm 5/19/2015
-         *  Called from: MainFormLoad(),
-         *  addNewSubjectToolStripMenuItem_Click(),
-         *  subjectOnePanel_MouseDown(),
-         *  subjectTwoPanel_MouseDown(),
-         *  ...
          */
         private void setDefaultBackColorForTabs()
         {
@@ -482,34 +693,197 @@ namespace My_Note
             subjectThreePanel.BackColor = SystemColors.ControlLight;
             subjectFourPanel.BackColor = SystemColors.ControlLight;
             subjectFivePanel.BackColor = SystemColors.ControlLight;
-        }
+        } /* private void setDefaultBackColorForTabs() */
 
         #endregion
 
-        // Methods that handle Pages in each subject
+        // Region contains methods that handle Pages in each Subject
         #region Pages Methods
 
-        /*  DESCRIPTION: This method loads a page to be displayed. When switching between existing subjects
-         *  full of pages, it loads the last page viewed by the user in the subject to enhance user experience.
-         *  If user clicks 'next page' and page does not exist, then one is created and added to the subject.
-         *  The working 'engine' for this functionality is 'getPageForPageNumber()' method.
-         *  8:40am 5/21/15
-         *  Called from:
-         *  addNewSubjectToolStripMenuItem_Click(),
-         *  prevPageButon_Click(),
-         *  nextPageButton_Click(),
-         *  subjectOnePanel_MouseDown(),
-         *  subjectTwoPanel_MouseDown(),
-         *  ...
-         *  TODO - Consider adding setDefaultBackColorForTabs() and backColor = SystemColors.ControlDark in this
-         *  method for professional looking code
+        /*
+         * NAME
+         *  prevPageButton_Click() - updates UI and data elements for page before current
+         * 
+         * SYNOPSIS
+         *  private void prevPageButton_Click(object sender, EventArgs e);
+         *      sender  -> does nothing
+         *      e       -> does nothing
+         *      
+         * DESCRIPTION
+         *  This event handler method handles tasks associated with when the user clicks the button to go to the previous
+         *  page, if they are currently not on the first page. It first saves the current page by calling the appropriate
+         *  method. Then, it updates the user interface elements based on current values.
+         * 
+         * RETURNS
+         *  Nothing
+         * 
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  5:19pm 5/20/2015
+         */
+        private void prevPageButton_Click(object sender, EventArgs e)
+        {
+            if (m_currentPageNumber == 1) return;
+            saveCurrentPageDisplayed();
+            m_currentPageNumber--;
+            m_pageNumberLabel.Text = Convert.ToString(m_currentPageNumber);
+            updateCurrentPageDisplayForSubject(m_currentSubject, m_currentPageNumber);
+        } /* private void prevPageButton_Click(object sender, EventArgs e) */
+
+        /*
+         * NAME
+         *  nextPageButton_Click() - updates UI and data elements for next page
+         * 
+         * SYNOPSIS
+         *  private void nextPageButton_Click(object sender, EventArgs e);
+         *      sender  -> does nothing
+         *      e       -> does nothing
+         *      
+         * DESCRIPTION
+         *  This event handler method handles tasks associated when the user clicks the button to go to the next page.
+         *  It first checks to see if the user is currently on the last page; if so, then the user is notified of the
+         *  situation using a message box. Then, it checks to see if the user is currently on the last page and it is blank.
+         *  If so, then the user is notified with another message of the situation. Checking to see if the current blank page
+         *  is also the last page is done so because the user can create 'empty' pages in the middle of the 'Subject' by 
+         *  deleting their content. This means empty pages are allowed as long as they are between populated pages and no more
+         *  than one empty page is allowed to be used and saved at the end of each 'Subject'. Finally, this method saves the
+         *  current page and updates the user interface elements with appropriate values before the page is 'turned'.
+         * 
+         * RETURNS
+         *  Nothing
+         * 
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  5:23pm 5/20/2015
+         */
+        private void nextPageButton_Click(object sender, EventArgs e)
+        {
+            if (m_currentPageNumber == 50)
+            {
+                string endOfSubjectString = "Subject cannot exceed 50 pages. " +
+                "Please start a new subject if you wish to continue.";
+                MessageBox.Show(endOfSubjectString, "Maximum Page Error", MessageBoxButtons.OK);
+                selectTextControl();
+                return;
+            }
+            if ((currentPageIsEmpty() && m_currentPageNumber == m_currentSubject.TotalNumberOfPages) ||
+                (currentPageIsEmpty() && m_currentSubject.TotalNumberOfPages == 0))
+            {
+                string blankPageString = "Current page is blank, please enter some content before you continue.";
+                MessageBox.Show(blankPageString, "Blank Page Error", MessageBoxButtons.OK);
+                selectTextControl();
+                return;
+            }
+            saveCurrentPageDisplayed();
+            m_currentPageNumber++;
+            m_pageNumberLabel.Text = Convert.ToString(m_currentPageNumber);
+            updateCurrentPageDisplayForSubject(m_currentSubject, m_currentPageNumber);
+        } /* private void nextPageButton_Click(object sender, EventArgs e) */
+
+        /*
+         * NAME
+         *  currentPageIsEmpty() - checks to see if current page displayed is empty
+         * 
+         * SYNOPSIS
+         *  private bool currentPageIsEmpty();
+         *      
+         * DESCRIPTION
+         *  This method checks to see if the currently displayed page in the user interface is empty. It starts its testing
+         *  one element at a time and returns false the moment any one of them has content that is used by current page.
+         * 
+         * RETURNS
+         *  True if currently displayed page has no content, otherwise it returns false.
+         * 
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  5:23pm 5/20/2015
+         */
+        private bool currentPageIsEmpty()
+        {
+            if (richTextBox.TextLength != 0) return false;
+            if (m_shapesStorage.NumberOfShapes() != 0) return false;
+            if (m_verticalTextList.Count != 0) return false;
+            return true;
+        } /* private bool currentPageIsEmpty() */
+
+        /*
+         * NAME
+         *  saveCurrentPageDisplayed() - saves the content displayed on the current page
+         * 
+         * SYNOPSIS
+         *  private void saveCurrentPageDisplayed();
+         *      
+         * DESCRIPTION
+         *  This method is called to save the elements displayed on the current page to its 'Subject'. First, it gets the
+         *  'Page' object corresponding to the current page number from the 'Subject' container instead of creating a new
+         *  page. This is done to minimize the use of resources by not creating and disposing of objects dynamically. Second,
+         *  it updates the values for variables in the page to be saved. VerticalText objects need special care, due to the
+         *  complex nature of their class, that is why they are copied into the container individually. Third, the updated
+         *  'Page' is reinserted in its 'Subject' container with its new values; including the current page, which is saved
+         *  as the last page viewed in this 'Subject' in order to present a more appealing functionality to the user when
+         *  they return to the 'Subject' during an application session.
+         * 
+         * RETURNS
+         *  Nothing
+         * 
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  10:04am 5/21/2015
+         */
+        private void saveCurrentPageDisplayed()
+        {
+            Page pageToSave = m_currentSubject.getPageForPageNumber(m_currentPageNumber);
+            pageToSave.PageText = richTextBox.Text;
+            pageToSave.ShapeContainer = m_shapesStorage;
+            pageToSave.VerticalTextList.Clear();
+            foreach (VerticalText v in m_verticalTextList)
+            {
+                pageToSave.VerticalTextList.Add(v);
+            }
+            m_currentSubject.savePageWithPageNumber(pageToSave, m_currentPageNumber);
+            m_currentSubject.CurrentPageNumber = m_currentPageNumber;
+        } /* private void saveCurrentPageDisplayed() */
+
+        /*
+         * NAME
+         *  updateCurrentPageDisplayForSubject() - updates the UI page based on subject and page number
+         * 
+         * SYNOPSIS
+         *  private void updateCurrentPageDisplayForSubject(Subject a_subject, int a_pageNumber);
+         *      a_subject           -> 'Subject' in which the page to be used is contained
+         *      int a_pageNumber    -> indicates page number for the 'Page' in the 'Subject' to be used
+         *      
+         * DESCRIPTION
+         *  This method is used to update the content for the page currently displayed to the user. First, it gets the
+         *  'Page' object corresponding to the current page number from the 'Subject' container. If page does not exist,
+         *  such as the case when the user is at the end of 'Subject', then a blank page is returned from the 'Subject'
+         *  container. Second, content corresponding to the page to be displayed is populated in the user interface elements.
+         *  VerticalText objects require special handling, due to the complex nature of their class, that is why each one
+         *  is copied individually. Each one of them also has several buttons that must also be populated in the UI element.
+         *  Finally, page number label is updated and content is redrawn on screen.
+         * 
+         * RETURNS
+         *  Nothing
+         * 
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  8:40am 5/21/2015
          */
         private void updateCurrentPageDisplayForSubject(Subject a_subject, int a_pageNumber)
         {
             Page pageToDisplay = a_subject.getPageForPageNumber(a_pageNumber);
             richTextBox.Text = pageToDisplay.PageText;
             m_shapesStorage = pageToDisplay.ShapeContainer;
-            //m_verticalTextList = pageToDisplay.VerticalTextList;
             m_verticalTextList.Clear();
             foreach (VerticalText vOne in pageToDisplay.VerticalTextList)
             {
@@ -535,95 +909,7 @@ namespace My_Note
             richTextBox.Invalidate();
             backPanel.Invalidate();
             selectTextControl();
-        }
-
-        /*  DESCRIPTION: Saves UI elements on current page to current Page object. It gets the existing Page
-         *  object instead of creating a new one every time a new or an existing page needs to be saved. This
-         *  is done in order to minimize the use of resources.
-         *  10:04am 5/21/2015
-         *  Called from:
-         *  prevPageButton_Click(),
-         *  nextPageButton_Click()
-         *  saveCurrentSubjectDisplayed(),
-         *  saveTooStripMenuItem_Click()
-         */
-        private void saveCurrentPageDisplayed()
-        {
-            Page pageToSave = m_currentSubject.getPageForPageNumber(m_currentPageNumber);
-            pageToSave.PageText = richTextBox.Text;
-            pageToSave.ShapeContainer = m_shapesStorage;
-            //pageToSave.VerticalTextList = m_verticalTextList;
-            // Populate with new or 'refresh' existing data
-            pageToSave.VerticalTextList.Clear();
-            foreach(VerticalText v in m_verticalTextList)
-            {
-                pageToSave.VerticalTextList.Add(v);
-            }
-            m_currentSubject.savePageWithPageNumber(pageToSave, m_currentPageNumber);
-            m_currentSubject.CurrentPageNumber = m_currentPageNumber;
-        }
-
-        /*
-         * 5:19pm 5/19/2015
-         */
-        private void prevPageButton_Click(object sender, EventArgs e)
-        {
-            if (m_currentPageNumber == 1) return;
-
-            // Save current page
-            saveCurrentPageDisplayed();
-
-            // 'Turn' to next page
-            m_currentPageNumber--;
-            m_pageNumberLabel.Text = Convert.ToString(m_currentPageNumber);
-            updateCurrentPageDisplayForSubject(m_currentSubject, m_currentPageNumber);
-        }
-
-        /*  
-         *  5:23pm 5/20/2015
-         */
-        private void nextPageButton_Click(object sender, EventArgs e)
-        {
-            // Allowed to continue?
-            if (m_currentPageNumber == 50)
-            {
-                string endOfSubjectString = "Subject cannot exceed 50 pages. " +
-                "Please start a new subject if you wish to continue.";
-                MessageBox.Show(endOfSubjectString, "Maximum Page Error", MessageBoxButtons.OK);
-                selectTextControl();
-                return;
-            }
-            //if (currentPageIsEmpty())
-            // Prevent from adding blank pages at the end of the subject. One blank page is allowed. Also
-            // if somehow 
-            if (currentPageIsEmpty() && m_currentPageNumber == m_currentSubject.TotalNumberOfPages)
-            {
-                string blankPageString = "Current page is blank, please enter some content before you continue.";
-                MessageBox.Show(blankPageString, "Blank Page Error", MessageBoxButtons.OK);
-                selectTextControl();
-                return;
-            }
-
-            // Save current page
-            saveCurrentPageDisplayed();
-
-            // 'Turn' to next page
-            m_currentPageNumber++;
-            m_pageNumberLabel.Text = Convert.ToString(m_currentPageNumber);
-            updateCurrentPageDisplayForSubject(m_currentSubject, m_currentPageNumber);
-        }
-
-        /*
-         *  5:27pm 5/20/2015
-         *  Called from: nextPageButton_Click()
-         */
-        private bool currentPageIsEmpty()
-        {
-            if (richTextBox.TextLength != 0) return false;
-            if (m_shapesStorage.NumberOfShapes() != 0) return false;
-            if (m_verticalTextList.Count != 0) return false;
-            return true;
-        }
+        } /* private void updateCurrentPageDisplayForSubject(Subject a_subject, int a_pageNumber) */
 
         #endregion
 

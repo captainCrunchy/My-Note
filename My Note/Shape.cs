@@ -12,32 +12,29 @@ using System.Runtime.Serialization.Formatters.Binary;
  *      Shape
  *      
  *  DESCRIPTION:
- *      The purpose of this class is to provide the capacity to draw a shape by using individual points and
- *      connect them all based on a shape number. This class is intended to work with ShapeContainer class,
- *      therefore, each shape number can have many points as well as custom line width and line color. The 
- *      reason for creating so many points is to accomodate erase functionality where the eraser can remove
- *      individual points and not just sections, especially when this shape class is used to draw rectangles
- *      and ellipses. Initial code for this class was taken from an existing project on the web with pencil
- *      and eraser functionality and extended to work with other shapes like lines, ellipses, and rectangles.
- *      The only chages to this class were made to member variables and arguments in methods by updating the
- *      naming conventions to match this application. Public member variables were converted to private and
- *      were assigned propeties.
+ *      The purpose of this class is to provide the capacity to draw a shape by using individual points and connecting
+ *      them based on a shape number. This class is intended to work with ShapeContainer class, therefore, each shape
+ *      number can have many points as well as custom line width and line color. The reason for creating so many points
+ *      is to accomodate erase functionality where the eraser can remove individual points and not just full sections,
+ *      especially when this shape class is used to draw rectangles and ellipses. Initial code for this class was taken
+ *      from an existing project on the web with pencil and eraser functionality and extended to work with other shapes
+ *      like lines, ellipses, and rectangles. Chages to this class were made to member variables and arguments in methods
+ *      by updating the naming conventions to match this application. Public member variables were converted to private and
+ *      were assigned propeties. This class now implements 'ISerializable' interface, which allows this object to control
+ *      its own serialization and deserialization. This class is marked with the 'SerializableAttribute' and is 'sealed' to
+ *      prevent inheritance.
  *      A link to the author and site is provided below:
  *      Geoff Samuel, May 23, 2011
  *      http://www.codeproject.com/Articles/198419/Painting-on-a-panel
  *      
  *  CODE STRUCTURE:
- *      This class contains a custom constructor and member variables along with their properties.
- */
-
-/*  TODO: Update code because I added data persistence?
- * 
+ *      This class maintains much of original code structure with the addition of data persistence methods at the end.
  */
 
 namespace My_Note
 {
     [Serializable()]
-    public class Shape : ISerializable
+    sealed public class Shape : ISerializable
     {
         private Point m_pointLocation;          // position of the point
         private float m_lineWidth;              // width of the line
@@ -106,7 +103,24 @@ namespace My_Note
         }
 
         /*
-         *  Gets called by deserializer
+         * NAME
+         *  Shape() - gets called to deserialize this object
+         *  
+         * SYNOPSIS
+         *  public Shape(SerializationInfo a_info, StreamingContext a_context);
+         *      a_info      -> provides data it has stored
+         *      a_context   -> does nothing (required)
+         *      
+         * DESCRIPTION
+         *  This constructor gets called when instances of this object are to be deserialized.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
          *  9:37am 5/20/2015
          */
         public Shape(SerializationInfo a_info, StreamingContext a_context)
@@ -115,15 +129,35 @@ namespace My_Note
             m_lineWidth = (float)a_info.GetValue("LineWidth", typeof(float));
             m_lineColor = (Color)a_info.GetValue("LineColor", typeof(Color));
             m_shapeNumber = (int)a_info.GetValue("ShapeNumber", typeof(int));
-        }
+        } /* public Shape(SerializationInfo a_info, StreamingContext a_context) */
 
-        // Data persistence 9:21am 5/20/2015
+        /*
+         * NAME
+         *  GetObjectData() - used to serialize this object
+         *  
+         * SYNOPSIS
+         *  public void GetObjectData(SerializationInfo a_info, StreamingContext a_context);
+         *      a_info      -> stores data needed to serialize an object
+         *      a_context   -> does nothing (required)
+         *      
+         * DESCRIPTION
+         *  This method is used to serialize this object by storing member variables into SerializationInfo object.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  9:21am 5/20/2015
+         */
         public void GetObjectData(SerializationInfo a_info, StreamingContext a_context)
         {
             a_info.AddValue("PointLocation", m_pointLocation);
             a_info.AddValue("LineWidth", m_lineWidth);
             a_info.AddValue("LineColor", m_lineColor);
             a_info.AddValue("ShapeNumber", m_shapeNumber);
-        }
+        } /* public void GetObjectData(SerializationInfo a_info, StreamingContext a_context) */
     }
 }

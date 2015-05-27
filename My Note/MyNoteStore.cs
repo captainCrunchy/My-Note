@@ -6,39 +6,56 @@ using System.Threading.Tasks;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
-// This is data persistence, does not need to be a singleton
-
+/*
+ *  TITLE:
+ *      MyNoteStore
+ *      
+ *  DESCRIPTION:
+ *      This class is used to represent the main data storage object for this application. Since it is used in only one class
+ *      it does not need to be a singleton object. This class implements the 'ISerializable' interface, which allows this
+ *      object to control its own serialization and deserialization. This class is marked with the 'SerializableAttribute'
+ *      and is 'sealed' to prevent inheritance. Custom constructor is used in the deserialization process and a regular
+ *      constructor is used for first time creation of this object in the application. GetObjectData() is used for serialization
+ *      of this object.
+ *      
+ *  CODE STRUCTURE:
+ *      This class organizes code in the following order: member variables, properties, regular methods, data peristence
+ *      methods.
+ */
 
 namespace My_Note
 {
     [Serializable()]
-    class MyNoteStore : ISerializable // MyNoteStore == ObjectToSerialize
+    sealed class MyNoteStore : ISerializable
     {
-        // do these need to be created here? can they be created in the constructor
-        // since they are not being used anywhere else?
-        //private Subject subjectOne = new Subject();
-        //private Subject subjectTwo = new Subject();
-        //private Subject subjectThree = new Subject();
-        //private Subject subjectFour = new Subject();
-        //private Subject subjectFive = new Subject();
-        private List<Subject> m_savedSubjects; // Subjects == Cars
+        private List<Subject> m_savedSubjects;      // Used to store 'Subject' objects
 
-        /*
-         *  6:05pm 5/19/2015
-         */
         public List<Subject> SavedSubjects
         {
             get
             {
                 return this.m_savedSubjects;
             }
-            set
-            {
-                m_savedSubjects = value;
-            }
         }
+
         /*
-         *  5:32pm 5/21/2015 
+         * NAME
+         *  NumberOfSubjects() - gets the number of subjects used in this object
+         *  
+         * SYNOPSIS
+         *  public int NumberOfSubjects();
+         *      
+         * DESCRIPTION
+         *  This method checks to see how many subjects in the container are being 'used' and returns the count. 
+         *  
+         * RETURNS
+         *  A number of objects currently used in this object
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  5:32pm 5/21/2015
          */
         public int NumberOfSubjects()
         {
@@ -51,10 +68,28 @@ namespace My_Note
                 }
             }
             return currentSubjectCount;
-        }
+        } /* public int NumberOfSubjects() */
 
-
-        // Each notebook starts with five subjects
+        /*
+         * NAME
+         *  MyNoteStore() - gets called to construct this object
+         *  
+         * SYNOPSIS
+         *  public MyNoteStore();
+         * 
+         * DESCRIPTION
+         *  This constructor gets called when an instance of this object is created and used during
+         *  application execution. It creates five 'Subject' objects and places them in a container.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  6:07pm 5/19/2015
+         */
         public MyNoteStore()
         {
             Subject subjectOne = new Subject();
@@ -68,22 +103,58 @@ namespace My_Note
             m_savedSubjects.Add(subjectThree);
             m_savedSubjects.Add(subjectFour);
             m_savedSubjects.Add(subjectFive);
-        }
+        } /* public MyNoteStore() */
 
         /*
+         * NAME
+         *  MyNoteStore() - gets called to deserialize this object
+         *  
+         * SYNOPSIS
+         *  public MyNoteStore(SerializationInfo a_info, StreamingContext a_context);
+         *      a_info      -> provides data it has stored
+         *      a_context   -> does nothing (required)
+         *      
+         * DESCRIPTION
+         *  This constructor gets called when an instance of this object is to be deserialized.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
          *  6:10pm 5/19/2015
          */
         public MyNoteStore(SerializationInfo a_info, StreamingContext a_context)
         {
             m_savedSubjects = (List<Subject>)a_info.GetValue("SavedSubjects", typeof(List<Subject>));
-        }
+        } /* public MyNoteStore(SerializationInfo a_info, StreamingContext a_context) */
 
         /*
+         * NAME
+         *  GetObjectData() - used to serialize this object
+         *  
+         * SYNOPSIS
+         *  public void GetObjectData(SerializationInfo a_info, StreamingContext a_context);
+         *      a_info      -> stores data needed to serialize an object
+         *      a_context   -> does nothing (required)
+         *      
+         * DESCRIPTION
+         *  This method is used to serialize this object by saving storing member variable into SerializationInfo object.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
          *  6:13pm 5/19/2015
          */
         public void GetObjectData(SerializationInfo a_info, StreamingContext a_context)
         {
             a_info.AddValue("SavedSubjects", m_savedSubjects);
-        }
+        } /* public void GetObjectData(SerializationInfo a_info, StreamingContext a_context) */
     }
 }

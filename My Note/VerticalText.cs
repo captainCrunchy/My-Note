@@ -26,43 +26,39 @@ using System.Runtime.Serialization.Formatters.Binary;
  *      variable creation in order to increase drawing performance. Some variables are initialized in the custom constructor
  *      Methods have been separated into regions based on their functionality each with appropriate comments; i.e. region for
  *      move button, region for options button, region for helper methods, etc.
+ *      
+ * mention that SolidBrush and Button classes do not support serialization, that is why additional member variables and methods
+ * were added
  */
-
 namespace My_Note
 {
     [Serializable()]
     class VerticalText : ISerializable
     {
-        /*S*/private String m_textString = "Enter Text";                     // Actual text, used in drawVerticalText(), updated from options
-        /*S*/private Font m_textFont = new Font("Microsoft Sans Serif", 12); // Font of text, used in drawVerticalText(), updated from options
+        private String m_textString = "Enter Text";                     // Actual text, used in drawVerticalText(), updated from options
+        private Font m_textFont = new Font("Microsoft Sans Serif", 12); // Font of text, used in drawVerticalText(), updated from options
         
-        // created because solid brush cannot be serialized but we still want to create it only once to optimize performance
-        /*S*/private Color m_textBrushColor = Color.Black;
-        //private SolidBrush m_textBrush;// Assigned in constructor
-        private SolidBrush m_textBrush = new SolidBrush(Color.Black);
+        private SolidBrush m_textBrush = new SolidBrush(Color.Black);   // Used in drawVerticalText(), updated from options
+        private Color m_textBrushColor = Color.Black;                   // Used because SolidBrush object does not support 'serialization'
 
-        ///*S??*/private SolidBrush m_textBrush = new SolidBrush(Color.Black);   // Brush of text, used in drawVerticalText(), updated from options
-        /*S*/public Point m_textOrigin;                                     // Origin of text, used in drawVerticalText(), updated with m_moveButton
-        /*S*/private Int32 m_textAngle = 0;                                  /* Text angle in degrees, used in drawVerticalText() and updateButtonLocations(), 
+        public Point m_textOrigin;                                      // Origin of text, used in drawVerticalText(), updated with m_moveButton
+        private Int32 m_textAngle = 0;                                  /* Text angle in degrees, used in drawVerticalText() and updateButtonLocations(), 
                                                                            updated in m_rotateButton_MouseMove(). */
         
         private Button m_moveButton = new Button();                     // Button that moves the text around the panel
-        // added
-        private Point m_moveButtonLocation = new Point();
+        private Point m_moveButtonLocation = new Point();               // Used because Button object does not support 'serialization'
         private bool m_isMoving = false;                                // Indicates whether the text is currently being moved
         private Point m_alteringButtonOffsetPoint = new Point();        /* Offset point calculated by subtracting 'm_moveButton.Location' or the
-                                                                           'm_rotateButton.Location' minus 'current point' (captured from entire screen) */
+                                                                           'm_rotateButton.Location' minus 'current point' (captured from main screen) */
 
         private Button m_optionsButton = new Button();                  // Brings up options window to modify text properties
-        // added
-        private Point m_optionsButtonLocation = new Point();
+        private Point m_optionsButtonLocation = new Point();            // Used because Button object does not support 'serialization'
         private VertTextOptionsForm m_optionsForm = new VertTextOptionsForm();  // Options window to modify text properties
-        /*S*/private float m_optButDistF = 32;                               // Distance between move and options buttons, used in
+        private float m_optButDistF = 32;                               // Distance between move and options buttons, used in
                                                                         // updateButtonLocations(), updated in drawVerticalText()
 
-        private Button m_deleteButton = new Button();
-        // added
-        private Point m_deleteButtonLocation = new Point();
+        private Button m_deleteButton = new Button();                   
+        private Point m_deleteButtonLocation = new Point();             // Used because Button object does not support 'serialization'
         /*S*/private float m_delButDistF = 64;
 
         private Button m_rotateButton = new Button();                   // Button that rotates text to user desired angles
@@ -178,6 +174,7 @@ namespace My_Note
         
         /*
          * 2:32pm 5/20/2015
+         * used when restoring a VerticalText object
          * maybe this is better here because it will also be used in data persistence
          */
         public void setButtonProperties()

@@ -8,44 +8,51 @@ using System.Drawing;
 using System.Collections;
 using System.Drawing.Drawing2D;
 
-// ATTN TOWARDS THE END: On mouse move during pencil drawing 3 items can be invalidated to draw 'nicer'
-// with a performance penalty
-
-/*
+/* 
  *  TITLE:
  *      MainForm : Form
  *      
  *  DESCRIPTION:
- *      This class is the main form, it is the starting point of the application, and it is always
- *      visible. It provides common controls such as 'File' and 'Help' menu options, text and draw
- *      controls, and a 'combined' panel for text editing and drawing.
+ *    MainForm class:
+ *      This class represents the main form for the application. It is the starting point and is always visible. It provides
+ *      common controls such as 'File' and 'Help' menu options, text editing and drawing controls, and a 'combined' panel
+ *      for text editing and drawing shapes. This MainForm class is divided into four (.cs) files, which are simply extensions
+ *      of this class; i.e. each is a 'public partial class MainForm : Form'. This was done to keep the code organized and
+ *      readable. The user is interacting with some part of this class at all times.
+ *    mainForm.cs:
+ *      This file implements tasks that are responsible for starting and running the application. It performs general tasks
+ *      like handling the user inteface elements of the form and communication with data persistence objects. It is also
+ *      responsible for coordinating tasks between other 'partial class' files.
+ *    formMenuStrip.cs:
+ *      This file handles events that are triggered by elements of the menu strip in the form and their appearances based on
+ *      current data. Example: File, Edit, ..., Help.
+ *    formToolbar.cs:
+ *      This file is responsible for appearance of controls in the toolbar and their events. These controls trigger such tasks
+ *      as text editing, drawing shapes, and erasing.
+ *    formTextBox.cs: (YOU ARE HERE)
+ *      This file is responsible for appearances and events of the richTextBox and its layers. Such additional layers are
+ *      transparent and background panels. Events handled in this files are tasks such as applying text editing and drawing
+ *      shapes onto the panels, and erasing them based on currently selected controls and options.
  *      
  *  CODE STRUCTURE:
- *      This class is divided into several files, which are all responsible for performing a specific
- *      task. The files are simply extensions of this class, i.e. '... partial class...'. Below is a
- *      description of each 'partial class' and its purpose.
- * 
- *      mainForm.cs - This file is the starting point of the MainForm class. It contains the
- *                    constructor and is responsible for coordinating interactions between
- *                    other parts of the class and the application.
- *               
- *      formMenuStrip.cs - This file handles events that are triggered by elements
- *                         of the menu strip in the form. (Ex: File, Edit, ... Help)
- *                    
- *      formToolbar.cs - This file is responsible for controls in the toolbar and
- *                       their events in the main form. (Ex: Font, Text, Color, Line...)
- * 
- *      formTextbox.cs - (YOU ARE HERE) This file is responsible for appearance and events of the richTextBox
- *                       and its layers. Variables were created and initialized immediately in the declaration
- *                       section for reusability, to avoid repetition of creation in order to increase
- *                       drawing performance. Some variables are initialized in the main constructor. Other
- *                       components have been separated into regions each with appropriate comments.
+ *    MainForm class:
+ *      This class is divided into four (.cs) files based on functionality. Each is responsible for performing specific tasks
+ *      based on the user interface elements and controls. Each (.cs) file declares and initializes member variables that are
+ *      needed in that file. Some member variables can only be initialized in the constructor, which is in the mainForm.cs file.
+ *    formTextbox.cs: (YOU ARE HERE)
+ *      This file is organized by separating code into 'regions' based on specific functionalities. It contains member variables
+ *      used in this file. Some member variables need to be initialized in the constructor which is in the mainForm.cs file.
+ *      Regions contain related code representing UI elements and other functionality. Helper methods are toward the end and serve
+ *      all other methods in this file.
  */
 
 namespace My_Note
 {
     public partial class MainForm : Form
     {
+        // Region contains member variables for this class
+        #region Member Variables
+
         private Graphics m_transparentPanelGraphics;                        // Used to reduce repetitive data creation
         private Pen m_transparentPanelPen;                                  // Used to reduce repetitive data creation
 
@@ -71,14 +78,10 @@ namespace My_Note
         private int m_richTextBoxSelectCurrentCharIndex = 0;                // Record current index during text selection using mouse
         private bool m_isSelectingText = false;                             // Is the mouse currently down and selecting text
 
-        /*  TODO: Modified richTextBoxTextChanged()
-         *        added m_totalNumberOfPages
-        */
+        #endregion
 
-        private int m_totalNumberOfPages = 1; // right now it is doing nothing
-
-        // This region contains methods for richTextBox
-        #region richTextBoxMethods
+        // Region contains methods for richTextBox
+        #region richTextBox Methods
 
         /*
          * NAME
@@ -104,24 +107,14 @@ namespace My_Note
          */
         private void richTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (richTextBox.Text.Length > 850)
-            {
-                mslog("text length = " + richTextBox.Text.Length);
-            }
-            if (m_currentPageNumber == m_totalNumberOfPages)
-            {
-                // && if at the end of text
-                // add code to go to the next page
-                
-            }
             richTextBox.Invalidate();
             transparentPanel.Invalidate();
         } /* private void richTextBox_TextChanged(object sender, EventArgs e) */
 
         #endregion
 
-        // This region contains event handler for transparentPanel
-        #region transparentPanelEventMethods
+        // Region contains event handler methods for transparentPanel
+        #region transparentPanelEvent Methods
 
         /*
          * NAME
@@ -164,7 +157,7 @@ namespace My_Note
                     transparentPanel.Refresh();
                 }
             }
-        } /*private void transparentPanel_Click(object sender, System.EventArgs e)*/
+        } /* private void transparentPanel_Click(object sender, System.EventArgs e) */
 
         /*
          * NAME
@@ -262,7 +255,7 @@ namespace My_Note
         {
             if (e.Button == MouseButtons.Left)
             {
-                if (m_currentSelectedControl == e_SelectedControl.TEXT)
+                if (m_currentSelectedControl == e_SelectedControl.TEXT)  // Highlight/select text
                 {
                     m_isSelectingText = true;
                     Point newPoint = new Point(e.X - 40, e.Y - 35);
@@ -271,15 +264,15 @@ namespace My_Note
                     richTextBox.SelectionLength = Math.Abs(m_richTextBoxSelectCurrentCharIndex - m_richTextBoxSelectStartCharIndex);
                     richTextBox.Select();
                 }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.PENCIL))
+                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.PENCIL))  // Draw using pencil
                 {
                     drawWithPencil(e);
                 }
-                if (m_isErasing && (m_currentSelectedControl == e_SelectedControl.ERASER))
+                if (m_isErasing && (m_currentSelectedControl == e_SelectedControl.ERASER))  // Erase shapes
                 {
                     startErasing(e);
                 }
-                if (m_isDrawing && m_lastPosition != e.Location)
+                if (m_isDrawing && m_lastPosition != e.Location)  // Draw an arrow in one of the directions
                 {
                     if ((m_currentSelectedControl == e_SelectedControl.WARROW) && (e.Location.X < m_drawStartPoint.X))
                     {
@@ -318,7 +311,7 @@ namespace My_Note
                         drawSouthWestArrow(e);
                     }
                 }
-                if (m_isDrawing)
+                if (m_isDrawing)  // Draw rectangle, ellipse, or a line (solid, dashed, dotted)
                 {
                     if (m_currentSelectedControl == e_SelectedControl.RECTANGLE)
                     {
@@ -376,7 +369,7 @@ namespace My_Note
         {
             if (e.Button == MouseButtons.Left)
             {
-                if ((m_currentSelectedControl == e_SelectedControl.TEXT) && (m_isSelectingText == true))
+                if ((m_currentSelectedControl == e_SelectedControl.TEXT) && (m_isSelectingText == true))  // Finished highlighting/selecting
                 {
                     richTextBox.SelectionStart = Math.Min(m_richTextBoxSelectStartCharIndex, m_richTextBoxSelectCurrentCharIndex);
                     richTextBox.SelectionLength = Math.Abs(m_richTextBoxSelectCurrentCharIndex - m_richTextBoxSelectStartCharIndex);
@@ -385,18 +378,18 @@ namespace My_Note
                     transparentPanel.Invalidate();
                     m_isSelectingText = false;
                 }
-                if (m_currentSelectedControl == e_SelectedControl.PENCIL)
+                if (m_currentSelectedControl == e_SelectedControl.PENCIL)  // Finished using pencil
                 {
                     transparentPanel.Invalidate();
                     richTextBox.Invalidate();
                     backPanel.Invalidate();
                 }
-                if (m_currentSelectedControl == e_SelectedControl.ERASER)
+                if (m_currentSelectedControl == e_SelectedControl.ERASER)  // Finished erasing
                 {
                     transparentPanel.Invalidate();
                     richTextBox.Invalidate();
                 }
-                if (m_isDrawing) // Draw an arrow
+                if (m_isDrawing) // Finished using an arrow, rectangle, ellipse, and line (dashed, solid, dotted). Now save.
                 {
                     if (m_currentSelectedControl == e_SelectedControl.WARROW && (e.Location.X < m_drawStartPoint.X))
                     {
@@ -458,7 +451,7 @@ namespace My_Note
                     }
                     m_isDrawing = false;
                 }
-                if (m_currentSelectedControl == e_SelectedControl.VERTTEXT)
+                if (m_currentSelectedControl == e_SelectedControl.VERTTEXT)  // Added VerticalText object
                 {
                     foreach (VerticalText v in m_verticalTextList)
                     {
@@ -483,10 +476,10 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This method gets called automatically whenever any element within transparentPanel makes
-         *  any kind of change. It is declared to accomodate the behavior of VerticalTextOptionsForm
-         *   by repainting itself and updating the view. Such behavior is necessary to minimize
-         *   communication between non-related objects and preserve rules of encapsulation.
+         *  This method gets called automatically whenever any element within transparentPanel makes any kind of
+         *  change, including the object whose behavior it is declared to accomodate. That is, the object of the
+         *  VerticalTextOptionsForm class needs to call _Paint method of the transparentPanel when it is closed.
+         *  This is the simplest approach for accomplishing the task.
          *  
          * RETURNS
          *  Nothing
@@ -517,14 +510,13 @@ namespace My_Note
          *      e       -> used for smoothing drawing and drawing lines
          *      
          * DESCRIPTION
-         *  Redraws the tranparentPanel graphics. This is done by accessing the m_shapesStorage
-         *  object of the ShapeContainer class, which holds a list of shapes. Each shape in this
-         *  list is represented as a set of points with a common shape number. The 'for-loop' below
-         *  accesses two points/shapes from the list at a time and if they share the same shape
-         *  number, then they are connected to form a line. If the shape numbers are different,
-         *  then a new shape begins to form. This method gets triggered by the OnPaint() method
-         *  of the TransparentPanel.cs subclass by the command: base.OnPaint(e);. Also, redraws
-         *  the VerticalText object by iterating over the container that holds them.
+         *  Redraws the tranparentPanel graphics. This is done by accessing the m_shapesStorage object of the
+         *  ShapeContainer class, which holds a list of shapes. Each shape in this list is represented as a
+         *  set of points with a common shape number. The 'for-loop' below accesses two points from the list
+         *  at a time; if they share the same shape number, then they are connected to form a line. If the shape
+         *  numbers are different, then a new shape begins to form. This method gets triggered by the OnPaint()
+         *  method of the TransparentPanel.cs custom subclass and by the base.OnPaint(e) method. It also redraws
+         *  the VerticalText objects by iterating over the container that holds them.
          * 
          * RETURNS
          *  Nothing
@@ -559,7 +551,7 @@ namespace My_Note
 
         #endregion
 
-        // This region contains 'helper' methods
+        // Region contains 'helper' methods
         #region Helper Methods
 
         /*
@@ -1987,214 +1979,3 @@ namespace My_Note
         #endregion
     }
 }
-/*private void transparentPanel_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-
-                if (m_currentSelectedControl == e_SelectedControl.TEXT)
-                {
-                    Point newPoint = new Point(e.X - 40, e.Y - 35); // This is because text box is a little bit offset
-                    m_richTextBoxSelectStartCharIndex = richTextBox.GetCharIndexFromPosition(newPoint);
-
-                    //int charIndex = richTextBox.GetCharIndexFromPosition(newPoint);
-                    //richTextBox.SelectionStart = charIndex;
-                    //m_richTextBoxSelectStartCharIndex = charIndex;
-                    //mslog("SelectionStart = " + richTextBox.SelectionStart);
-                }
-
-
-
-                if (m_currentSelectedControl == e_SelectedControl.PENCIL)
-                {
-                    m_isDrawing = true;
-                    m_shapeNumber++;
-                    m_lastPosition = new Point(0, 0);
-                }
-                if (m_currentSelectedControl == e_SelectedControl.ERASER)
-                {
-                    m_isErasing = true;
-                }
-
-                // below can all be combined with a bunch of or statements
-                // or it can be done to see if the selected control is within a certain value range
-
-                // Technique is used to save over 50 lines of code
-                if ((int)m_currentSelectedControl < 8)
-                {
-
-                }
-                if (m_currentSelectedControl == e_SelectedControl.WARROW)
-                {
-                    mslog("selected warrow = " + (int)e_SelectedControl.WARROW);
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.NWARROW)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.NARROW)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.NEARROW)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.EARROW)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.SEARROW)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.SARROW)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.SWARROW)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.RECTANGLE)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.ELLIPSE)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.SOLID)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.DASHED)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                    m_canDash = true;
-                }
-                if (m_currentSelectedControl == e_SelectedControl.DOTTED)
-                {
-                    m_isDrawing = true;
-                    m_drawStartPoint = e.Location;
-                    m_canDash = true;
-                }
-            }
-        } /* private void transparentPanel_MouseDown(object sender, MouseEventArgs e) */
-
-/*private void transparentPanel_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                if (m_currentSelectedControl == e_SelectedControl.TEXT)
-                {
-                    m_isSelectingText = true;
-                    Point newPoint = new Point(e.X - 40, e.Y - 35);
-                    m_richTextBoxSelectCurrentCharIndex = richTextBox.GetCharIndexFromPosition(newPoint);
-                    // can't select going backwards
-                    richTextBox.SelectionStart = Math.Min(m_richTextBoxSelectStartCharIndex, m_richTextBoxSelectCurrentCharIndex);
-                    richTextBox.SelectionLength = Math.Abs(m_richTextBoxSelectCurrentCharIndex - m_richTextBoxSelectStartCharIndex);
-                    richTextBox.Select();
-                }
-
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.PENCIL))
-                {
-                    drawWithPencil(e);
-                }
-                if (m_isErasing && (m_currentSelectedControl == e_SelectedControl.ERASER))
-                {
-                    startErasing(e);
-                }
-
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.WARROW))
-                {
-                    if ((m_lastPosition != e.Location) && (e.Location.X < m_drawStartPoint.X))
-                    {
-                        drawWestArrow(e);
-                    }
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.NWARROW))
-                {
-                    if ((m_lastPosition != e.Location) && (e.Location.X < m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y))
-                    {
-                        drawNorthWestArrow(e);
-                    }
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.NARROW))
-                {
-                    if ((m_lastPosition != e.Location) && (e.Location.Y < m_drawStartPoint.Y))
-                    {
-                        drawNorthArrow(e);
-                    }
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.NEARROW))
-                {
-                    if ((m_lastPosition != e.Location) && (e.Location.X > m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y))
-                    {
-                        drawNorthEastArrow(e);
-                    }
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.EARROW))
-                {
-                    if ((m_lastPosition != e.Location) && (e.Location.X > m_drawStartPoint.X))
-                    {
-                        drawEastArrow(e);
-                    }
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.SEARROW))
-                {
-                    if ((m_lastPosition != e.Location) && (e.Location.X > m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y))
-                    {
-                        drawSouthEastArrow(e);
-                    }
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.SARROW))
-                {
-                    if ((m_lastPosition != e.Location) && (e.Location.Y > m_drawStartPoint.Y))
-                    {
-                        drawSouthArrow(e);
-                    }
-                }
-                if (m_isDrawing & (m_currentSelectedControl == e_SelectedControl.SWARROW))
-                {
-                    if ((m_lastPosition != e.Location) && (e.Location.X < m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y))
-                    {
-                        drawSouthWestArrow(e);
-                    }
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.RECTANGLE))
-                {
-                    drawRectangle(e);
-                }
-
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.ELLIPSE))
-                {
-                    drawEllipse(e);
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.SOLID))
-                {
-                    drawSolidLine(e);
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.DASHED))
-                {
-                    drawDashedLine(e);
-                }
-                if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.DOTTED))
-                {
-                    drawDottedLine(e);
-                }
-            }
-        } /* private void transparentPanel_MouseMove(object sender, MouseEventArgs e) */
