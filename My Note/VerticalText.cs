@@ -400,7 +400,7 @@ namespace My_Note
         #endregion
 
         // Region contains elements associated with m_deleteButton
-        #region m_deleteButton methods
+        #region m_deleteButton Methods
 
         public Button DeleteButton
         {
@@ -477,8 +477,8 @@ namespace My_Note
 
         #endregion
 
-        // Region contains m_rotateButton Property and Event Handlers
-        #region m_rotateButton methods
+        // Region contains elements associated with m_rotateButton
+        #region m_rotateButton Methods
 
         public Button RotateButton
         {

@@ -908,6 +908,7 @@ namespace My_Note
             transparentPanel.Invalidate();
             richTextBox.Invalidate();
             backPanel.Invalidate();
+            canHideVertTextButtons = true;
             selectTextControl();
         } /* private void updateCurrentPageDisplayForSubject(Subject a_subject, int a_pageNumber) */
 
@@ -938,5 +939,58 @@ namespace My_Note
         }
 
         #endregion
+
+        /* Added content is here and below:
+         * 
+         */
+
+        /*  This will trigger the FormClosing event handler where confirmation will be handled
+         *  1:09pm 5/27/2015
+         */
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        /*
+         *  2:27pm 5/27/2015
+         *  http://stackoverflow.com/questions/4974276/richtextbox-drawtobitmap-does-not-draw-containing-text
+         */
+        private void printToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Works
+            //Bitmap memoryImage = new Bitmap(transparentPanel.Width, transparentPanel.Height);
+            //Rectangle pageRectangle = transparentPanel.Bounds;
+            //transparentPanel.DrawToBitmap(memoryImage, transparentPanel.Bounds);
+            //memoryImage.Save("memImg.bmp");
+
+            // Works
+            //Size saveSize = new Size(666, 695);
+            //Bitmap memoryImage = new Bitmap(saveSize.Width, saveSize.Height);
+            //transparentPanel.DrawToBitmap(memoryImage, transparentPanel.Bounds);
+            //memoryImage.Save("memImg.bmp");
+
+            // Doesn't work
+            //Bitmap memoryImage = new Bitmap(richTextBox.Width, richTextBox.Height);
+            //Rectangle pageRectangle = richTextBox.Bounds;
+            //richTextBox.Update();
+            //richTextBox.DrawToBitmap(memoryImage, richTextBox.Bounds);
+            //memoryImage.Save("memImg.bmp");
+
+            //Bitmap bmp = new Bitmap(richTextBox.Width, richTextBox.Height);
+            //using (Graphics gr = Graphics.FromImage(bmp))
+            //{
+            //    gr.CopyFromScreen(richTextBox.PointToScreen(Point.Empty), Point.Empty, richTextBox.Size);
+            //}
+            //bmp.Save("memImg.bmp");
+            
+            // Saves as bitmap to be printed later.
+            Bitmap bmp = new Bitmap(transparentPanel.Width, transparentPanel.Height);
+            using (Graphics gr = Graphics.FromImage(bmp))
+            {
+                gr.CopyFromScreen(transparentPanel.PointToScreen(Point.Empty), Point.Empty, transparentPanel.Size);
+            }
+            bmp.Save("memImg.bmp");
+        }
     }
 }
