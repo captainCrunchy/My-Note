@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
-// TODO: fontComboBox_SelectedIndexChanged() may not be used in the future
+
 /* 
  *  TITLE:
  *      MainForm : Form

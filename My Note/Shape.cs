@@ -18,7 +18,7 @@ using System.Runtime.Serialization.Formatters.Binary;
  *      is to accomodate erase functionality where the eraser can remove individual points and not just full sections,
  *      especially when this shape class is used to draw rectangles and ellipses. Initial code for this class was taken
  *      from an existing project on the web with pencil and eraser functionality and extended to work with other shapes
- *      like lines, ellipses, and rectangles. Chages to this class were made to member variables and arguments in methods
+ *      like lines, ellipses, and rectangles. Changes to this class were made to member variables and arguments in methods
  *      by updating the naming conventions to match this application. Public member variables were converted to private and
  *      were assigned propeties. This class now implements 'ISerializable' interface, which allows this object to control
  *      its own serialization and deserialization. This class is marked with the 'SerializableAttribute' and is 'sealed' to

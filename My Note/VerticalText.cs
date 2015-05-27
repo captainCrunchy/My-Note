@@ -18,23 +18,35 @@ using System.Runtime.Serialization.Formatters.Binary;
  *      just above it and spaced equally. Starting from the left, first button is to allow the user to move the text
  *      around the screen. Second button is to allow the user to enter an options pop-up window where they can set the
  *      text and its properties. Third button lets the user delete this instance from the panel in which it is used.
- *      Fourth button is to allow the user to rotate the text to set it to a desired angle. Buttons and their locations
- *      are created dynamically and their event handler are assigned programmatically in the constructor.
+ *      Fourth button is to allow the user to rotate the text to set it to a desired angle. Buttons, their locations,
+ *      and their event handlers are created programmatically and are updated dynamically. To perform certain operations
+ *      like deleting this object from its container or updating that container, references to owner containers are assigned
+ *      to member variables. These four variables are prefixed with m_owner.... and are weak refences, which will not
+ *      create a circular reference cycles. This class implements the 'ISerializable' interface, which allows this object
+ *      to control its own serialization and deserialization. This class is marked with the 'SerializableAttribute' and
+ *      is 'sealed' to prevent inheritance. Custom constructor is used in the deserialization process and regular construtor
+ *      is used for creation and initialization of this object in the application. GetObjectData() is used for serialization
+ *      of this object. Some objects, like buttons and brush, cannot be saved because 'Button' and 'Brush' classes do not
+ *      implement ISerializable intefrace. Instead of subclassing and overriding these controls, simpler and more efficient
+ *      approach was taken. For buttons, only their location values are saved and restored. Event handlers for these buttons
+ *      also receive special care upon 'restore' of this object during data persistence operations. For brush, only the brush
+ *      color needs to be saved and restored. Data persistence methods and their details are in the appropriate 'region'.
  *      
  *  CODE STRUCTURE:
  *      Variables were created and initialized immediately in the declaration section for reusability, to avoid repetition of
- *      variable creation in order to increase drawing performance. Some variables are initialized in the custom constructor
+ *      variable creation in order to increase drawing performance. Some variables are initialized in the custom constructor.
  *      Methods have been separated into regions based on their functionality each with appropriate comments; i.e. region for
- *      move button, region for options button, region for helper methods, etc.
- *      
- * mention that SolidBrush and Button classes do not support serialization, that is why additional member variables and methods
- * were added
+ *      move button, region for options button, region for helper methods, etc... .
+ * 
  */
 namespace My_Note
 {
     [Serializable()]
-    class VerticalText : ISerializable
+    sealed class VerticalText : ISerializable
     {
+        // Region contains member variables and constructor for this class
+        #region Member Variables and Constructor
+
         private String m_textString = "Enter Text";                     // Actual text, used in drawVerticalText(), updated from options
         private Font m_textFont = new Font("Microsoft Sans Serif", 12); // Font of text, used in drawVerticalText(), updated from options
         
@@ -42,64 +54,37 @@ namespace My_Note
         private Color m_textBrushColor = Color.Black;                   // Used because SolidBrush object does not support 'serialization'
 
         public Point m_textOrigin;                                      // Origin of text, used in drawVerticalText(), updated with m_moveButton
-        private Int32 m_textAngle = 0;                                  /* Text angle in degrees, used in drawVerticalText() and updateButtonLocations(), 
-                                                                           updated in m_rotateButton_MouseMove(). */
+        private Int32 m_textAngle = 0;                                  /* Text angle in degrees, used in drawVerticalText() and
+                                                                           updateButtonLocations(), updated in m_rotateButton_MouseMove(). */
         
-        private Button m_moveButton = new Button();                     // Button that moves the text around the panel
+        private Button m_moveButton = new Button();                     // Used to move the text around the panel
         private Point m_moveButtonLocation = new Point();               // Used because Button object does not support 'serialization'
         private bool m_isMoving = false;                                // Indicates whether the text is currently being moved
         private Point m_alteringButtonOffsetPoint = new Point();        /* Offset point calculated by subtracting 'm_moveButton.Location' or the
                                                                            'm_rotateButton.Location' minus 'current point' (captured from main screen) */
 
         private Button m_optionsButton = new Button();                  // Brings up options window to modify text properties
-        private Point m_optionsButtonLocation = new Point();            // Used because Button object does not support 'serialization'
         private VertTextOptionsForm m_optionsForm = new VertTextOptionsForm();  // Options window to modify text properties
-        private float m_optButDistF = 32;                               // Distance between move and options buttons, used in
-                                                                        // updateButtonLocations(), updated in drawVerticalText()
+        private float m_optButDistF = 32;                               /* Distance between move and options buttons, used in
+                                                                           updateButtonLocations(), updated in drawVerticalText() */
 
-        private Button m_deleteButton = new Button();                   
-        private Point m_deleteButtonLocation = new Point();             // Used because Button object does not support 'serialization'
-        /*S*/private float m_delButDistF = 64;
+        private Button m_deleteButton = new Button();                   // Used to delete this object from its container
+        private float m_delButDistF = 64;                               /* Distance between move and delete buttons, used in
+                                                                           updateButtonLocations(), updated in drawVerticalText() */
 
         private Button m_rotateButton = new Button();                   // Button that rotates text to user desired angles
-        // added
-        private Point m_rotateButtonLocation = new Point();
         private bool m_isRotating = false;                              // Indicates whether the text is being rotated
-        /*S*/private float m_rotButDistF = 96;                               /* Distance between move and rotate buttons, used in
+        private float m_rotButDistF = 96;                               /* Distance between move and rotate buttons, used in
                                                                            udpateButtonLocations(), updated in drawVerticalText() */
 
-        // essentially this is a pointer to a variable living in MainForm class
         private List<VerticalText> m_ownerVerticalTextList;             /* Used to access container in which 'this' will be in, to assist the
-                                                                           removal of 'this' from the container. (m_deleteButton region) */
-
-        /* Next three member variables point to the objects that live in the form (in formTextbox.cs) which owns this (VerticalText)
-           object as well. They are declared here only to assist the 'm_optionsButton_MouseUp' event handler with repainting this object
-           when changes are made to it. This technique seems to be the only way to access objects that are outside of this object without
-           breaking the rules of encapsulation. These member variables are accessed via their properties defined in m_optionsButton region. */
-        // essentially these are pointers to variables and UI objects living in MainFormClass
-        private TransparentPanel m_ownerTranspPanel;
-        private RichTextBox m_ownerRichTextBox;
-        private Panel m_ownerBackPanel;
-        /*
-         *  TODO: The above three member variables may not be able to be saved because they are references
-         *        need to think of a different way to assign their values. That is, maybe thy should not be
-         *        assigned when they are first created, instead let them be assigned as the options button is
-         *        clicked. This can be captured with the help of transparentPanelEvent
-         *        More comments were added to references from previous class.
-         *        Data persistence was added on the bottom.
-         *        Brush serialized?
-         *        Modified drawVertical text by udpating its brush color
-         *        Modified m_optionsButton_MouseUp
-         *        added setButtonProperties()
-         *        added m_textBrushColor
-         *        added m_moveButtonLocation
-         *        added m_optionsButtonLocation
-         *        added m_deleteButtonLocation
-         *        added m_rotateButtonLocation
-         *        modified m_moveButtonMouseMove
-         *        modified updateButtonLocations();
-         *        altered the constructor with the move button location restriction and new text origin assignment
-         */
+                                                                           removal of 'this' object from the container */
+        private TransparentPanel m_ownerTranspPanel;                    /* Used to access panel ON which 'this' will be drawn, to trigger the
+                                                                           repaint upon the change and update of options of 'this' object */
+        private RichTextBox m_ownerRichTextBox;                         /* Used to access text box ABOVE which 'this' will be drawn, to trigger
+                                                                           the repaint upon the change and update of options of 'this' object */
+        private Panel m_ownerBackPanel;                                 /* Used to access panel ABOVE which 'this' will be drawn, to trigger the
+                                                                           repaint upon the change and update of options of 'this' object */
 
         /*
          * NAME
@@ -110,9 +95,12 @@ namespace My_Note
          *      e       -> is used to get the location of mouse click
          * 
          * DESCRIPTION
-         *  This constructor is called, specifically, from trapsarentPanel_MouseUp event handler.
-         *  IMPORTANT: It utilizes (MouseEventArgs e) to get the location from the object using
-         *  this class so that locations can be set INITIALLY and used CONTINUALLY afterwards.
+         *  This constructor is called, specifically, from trapsarentPanel_MouseUp event handler. It utilizes
+         *  (MouseEventArgs e) to get the location from the object that is using this class. This location is
+         *  used to assign locations of other elements and save them for future uses. m_moveButton location is
+         *  most important because it determines the location of all other elements and it is responsible for
+         *  keeping 'this' object within its container. In this case, the container is the transparentPanel UI
+         *  object, whose boundary values have been hard coded.
          *  
          * RETURNS
          *  Nothing
@@ -125,11 +113,8 @@ namespace My_Note
          */
         public VerticalText(MouseEventArgs e)
         {
-            //m_textOrigin = e.Location;
-
             m_moveButton.BackColor = Color.Transparent;
             m_moveButton.BackgroundImage = Properties.Resources.moveArrow;
-
             // Center the m_moveButton.Location with the mouse cursor location,
             // and ensure that it is not placed outside the bounds of its container
             Point newMoveButtonLocation = new Point(e.Location.X - 8, e.Location.Y - 8);
@@ -138,14 +123,12 @@ namespace My_Note
             if (newMoveButtonLocation.Y < 0) newMoveButtonLocation.Y = 0;
             if (newMoveButtonLocation.Y > 589) newMoveButtonLocation.Y = 589;
             m_moveButton.Location = newMoveButtonLocation;
-            //m_moveButton.Location = new Point(e.Location.X-8, e.Location.Y-8);
-
-            m_textOrigin = new Point(m_moveButton.Location.X + 8, m_moveButton.Location.Y + 8);
-
             m_moveButton.Size = new Size(16, 16);
             m_moveButton.MouseDown += m_moveButton_MouseDown;
             m_moveButton.MouseMove += m_moveButton_MouseMove;
             m_moveButton.MouseUp += m_moveButton_MouseUp;
+
+            m_textOrigin = new Point(m_moveButton.Location.X + 8, m_moveButton.Location.Y + 8);
 
             m_optionsButton.BackColor = Color.Transparent;
             m_optionsButton.BackgroundImage = Properties.Resources.optionsImg;
@@ -153,9 +136,7 @@ namespace My_Note
             m_optionsButton.Size = new Size(16, 16);
             m_optionsButton.MouseUp += m_optionsButton_MouseUp;
 
-            //m_deleteButton.BackColor = Color.White;
             m_deleteButton.BackColor = Color.Transparent;
-
             m_deleteButton.BackgroundImage = Properties.Resources.removeX;
             m_deleteButton.Location = new Point(m_moveButton.Location.X + (Int32)m_delButDistF, m_moveButton.Location.Y);
             m_deleteButton.Size = new Size(16, 16);
@@ -163,69 +144,17 @@ namespace My_Note
 
             m_rotateButton.BackColor = Color.Transparent;
             m_rotateButton.BackgroundImage = Properties.Resources.rotateArrow;
-            m_rotateButton.Location = new Point(m_moveButton.Location.X + (Int32)m_delButDistF, m_moveButton.Location.Y);
+            m_rotateButton.Location = new Point(m_moveButton.Location.X + (Int32)m_rotButDistF, m_moveButton.Location.Y);
             m_rotateButton.Size = new Size(16, 16);
             m_rotateButton.MouseDown += m_rotateButton_MouseDown;
             m_rotateButton.MouseMove += m_rotateButton_MouseMove;
             m_rotateButton.MouseUp += m_rotateButton_MouseUp;
-
-            //m_textBrush = new SolidBrush(m_textBrushColor);
         } /* public VerticalText(MouseEventArgs e) */
-        
-        /*
-         * 2:32pm 5/20/2015
-         * used when restoring a VerticalText object
-         * maybe this is better here because it will also be used in data persistence
-         */
-        public void setButtonProperties()
-        {
-            m_moveButton.BackColor = Color.Transparent;
-            m_moveButton.BackgroundImage = Properties.Resources.moveArrow;
-            m_moveButton.Location = m_moveButtonLocation;
-            m_moveButton.Size = new Size(16, 16);
 
-            // Best solution, it is not professional looking but it is safe,
-            // effective, and efficient. Helps with data persistence between when
-            // the application is running, closed, or switching between subjects and pages.
-            m_moveButton.MouseDown -= m_moveButton_MouseDown;
-            m_moveButton.MouseMove -= m_moveButton_MouseMove;
-            m_moveButton.MouseUp -= m_moveButton_MouseUp;
-            m_moveButton.MouseDown += m_moveButton_MouseDown;
-            m_moveButton.MouseMove += m_moveButton_MouseMove;
-            m_moveButton.MouseUp += m_moveButton_MouseUp;
+        #endregion
 
-            m_optionsButton.BackColor = Color.Transparent;
-            m_optionsButton.BackgroundImage = Properties.Resources.optionsImg;
-            m_optionsButton.Location = m_optionsButtonLocation;
-            m_optionsButton.Size = new Size(16, 16);
-
-            m_optionsButton.MouseUp -= m_optionsButton_MouseUp;
-            m_optionsButton.MouseUp += m_optionsButton_MouseUp;
-
-            //m_deleteButton.BackColor = Color.White;
-            m_deleteButton.BackColor = Color.Transparent;
-            m_deleteButton.BackgroundImage = Properties.Resources.removeX;
-            m_deleteButton.Location = m_deleteButtonLocation;
-            m_deleteButton.Size = new Size(16, 16);
-
-            m_deleteButton.MouseUp -= m_deleteButton_MouseUp;
-            m_deleteButton.MouseUp += m_deleteButton_MouseUp;
-
-            m_rotateButton.BackColor = Color.Transparent;
-            m_rotateButton.BackgroundImage = Properties.Resources.rotateArrow;
-            m_rotateButton.Location = m_rotateButtonLocation;
-            m_rotateButton.Size = new Size(16, 16);
-
-            m_rotateButton.MouseDown -= m_rotateButton_MouseDown;
-            m_rotateButton.MouseMove -= m_rotateButton_MouseMove;
-            m_rotateButton.MouseUp -= m_rotateButton_MouseUp;
-            m_rotateButton.MouseDown += m_rotateButton_MouseDown;
-            m_rotateButton.MouseMove += m_rotateButton_MouseMove;
-            m_rotateButton.MouseUp += m_rotateButton_MouseUp;
-        }
-
-        // This region contains m_moveButton Property and Event Handlers
-        #region m_moveButton methods
+        // Region contains elements associated with m_moveButton
+        #region m_moveButton Methods
 
         public Button MoveButton
         {
@@ -251,12 +180,11 @@ namespace My_Note
          *                  
          * 
          * DESCRIPTION
-         *  Prepares this VerticalText object to be moved by capturing the mouse click location
-         *  within the main screen, then it translates/calculates this initial location to the
-         *  location within the panel to be used in by getting the difference between location
-         *  in the big screen and the location of m_moveButton in the panel. This value is then
-         *  stored in m_alteringButtonOffsetPoint and used in moveButton_MouseMove event. Hides
-         *  other buttons for nice appearances while text is being moved
+         *  Prepares this VerticalText object to be moved by capturing the mouse click location within the main
+         *  screen, then it translates/calculates this initial location to the location within the panel to be
+         *  used in by getting the difference between location in the big screen and the location of m_moveButton
+         *  in the panel. This value is then stored in m_alteringButtonOffsetPoint and used in moveButton_MouseMove
+         *  event. Hides other buttons for nice appearance while text is being moved.
          *  
          * RETURNS
          *  Nothing
@@ -297,9 +225,9 @@ namespace My_Note
          *                 confirm that left mouse button was clicked
          * 
          * DESCRIPTION
-         *  Moves the VerticalText object by updating its new location based on the MouseEventArg and the
-         *  offset calculated and recorded in the MouseDown event earlier. First it updates the position of
-         *  the m_moveButton itself, then it calculates and updates the position of the m_textOrigin point.
+         *  Moves the VerticalText object by updating its new location based on the MouseEventArg and the offset
+         *  calculated and recorded in the MouseDown event earlier. First it updates the position of the m_moveButton
+         *  itself, then it calculates and updates the position of the m_textOrigin point.
          *  
          * RETURNS
          *  Nothing
@@ -328,7 +256,6 @@ namespace My_Note
 
                     // Assign new location
                     m_moveButton.Location = newPoint;
-                    // added this for data persistence
                     m_moveButtonLocation = newPoint;
                     m_textOrigin = new Point(newPoint.X + 8, newPoint.Y + 8);
                 }
@@ -345,8 +272,7 @@ namespace My_Note
          *      e       -> used to confirm that left mouse button was clicked
          * 
          * DESCRIPTION
-         *  Updates the locations of all the buttons and sets them to visible. Refreshes
-         *  values of member variables.
+         *  Updates the locations of all the buttons and sets them to visible. Refreshes values of member variables.
          *  
          * RETURNS
          *  Nothing
@@ -376,8 +302,8 @@ namespace My_Note
 
         #endregion
 
-        // This region contains m_optionsButton Property and Event Handlers
-        #region m_optionsButton methods
+        // Region contains elements associated with m_optionsButton
+        #region m_optionsButton Methods
 
         public Button OptionsButton
         {
@@ -437,10 +363,10 @@ namespace My_Note
          *      e       -> used to confirm that left mouse button was clicked
          * 
          * DESCRIPTION
-         *  Shows option pop-up form for changing text options such as text size, font, color, and
-         *  the text itself. It first passes current values into the m_optionsForm in order to update
-         *  the UI display in the form. After the user has performed changes, current values are
-         *  passed in again by reference in order to be updated with new values.
+         *  Shows option pop-up form for changing text options such as text size, font, color, and the text
+         *  itself. It first passes current values into the m_optionsForm in order to update the UI display
+         *  in the form. After the user has performed changes, current values are passed in again by reference
+         *  in order to be updated with new values.
          *  
          * RETURNS
          *  Nothing
@@ -462,7 +388,6 @@ namespace My_Note
                 m_optionsForm.MinimizeBox = false;
                 m_optionsForm.ShowDialog();
                 m_optionsForm.UpdateUIAttributes(ref m_textFont, ref m_textString, ref m_textBrush);
-                // added this 'for data persistence'
                 m_textBrushColor = m_textBrush.Color;
                 
                 m_ownerTranspPanel.Invalidate();
@@ -474,7 +399,7 @@ namespace My_Note
 
         #endregion
 
-        // This region contains m_deleteButton Property and Event Handlers
+        // Region contains elements associated with m_deleteButton
         #region m_deleteButton methods
 
         public Button DeleteButton
@@ -511,13 +436,11 @@ namespace My_Note
          *      e       -> used to confirm that left mouse button was clicked
          * 
          * DESCRIPTION
-         *  This method triggers the options to delete 'this' instance of VerticalText. It uses the
-         *  references passed to 'this' object from the owner of 'this'. First reference is to the
-         *  TransparentPanel object in which 'this' resides as a UI element. Other reference is to
-         *  the List<> container in which 'this' resides as a data persistence element. The point is
-         *  to remove 'this' from both upon the user's request; i.e. upon clicking 'OK' button. The
-         *  removal of 'this' also includes removing the buttons that belong to 'this' from the
-         *  TransparentPanel object.
+         *  This method triggers message box asking to delete 'this' instance of VerticalText. If the user clicks 'OK',
+         *  then a delete process is started. Since 'this' instance has a reference to the container (transparentPanel)
+         *  that holds the buttons of 'this' class, it removes those buttons from that container. Since 'this' instance
+         *  also has a reference to the container (m_verticalTextList) that holds 'this' instance, 'this' removes itself
+         *  from that container.
          * 
          * RETURNS
          *  Nothing
@@ -554,7 +477,7 @@ namespace My_Note
 
         #endregion
 
-        // This region contains m_rotateButton Property and Event Handlers
+        // Region contains m_rotateButton Property and Event Handlers
         #region m_rotateButton methods
 
         public Button RotateButton
@@ -579,12 +502,11 @@ namespace My_Note
          *      e       -> used to confirm that left mouse button was clicked
          * 
          * DESCRIPTION
-         *  Prepares this VerticalText object to be rotated by capturing the mouse click location
-         *  within the main screen, then it translates/calculates this initial location to the
-         *  location within the panel to be used in by getting the difference between location
-         *  in the big screen and the location of m_rotateButton in the panel. This value is then
-         *  stored in m_alteringButtonOffsetPoint and used in rotateButton_MouseMove event. Hides
-         *  other buttons for nice appearances while text is being rotated.
+         *  Prepares this VerticalText object to be rotated by capturing the mouse click location within the
+         *  main screen, then it translates/calculates this initial location to the location within the panel
+         *  to be used in by getting the difference between location in the big screen and the location of
+         *  m_rotateButton in the panel. This value is then stored in m_alteringButtonOffsetPoint and used in
+         *  rotateButton_MouseMove event. Hides other buttons for nice appearances while text is being rotated.
 
          * RETURNS
          *  Nothing
@@ -621,13 +543,12 @@ namespace My_Note
          *                 confirm that left mouse button was clicked
          * 
          * DESCRIPTION
-         *  Rotates the VerticalText object by using the m_moveButton as the achnor point. Calculates
-         *  the difference between the current mouse cursor position (m_rotateButton) and the pivot
-         *  position (m_moveButton), then uses the results in a trigonometric function to calculate and
-         *  assign a new angle to the text string. Updates the location of m_rotateButton based on the
-         *  (MouseEventArg e) and the offset calculated and recorded in the MouseDown event earlier.
-         *  Updates the value of m_textAngle so that it can be used in drawVerticalText() when called
-         *  externally.
+         *  Rotates the VerticalText object by using the m_moveButton as the achnor point. Calculates the difference
+         *  between the current mouse cursor position (m_rotateButton) and the pivot position (m_moveButton), then
+         *  uses the results in a trigonometric function to calculate and assign a new angle to the text string. Updates
+         *  the location of m_rotateButton based on the (MouseEventArg e) and the offset calculated and recorded in
+         *  the MouseDown event earlier. Updates the value of m_textAngle so that it can be used in drawVerticalText()
+         *  when called externally.
          * 
          * RETURNS
          *  Nothing
@@ -665,8 +586,7 @@ namespace My_Note
          *      e       -> used to confirm that left mouse button was clicked
          * 
          * DESCRIPTION
-         *  Updates the locations of all the buttons and sets them to visible. Refreshes
-         *  values of member variables.
+         *  Updates the locations of all the buttons and sets them to visible. Refreshes values of member variables.
          *  
          * RETURNS
          *  Nothing
@@ -696,7 +616,7 @@ namespace My_Note
 
         #endregion
 
-        // This region contains 'helper' and public methods
+        // Region contains 'helper' and public methods
         #region Helper and Public Methods
 
         /*
@@ -708,11 +628,10 @@ namespace My_Note
          *      e       -> used to indicate location and size of text
          * 
          * DESCRIPTION
-         *  This method draws text at a desired angle. The 'engine' of this method was taken from a
-         *  book, documented and credited appropriately; i.e. the transform methods. Arguments for
-         *  these methods are member variables whose values were genereated using their respective
-         *  event handlers. The string width is calculated to accomodate the posion and spacing of
-         *  the buttons.
+         *  This method draws text at a desired angle. The 'engine' of this method was taken from a book, documented
+         *  and credited appropriately; i.e. the transform methods. Arguments for methods used in this method are member
+         *  variables whose values were genereated using their respective event handlers. The string width is calculated
+         *  to accomodate the position and spacing of the buttons.
          * 
          * RETURNS
          *  Nothing
@@ -733,7 +652,6 @@ namespace My_Note
             e.Graphics.TranslateTransform(m_textOrigin.X, m_textOrigin.Y);
             e.Graphics.RotateTransform(m_textAngle);
             e.Graphics.TranslateTransform(-m_moveButton.Location.X, -m_moveButton.Location.Y);
-            // added this for data persistence
             m_textBrush.Color = m_textBrushColor;
             e.Graphics.DrawString(m_textString, m_textFont, m_textBrush, m_textOrigin);
             e.Graphics.ResetTransform();
@@ -766,14 +684,13 @@ namespace My_Note
          *  private void updateButtonLocations();
          * 
          * DESCRIPTION
-         *  This method gets called by the _MouseUp events of m_rotateButton and m_moveButton, and by
-         *  drawVerticalText() in order to update the locations of all the buttons. The calculations are 
-         *  performed by using the location of 'm_moveButton' as the 'pivot point' and the angle of the
-         *  text to project the direction of locations for the other buttons. The process is to first convert
-         *  the text angle to radians; then use an equation based on (a) the pivot point, (b) the distance
-         *  value of each button from the pivot point, (c) the text angle in radians used in a trigonometric
-         *  function. Values are converted to 'float' and back when necessary in order to preserve accuracy.
-         *  Finally, new locations are assigned to current buttons.
+         *  This method gets called by the _MouseUp events of m_rotateButton and m_moveButton, and by drawVerticalText()
+         *  in order to update the locations of all the buttons. The calculations are performed by using the location of
+         *  'm_moveButton' as the 'pivot point' and the angle of the text to project the direction of locations for the
+         *  other buttons. The process is to first convert the text angle to radians; then use an equation based on
+         *  (a) the pivot point, (b) the distance value of each button from the pivot point, (c) the text angle in radians
+         *  used in a trigonometric function. Values are converted to 'float' and back when necessary in order to preserve
+         *  accuracy. Finally, new locations are assigned to current buttons.
          * 
          * RETURNS
          *  Nothing
@@ -796,25 +713,18 @@ namespace My_Note
             float newOptLocY = (float)(Y + Math.Sin(radAngleF) * optButDistF);
             PointF newOptButPtF = new PointF(newOptLocX, newOptLocY);
             m_optionsButton.Location = Point.Round(newOptButPtF);
-            // added for data persistence
-            m_optionsButtonLocation = m_optionsButton.Location;
 
             float delButDistF = m_delButDistF;
             float newDelLocX = (float)(X + Math.Cos(radAngleF) * delButDistF);
             float newDelLocY = (float)(Y + Math.Sin(radAngleF) * delButDistF);
             PointF newDelButPtF = new PointF(newDelLocX, newDelLocY);
             m_deleteButton.Location = Point.Round(newDelButPtF);
-            // added for data persistence
-            m_deleteButtonLocation = m_deleteButton.Location;
 
             float rotButDistF = m_rotButDistF;
             float newRotLocX = (float)(X + Math.Cos(radAngleF) * rotButDistF);
             float newRotLocY = (float)(Y + Math.Sin(radAngleF) * rotButDistF);
             PointF newRotButPtF = new PointF(newRotLocX, newRotLocY);
             m_rotateButton.Location = Point.Round(newRotButPtF);
-            // added for data persistence
-            m_rotateButtonLocation = m_rotateButton.Location;
-
         } /* private void updateButtonLocations() */
 
         /*
@@ -825,10 +735,10 @@ namespace My_Note
          *  public bool isNew();
          * 
          * DESCRIPTION
-         *  This method gets called to check and see if this object is new; i.e. was created and has not yet
-         *  been modified. Such functionality will assist the owner of this object in preventing the creation
-         *  of too many new instance by accidentally clicking on the panel to fast or too many times. Object
-         *  is considered not new when the text has been changed.
+         *  This method gets called to check and see if this object is new; i.e. was created and has not yet been
+         *  modified. Such functionality will assist the owner of this object in preventing the creation of too many
+         *  new instance by accidentally clicking on the panel to fast or too many times. Object is considered not
+         *  new when the text has been changed.
          * 
          * RETURNS
          *  True if this object was just created and false if it has been modified.
@@ -859,9 +769,9 @@ namespace My_Note
          *  public void hideButtons();
          * 
          * DESCRIPTION
-         *  This method gets called to set the 'Visible' properties of all the buttons associated with this
-         *  object to false. This is done to indicate to the user that VerticalText control is not currrently
-         *  selected and to deliver a more presentable UI.
+         *  This method gets called to set the 'Visible' properties of all the buttons associated with this object to
+         *  false. This is done to indicate to the user that VerticalText control is not currrently selected and to
+         *  deliver a more presentable UI.
          * 
          * RETURNS
          *  Nothing
@@ -888,9 +798,9 @@ namespace My_Note
          *  public void showButtons();
          * 
          * DESCRIPTION
-         *  This method gets called to set the 'Visible' properties of all the buttons associated with this
-         *  object to true. This is done to indicate to the user that VerticalText control is currently
-         *  selected in order to give the user tools to modify each instance of this VerticalText.
+         *  This method gets called to set the 'Visible' properties of all the buttons associated with this object to
+         *  true. This is done to indicate to the user that VerticalText control is currently selected in order to give
+         *  the user tools to modify each instance of this VerticalText.
          * 
          * RETURNS
          *  Nothing
@@ -911,41 +821,149 @@ namespace My_Note
 
         #endregion
 
+        // Region contains methods to assist data persistence
+        #region Data Persistence Methods
+
+        /*
+         * NAME
+         *  setButtonProperties() - sets button properties
+         *  
+         * SYNOPSIS
+         *  public void setButtonProperties();
+         * 
+         * DESCRIPTION
+         *  This method is used to set properties for buttons belonging to this class. This method was added to meet the
+         *  needs of data persistence technique used in this application. Since 'Button' class does not support serialization
+         *  its attributes are saved and written to disk instead. Upon restoring this object, upon startup or 'Page' change,
+         *  'Button' member variables are recreated but their values do not get reassigned again because the constructor does
+         *  not get called again. Their values get reassigned in this method, called by an outside object when restoring 'this'.
+         *  Special technique was used to reassign event handlers to 'Button' objects because, unlike their other properties,
+         *  event handlers do not get replaced by new ones with the same name, instead they are added to existing ones. That is
+         *  why they are first removed, then added again. This safe and effective technique was used to because the alternative
+         *  solution would be far more complicated.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  2:32pm 5/20/2015
+         */
+        public void setButtonProperties()
+        {
+            m_moveButton.BackColor = Color.Transparent;
+            m_moveButton.BackgroundImage = Properties.Resources.moveArrow;
+            m_moveButton.Location = m_moveButtonLocation;
+            m_moveButton.Size = new Size(16, 16);
+            m_moveButton.MouseDown -= m_moveButton_MouseDown;
+            m_moveButton.MouseMove -= m_moveButton_MouseMove;
+            m_moveButton.MouseUp -= m_moveButton_MouseUp;
+            m_moveButton.MouseDown += m_moveButton_MouseDown;
+            m_moveButton.MouseMove += m_moveButton_MouseMove;
+            m_moveButton.MouseUp += m_moveButton_MouseUp;
+
+            m_optionsButton.BackColor = Color.Transparent;
+            m_optionsButton.BackgroundImage = Properties.Resources.optionsImg;
+            m_optionsButton.Size = new Size(16, 16);
+            m_optionsButton.MouseUp -= m_optionsButton_MouseUp;
+            m_optionsButton.MouseUp += m_optionsButton_MouseUp;
+
+            m_deleteButton.BackColor = Color.White;
+            m_deleteButton.BackColor = Color.Transparent;
+            m_deleteButton.BackgroundImage = Properties.Resources.removeX;
+            m_deleteButton.Size = new Size(16, 16);
+            m_deleteButton.MouseUp -= m_deleteButton_MouseUp;
+            m_deleteButton.MouseUp += m_deleteButton_MouseUp;
+
+            m_rotateButton.BackColor = Color.Transparent;
+            m_rotateButton.BackgroundImage = Properties.Resources.rotateArrow;
+            m_rotateButton.Size = new Size(16, 16);
+            m_rotateButton.MouseDown -= m_rotateButton_MouseDown;
+            m_rotateButton.MouseMove -= m_rotateButton_MouseMove;
+            m_rotateButton.MouseUp -= m_rotateButton_MouseUp;
+            m_rotateButton.MouseDown += m_rotateButton_MouseDown;
+            m_rotateButton.MouseMove += m_rotateButton_MouseMove;
+            m_rotateButton.MouseUp += m_rotateButton_MouseUp;
+        } /* public void setButtonProperties() */
+
         // Data persistence
         /* 10:51am 5/20/2015
          *  // used in deserializer 
+         */
+        /*
+         * NAME
+         *  VerticalText() - gets called to deserialize this object
+         *  
+         * SYNOPSIS
+         *  public VerticalText(SerializationInfo a_info, StreamingContext a_context);
+         *      a_info      -> provides data it has stored
+         *      a_context   -> does nothing (required)
+         *      
+         * DESCRIPTION
+         *  This constructor gets called when instances of this object are to be deserialized. Since
+         *  not all member variables were saved, additional member variables were saved to help restore
+         *  process. Such variables are m_textBrushColor and m_moveButtonLocation.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  6:27pm 5/19/2015
          */
         public VerticalText(SerializationInfo a_info, StreamingContext a_context)
         {
             m_textString = (String)a_info.GetValue("TextString", typeof(String));
             m_textFont = (Font)a_info.GetValue("TextFont", typeof(Font));
-            //m_textBrush = (SolidBrush)a_info.GetValue("TextBrush", typeof(SolidBrush));
             m_textBrushColor = (Color)a_info.GetValue("TextBrushColor", typeof(Color));
             m_textOrigin = (Point)a_info.GetValue("TextOrigin", typeof(Point));
             m_textAngle = (Int32)a_info.GetValue("TextAngle", typeof(Int32));
             m_optButDistF = (float)a_info.GetValue("OptButDist", typeof(float));
             m_delButDistF = (float)a_info.GetValue("DelButDist", typeof(float));
             m_rotButDistF = (float)a_info.GetValue("RotButDist", typeof(float));
-            //m_moveButton = (Button)a_info.GetValue("MoveButton", typeof(Button));
             m_moveButtonLocation = (Point)a_info.GetValue("MoveButtonLocation", typeof(Point));
-        }
+        } /* public VerticalText(SerializationInfo a_info, StreamingContext a_context) */
+
         /*
-         *  11:08am 5/20/15
+         * NAME
+         *  GetObjectData() - used to serialize this object
          *  
+         * SYNOPSIS
+         *  public void GetObjectData(SerializationInfo a_info, StreamingContext a_context);
+         *      a_info      -> stores data needed to serialize an object
+         *      a_context   -> does nothing (required)
+         *      
+         * DESCRIPTION
+         *  This method is used to serialize this object by storing member variables into SerializationInfo
+         *  object. Not all member variables of this class can be saved, therefore additional variables are
+         *  used, m_textBrushColor and m_moveButtonLocation.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  11:08am 5/20/2015
          */
         public void GetObjectData(SerializationInfo a_info, StreamingContext a_context)
         {
             a_info.AddValue("TextString", m_textString);
             a_info.AddValue("TextFont", m_textFont);
-            //a_info.AddValue("TextBrush", m_textBrush);
             a_info.AddValue("TextBrushColor", m_textBrushColor);
             a_info.AddValue("TextOrigin", m_textOrigin);
             a_info.AddValue("TextAngle", m_textAngle);
             a_info.AddValue("OptButDist", m_optButDistF);
             a_info.AddValue("DelButDist", m_delButDistF);
             a_info.AddValue("RotButDist", m_delButDistF);
-            //a_info.AddValue("MoveButton", m_moveButton);
             a_info.AddValue("MoveButtonLocation", m_moveButtonLocation);
-        }
+        } /* public void GetObjectData(SerializationInfo a_info, StreamingContext a_context) */
+
+        #endregion
     }
 }

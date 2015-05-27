@@ -15,7 +15,7 @@ using System.Windows.Forms;
  *  DESCRIPTION:
  *      The purpose of this class is to provide the application with a custom ComboBox tool in the toolbox.
  *      An instance of this class/control is used in VertTextOptionsForm to allow the user to set the color
- *      of the rotatable text. Initial code for this class class was taken from a website and slightly modified
+ *      of the rotatable text. Initial code for this class was taken from a website and slightly modified
  *      to accomodate the needs of this application. The modifications that were made to this class include
  *      the removal of unnecessary features. Due to the simplicity of this class and effective coding standards
  *      by the original author, further modifications were not necessary.

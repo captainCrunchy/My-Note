@@ -913,7 +913,7 @@ namespace My_Note
 
         #endregion
 
-        // Temporary methods
+        // Temporary elements
         #region Temporary Methods
 
         // Temp
