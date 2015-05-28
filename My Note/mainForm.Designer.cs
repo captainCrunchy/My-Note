@@ -31,16 +31,21 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.printToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.printPreviewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.previewMarginsAreaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.previewFullPageAreaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.printPageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.printMarginsAreaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.printFullPageAreaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.eidtToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addNewSubjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.renameNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteSubjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.autoSaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.minuteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.minutesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.minutesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.oneMinuteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fiveMinutesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tenMinutesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.noneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.myNoteHelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -99,6 +104,7 @@
             this.logTextBox = new System.Windows.Forms.TextBox();
             this.clearButton = new System.Windows.Forms.Button();
             this.transparentPanel = new My_Note.TransparentPanel();
+            this.popupButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.toolbarPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox18)).BeginInit();
@@ -121,7 +127,8 @@
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.saveToolStripMenuItem,
-            this.printToolStripMenuItem,
+            this.printPreviewToolStripMenuItem,
+            this.printPageToolStripMenuItem,
             this.closeToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -130,21 +137,60 @@
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
-            // printToolStripMenuItem
+            // printPreviewToolStripMenuItem
             // 
-            this.printToolStripMenuItem.Name = "printToolStripMenuItem";
-            this.printToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.printToolStripMenuItem.Text = "Print";
-            this.printToolStripMenuItem.Click += new System.EventHandler(this.printToolStripMenuItem_Click);
+            this.printPreviewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.previewMarginsAreaToolStripMenuItem,
+            this.previewFullPageAreaToolStripMenuItem});
+            this.printPreviewToolStripMenuItem.Name = "printPreviewToolStripMenuItem";
+            this.printPreviewToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.printPreviewToolStripMenuItem.Text = "Print Preview";
+            // 
+            // previewMarginsAreaToolStripMenuItem
+            // 
+            this.previewMarginsAreaToolStripMenuItem.Name = "previewMarginsAreaToolStripMenuItem";
+            this.previewMarginsAreaToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.previewMarginsAreaToolStripMenuItem.Text = "Preview Margins Area";
+            this.previewMarginsAreaToolStripMenuItem.Click += new System.EventHandler(this.previewMarginsAreaToolStripMenuItem_Click);
+            // 
+            // previewFullPageAreaToolStripMenuItem
+            // 
+            this.previewFullPageAreaToolStripMenuItem.Name = "previewFullPageAreaToolStripMenuItem";
+            this.previewFullPageAreaToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.previewFullPageAreaToolStripMenuItem.Text = "Preview Full Page Area";
+            this.previewFullPageAreaToolStripMenuItem.Click += new System.EventHandler(this.previewFullPageAreaToolStripMenuItem_Click);
+            // 
+            // printPageToolStripMenuItem
+            // 
+            this.printPageToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.printMarginsAreaToolStripMenuItem,
+            this.printFullPageAreaToolStripMenuItem});
+            this.printPageToolStripMenuItem.Name = "printPageToolStripMenuItem";
+            this.printPageToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.printPageToolStripMenuItem.Text = "Print Page";
+            // 
+            // printMarginsAreaToolStripMenuItem
+            // 
+            this.printMarginsAreaToolStripMenuItem.Name = "printMarginsAreaToolStripMenuItem";
+            this.printMarginsAreaToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.printMarginsAreaToolStripMenuItem.Text = "Print Margins Area";
+            this.printMarginsAreaToolStripMenuItem.Click += new System.EventHandler(this.printMarginsAreaToolStripMenuItem_Click);
+            // 
+            // printFullPageAreaToolStripMenuItem
+            // 
+            this.printFullPageAreaToolStripMenuItem.Name = "printFullPageAreaToolStripMenuItem";
+            this.printFullPageAreaToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.printFullPageAreaToolStripMenuItem.Text = "Print Full Page Area";
+            this.printFullPageAreaToolStripMenuItem.Click += new System.EventHandler(this.printFullPageAreaToolStripMenuItem_Click);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
@@ -183,37 +229,41 @@
             // autoSaveToolStripMenuItem
             // 
             this.autoSaveToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.minuteToolStripMenuItem,
-            this.minutesToolStripMenuItem,
-            this.minutesToolStripMenuItem1,
+            this.oneMinuteToolStripMenuItem,
+            this.fiveMinutesToolStripMenuItem,
+            this.tenMinutesToolStripMenuItem,
             this.noneToolStripMenuItem});
             this.autoSaveToolStripMenuItem.Name = "autoSaveToolStripMenuItem";
             this.autoSaveToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.autoSaveToolStripMenuItem.Text = "Auto Save";
             // 
-            // minuteToolStripMenuItem
+            // oneMinuteToolStripMenuItem
             // 
-            this.minuteToolStripMenuItem.Name = "minuteToolStripMenuItem";
-            this.minuteToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
-            this.minuteToolStripMenuItem.Text = "1 - Minute";
+            this.oneMinuteToolStripMenuItem.Name = "oneMinuteToolStripMenuItem";
+            this.oneMinuteToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.oneMinuteToolStripMenuItem.Text = "1 - Minute";
+            this.oneMinuteToolStripMenuItem.Click += new System.EventHandler(this.oneMinuteToolStripMenuItem_Click);
             // 
-            // minutesToolStripMenuItem
+            // fiveMinutesToolStripMenuItem
             // 
-            this.minutesToolStripMenuItem.Name = "minutesToolStripMenuItem";
-            this.minutesToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
-            this.minutesToolStripMenuItem.Text = "5 - Minutes";
+            this.fiveMinutesToolStripMenuItem.Name = "fiveMinutesToolStripMenuItem";
+            this.fiveMinutesToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.fiveMinutesToolStripMenuItem.Text = "5 - Minutes";
+            this.fiveMinutesToolStripMenuItem.Click += new System.EventHandler(this.fiveMinutesToolStripMenuItem_Click);
             // 
-            // minutesToolStripMenuItem1
+            // tenMinutesToolStripMenuItem
             // 
-            this.minutesToolStripMenuItem1.Name = "minutesToolStripMenuItem1";
-            this.minutesToolStripMenuItem1.Size = new System.Drawing.Size(140, 22);
-            this.minutesToolStripMenuItem1.Text = "10 - Minutes";
+            this.tenMinutesToolStripMenuItem.Name = "tenMinutesToolStripMenuItem";
+            this.tenMinutesToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.tenMinutesToolStripMenuItem.Text = "10 - Minutes";
+            this.tenMinutesToolStripMenuItem.Click += new System.EventHandler(this.tenMinutesToolStripMenuItem_Click);
             // 
             // noneToolStripMenuItem
             // 
             this.noneToolStripMenuItem.Name = "noneToolStripMenuItem";
             this.noneToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.noneToolStripMenuItem.Text = "None";
+            this.noneToolStripMenuItem.Click += new System.EventHandler(this.noneToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -832,11 +882,21 @@
             this.transparentPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseMove);
             this.transparentPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseUp);
             // 
+            // popupButton
+            // 
+            this.popupButton.Location = new System.Drawing.Point(28, 642);
+            this.popupButton.Name = "popupButton";
+            this.popupButton.Size = new System.Drawing.Size(75, 23);
+            this.popupButton.TabIndex = 55;
+            this.popupButton.Text = "popUp";
+            this.popupButton.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(812, 717);
+            this.Controls.Add(this.popupButton);
             this.Controls.Add(this.clearButton);
             this.Controls.Add(this.logTextBox);
             this.Controls.Add(this.subjectFivePanel);
@@ -921,14 +981,13 @@
         private System.Windows.Forms.Panel backPanel;
         private My_Note.TransparentPanel transparentPanel;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem printToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addNewSubjectToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteSubjectToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem autoSaveToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem minuteToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem minutesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem minutesToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem oneMinuteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fiveMinutesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tenMinutesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem noneToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem myNoteHelpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
@@ -942,6 +1001,13 @@
         private System.Windows.Forms.TextBox logTextBox;
         private System.Windows.Forms.Button clearButton;
         private System.Windows.Forms.ToolStripMenuItem renameNameToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem printPreviewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem previewMarginsAreaToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem previewFullPageAreaToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem printPageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem printMarginsAreaToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem printFullPageAreaToolStripMenuItem;
+        private System.Windows.Forms.Button popupButton;
     }
 }
 

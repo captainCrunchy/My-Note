@@ -29,12 +29,25 @@ namespace My_Note
     sealed class MyNoteStore : ISerializable
     {
         private List<Subject> m_savedSubjects;      // Used to store 'Subject' objects
+        private int m_autoSaveTimeInterval = 0;     // Remembers user preferred auto-save time interval
 
         public List<Subject> SavedSubjects
         {
             get
             {
                 return this.m_savedSubjects;
+            }
+        }
+
+        public int AutoSaveTimeInterval
+        {
+            get
+            {
+                return this.m_autoSaveTimeInterval;
+            }
+            set
+            {
+                m_autoSaveTimeInterval = value;
             }
         }
 
@@ -129,6 +142,7 @@ namespace My_Note
         public MyNoteStore(SerializationInfo a_info, StreamingContext a_context)
         {
             m_savedSubjects = (List<Subject>)a_info.GetValue("SavedSubjects", typeof(List<Subject>));
+            m_autoSaveTimeInterval = (int)a_info.GetValue("AutoSaveTimeInterval", typeof(int));
         } /* public MyNoteStore(SerializationInfo a_info, StreamingContext a_context) */
 
         /*
@@ -155,6 +169,7 @@ namespace My_Note
         public void GetObjectData(SerializationInfo a_info, StreamingContext a_context)
         {
             a_info.AddValue("SavedSubjects", m_savedSubjects);
+            a_info.AddValue("AutoSaveTimeInterval", m_autoSaveTimeInterval);
         } /* public void GetObjectData(SerializationInfo a_info, StreamingContext a_context) */
     }
 }

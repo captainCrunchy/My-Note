@@ -123,30 +123,36 @@ namespace My_Note
         public MainForm()
         {
             InitializeComponent();
-            // fix start position and prevent resizing
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.Fixed3D;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
 
-            m_currentSelectedControl = e_SelectedControl.TEXT;
-            m_selectedControlButtonColor = Color.SandyBrown;
-
-            textSelectButton.BackColor = m_selectedControlButtonColor;
-            fontComboBox.Text = "Microsoft Sans Serif";
-            richTextBox.Font = new Font("Microsoft Sans Serif", 12);
-
-            m_transparentPanelGraphics = this.transparentPanel.CreateGraphics();
-            m_transparentPanelPen = new Pen(m_currentDrawColor);
-
-            m_subjectOnePanelGraphics = subjectOnePanel.CreateGraphics();
-            m_subjectTwoPanelGraphics = subjectTwoPanel.CreateGraphics();
-            m_subjectThreePanelGraphics = subjectThreePanel.CreateGraphics();
-            m_subjectFourPanelGraphics = subjectFourPanel.CreateGraphics();
-            m_subjectFivePanelGraphics = subjectFivePanel.CreateGraphics();
-            m_drawFormat.FormatFlags = StringFormatFlags.DirectionVertical;
+            m_autoSaveTimer.Tick += new EventHandler(TimerEventProcessor);  // formmMenuStrip.cs
+            m_autoSaveNotifyTimer.Tick += new EventHandler(autoSaveNotify);  // formmMenuStrip.cs
+            m_autoSaveNotifyLabel.Location = new Point(8, 90);  // formmMenuStrip.cs (UI element)
+            m_autoSaveNotifyLabel.Size = new Size(132, 13);
+            m_autoSaveNotifyLabel.Text = "Work saved automatically!";
+            m_autoSaveNotifyLabel.ForeColor = Color.Black;
             
-            m_pageNumberLabel.Text = "1";
+            m_currentSelectedControl = e_SelectedControl.TEXT;  // mainForm.cs
+            m_selectedControlButtonColor = Color.SandyBrown;  // mainForm.cs
+
+            textSelectButton.BackColor = m_selectedControlButtonColor;  // UI element
+            fontComboBox.Text = "Microsoft Sans Serif";  // UI element
+            richTextBox.Font = new Font("Microsoft Sans Serif", 12);  // UI element
+
+            m_transparentPanelGraphics = this.transparentPanel.CreateGraphics();  // formTextbox.cs
+            m_transparentPanelPen = new Pen(m_currentDrawColor);  // formTextbox.cs
+
+            m_subjectOnePanelGraphics = subjectOnePanel.CreateGraphics();  // mainForm.cs
+            m_subjectTwoPanelGraphics = subjectTwoPanel.CreateGraphics();  // mainForm.cs
+            m_subjectThreePanelGraphics = subjectThreePanel.CreateGraphics();  // mainForm.cs
+            m_subjectFourPanelGraphics = subjectFourPanel.CreateGraphics();  // mainForm.cs
+            m_subjectFivePanelGraphics = subjectFivePanel.CreateGraphics();  // mainForm.cs
+            m_drawFormat.FormatFlags = StringFormatFlags.DirectionVertical;  // mainForm.cs
+
+            m_pageNumberLabel.Text = "1";  // mainForm.cs (UI element)
             m_pageNumberLabel.TextAlign = ContentAlignment.MiddleCenter;
             m_pageNumberLabel.BackColor = Color.Transparent;
             m_pageNumberLabel.BorderStyle = BorderStyle.Fixed3D;
@@ -263,7 +269,10 @@ namespace My_Note
                     this.Close();
                 }
             }
+            m_autoSaveTimeInterval = m_mainMyNoteStore.AutoSaveTimeInterval;
+            updateAutoSaveTimer();
             updateToolStripMenuItems();
+            updateCheckMarksForAutoSaveItems();
         } /* private void MainForm_Shown(object sender, EventArgs e) */
 
         /*
@@ -939,58 +948,5 @@ namespace My_Note
         }
 
         #endregion
-
-        /* Added content is here and below:
-         * 
-         */
-
-        /*  This will trigger the FormClosing event handler where confirmation will be handled
-         *  1:09pm 5/27/2015
-         */
-        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        /*
-         *  2:27pm 5/27/2015
-         *  http://stackoverflow.com/questions/4974276/richtextbox-drawtobitmap-does-not-draw-containing-text
-         */
-        private void printToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // Works
-            //Bitmap memoryImage = new Bitmap(transparentPanel.Width, transparentPanel.Height);
-            //Rectangle pageRectangle = transparentPanel.Bounds;
-            //transparentPanel.DrawToBitmap(memoryImage, transparentPanel.Bounds);
-            //memoryImage.Save("memImg.bmp");
-
-            // Works
-            //Size saveSize = new Size(666, 695);
-            //Bitmap memoryImage = new Bitmap(saveSize.Width, saveSize.Height);
-            //transparentPanel.DrawToBitmap(memoryImage, transparentPanel.Bounds);
-            //memoryImage.Save("memImg.bmp");
-
-            // Doesn't work
-            //Bitmap memoryImage = new Bitmap(richTextBox.Width, richTextBox.Height);
-            //Rectangle pageRectangle = richTextBox.Bounds;
-            //richTextBox.Update();
-            //richTextBox.DrawToBitmap(memoryImage, richTextBox.Bounds);
-            //memoryImage.Save("memImg.bmp");
-
-            //Bitmap bmp = new Bitmap(richTextBox.Width, richTextBox.Height);
-            //using (Graphics gr = Graphics.FromImage(bmp))
-            //{
-            //    gr.CopyFromScreen(richTextBox.PointToScreen(Point.Empty), Point.Empty, richTextBox.Size);
-            //}
-            //bmp.Save("memImg.bmp");
-            
-            // Saves as bitmap to be printed later.
-            Bitmap bmp = new Bitmap(transparentPanel.Width, transparentPanel.Height);
-            using (Graphics gr = Graphics.FromImage(bmp))
-            {
-                gr.CopyFromScreen(transparentPanel.PointToScreen(Point.Empty), Point.Empty, transparentPanel.Size);
-            }
-            bmp.Save("memImg.bmp");
-        }
     }
 }
