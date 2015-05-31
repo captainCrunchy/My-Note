@@ -850,7 +850,7 @@ namespace My_Note
         private void saveCurrentPageDisplayed()
         {
             Page pageToSave = m_currentSubject.getPageForPageNumber(m_currentPageNumber);
-            pageToSave.PageText = richTextBox.Text;
+            pageToSave.RTFTextCode = richTextBox.Rtf;
             pageToSave.ShapeContainer = m_shapesStorage;
             pageToSave.VerticalTextList.Clear();
             foreach (VerticalText v in m_verticalTextList)
@@ -891,7 +891,7 @@ namespace My_Note
         private void updateCurrentPageDisplayForSubject(Subject a_subject, int a_pageNumber)
         {
             Page pageToDisplay = a_subject.getPageForPageNumber(a_pageNumber);
-            richTextBox.Text = pageToDisplay.PageText;
+            richTextBox.Rtf = pageToDisplay.RTFTextCode;
             m_shapesStorage = pageToDisplay.ShapeContainer;
             m_verticalTextList.Clear();
             foreach (VerticalText vOne in pageToDisplay.VerticalTextList)
@@ -948,5 +948,159 @@ namespace My_Note
         }
 
         #endregion
+
+        /*
+         *  7:35am 5/31/2015
+         */
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutForm aboutForm = new AboutForm();
+            aboutForm.StartPosition = FormStartPosition.CenterParent;
+            aboutForm.FormBorderStyle = FormBorderStyle.Fixed3D;
+            aboutForm.ShowDialog();
+        }
+
+        /*
+         *  8:15am 5/31/2015
+         */
+        private void myNoteHelpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            HelpForm helpForm = new HelpForm();
+            helpForm.StartPosition = FormStartPosition.CenterParent;
+            helpForm.FormBorderStyle = FormBorderStyle.Fixed3D;
+            helpForm.ShowDialog();
+        }
+
+        /*
+         *  11:47am 5/31/2015
+         */
+        private void textColorButton_Click(object sender, EventArgs e)
+        {
+            DialogResult textColorDialog = drawColorDialog.ShowDialog();
+            if (textColorDialog == DialogResult.OK)
+            {
+                richTextBox.SelectionColor = drawColorDialog.Color;
+            }
+        }
+
+        /*
+         *  12:30pm 5/31/2015
+         */
+        private void highlightColorButton_Click(object sender, EventArgs e)
+        {
+            DialogResult textHighlightDialog = drawColorDialog.ShowDialog();
+            if (textHighlightDialog == DialogResult.OK)
+            {
+                richTextBox.SelectionBackColor = drawColorDialog.Color;
+            }
+        }
+
+        private void popupButton_Click(object sender, EventArgs e)
+        {
+            string rtfTextCode = richTextBox.Rtf;
+
+        }
+
+        /*
+         *  11:52am 5/31/2015
+         */
+        private void boldButton_Click(object sender, EventArgs e)
+        {
+            richTextBox.SelectionFont = new Font("Microsoft Sans Serif", 12, FontStyle.Bold);
+        }
+
+        /*
+         *  11:54am 5/31/2015
+         */
+        private void italicButton_Click(object sender, EventArgs e)
+        {
+            richTextBox.SelectionFont = new Font("Microsoft Sans Serif", 12, FontStyle.Italic);
+        }
+
+        /*
+         *  11:57am 5/31/2015
+         */
+        private void underlineButton_Click(object sender, EventArgs e)
+        {
+            richTextBox.SelectionFont = new Font("Microsoft Sans Serif", 12, FontStyle.Underline);
+        }
+
+        /*
+         *  12:03pm 5/31/2015
+         */
+        private void strikeoutButton_Click(object sender, EventArgs e)
+        {
+            richTextBox.SelectionFont = new Font("Microsoft Sans Serif", 12, FontStyle.Strikeout);
+        }
+
+        private static Font idealFont = new Font("Microsoft Sans Serif", 12);  // static
+        private Font m_currentRichTextFont = new Font("Microsoft Sans Serif", 12);  // dynamic
+        private bool textWasPasted = false;
+        private int pastedTextLength = 0;
+        private int pasteStartIndex = 0;
+        /*
+         *  4:11pm 5/31/2015
+         */
+        private void richTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            //mslog("keyVal = " + e.KeyValue);
+            int textLength = richTextBox.TextLength;
+            if ((int)e.KeyValue == 72 || (int)e.KeyValue == 32)
+            {
+                //mslog("ideal font");
+                richTextBox.SelectionFont = idealFont;
+            }
+            else
+            {
+                //mslog("current font");
+                richTextBox.SelectionFont = m_currentRichTextFont;
+            }
+            bool ctrlV = e.Modifiers == Keys.Control && e.KeyCode == Keys.V;
+            bool shiftIns = e.Modifiers == Keys.Shift && e.KeyCode == Keys.Insert;
+
+            if (ctrlV || shiftIns)
+            {
+                textWasPasted = true;
+                //mslog("pasted");
+                string enteredText = Clipboard.GetText();
+                pastedTextLength = enteredText.Length;
+                pasteStartIndex = richTextBox.SelectionStart;
+                int currentSelectionStart = richTextBox.SelectionStart;
+                //for (int i = currentSelectionStart; i < (currentSelectionStart+enteredText.Length); i++)
+                for (int i = 0; i < enteredText.Length ; i++)
+                {
+                    //mslog("-> " + enteredText[i]);
+                }
+                int textLengthNow = richTextBox.TextLength;
+                //richTextBox.select
+                //enteredText = e.
+            }
+        }
+        
+        /*
+         *  5:50pm 5/31/2015
+         */
+        private void richTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            //int textLengthNow = richTextBox.TextLength;
+            if (textWasPasted == true)
+            {
+                for (int i = pasteStartIndex; i < pasteStartIndex + pastedTextLength; i++)
+                {
+                    //mslog("--> " + richTextBox.Text[i]);
+                    if (richTextBox.Text[i] == ' ')
+                    {
+                        mslog("found a space");
+                        richTextBox.SelectionStart = i;
+                        richTextBox.SelectionLength = 1;
+                        richTextBox.Select();
+                        richTextBox.SelectionFont = idealFont;
+                    }
+                }
+                textWasPasted = false;
+            }
+        }
+
+        
     }
 }

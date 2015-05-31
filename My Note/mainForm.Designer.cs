@@ -279,12 +279,14 @@
             this.myNoteHelpToolStripMenuItem.Name = "myNoteHelpToolStripMenuItem";
             this.myNoteHelpToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.myNoteHelpToolStripMenuItem.Text = "My Note Help";
+            this.myNoteHelpToolStripMenuItem.Click += new System.EventHandler(this.myNoteHelpToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.aboutToolStripMenuItem.Text = "About";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // toolbarPanel
             // 
@@ -691,6 +693,7 @@
             this.textColorButton.Size = new System.Drawing.Size(33, 33);
             this.textColorButton.TabIndex = 6;
             this.textColorButton.UseVisualStyleBackColor = true;
+            this.textColorButton.Click += new System.EventHandler(this.textColorButton_Click);
             // 
             // highlightColorButton
             // 
@@ -701,6 +704,7 @@
             this.highlightColorButton.Size = new System.Drawing.Size(33, 33);
             this.highlightColorButton.TabIndex = 5;
             this.highlightColorButton.UseVisualStyleBackColor = true;
+            this.highlightColorButton.Click += new System.EventHandler(this.highlightColorButton_Click);
             // 
             // strikeoutButton
             // 
@@ -711,6 +715,7 @@
             this.strikeoutButton.TabIndex = 4;
             this.strikeoutButton.Text = "ab";
             this.strikeoutButton.UseVisualStyleBackColor = true;
+            this.strikeoutButton.Click += new System.EventHandler(this.strikeoutButton_Click);
             // 
             // underlineButton
             // 
@@ -721,6 +726,7 @@
             this.underlineButton.TabIndex = 3;
             this.underlineButton.Text = "U";
             this.underlineButton.UseVisualStyleBackColor = true;
+            this.underlineButton.Click += new System.EventHandler(this.underlineButton_Click);
             // 
             // italicButton
             // 
@@ -731,6 +737,7 @@
             this.italicButton.TabIndex = 2;
             this.italicButton.Text = "I";
             this.italicButton.UseVisualStyleBackColor = true;
+            this.italicButton.Click += new System.EventHandler(this.italicButton_Click);
             // 
             // boldButton
             // 
@@ -741,6 +748,7 @@
             this.boldButton.TabIndex = 1;
             this.boldButton.Text = "B";
             this.boldButton.UseVisualStyleBackColor = true;
+            this.boldButton.Click += new System.EventHandler(this.boldButton_Click);
             // 
             // fontComboBox
             // 
@@ -769,6 +777,8 @@
             this.richTextBox.TabIndex = 2;
             this.richTextBox.Text = "";
             this.richTextBox.TextChanged += new System.EventHandler(this.richTextBox_TextChanged);
+            this.richTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.richTextBox_KeyDown);
+            this.richTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.richTextBox_KeyUp);
             // 
             // backPanel
             // 
@@ -890,6 +900,7 @@
             this.popupButton.TabIndex = 55;
             this.popupButton.Text = "popUp";
             this.popupButton.UseVisualStyleBackColor = true;
+            this.popupButton.Click += new System.EventHandler(this.popupButton_Click);
             // 
             // MainForm
             // 

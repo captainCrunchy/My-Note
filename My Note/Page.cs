@@ -31,19 +31,7 @@ namespace My_Note
     {
         private ShapeContainer m_shapeContainer = new ShapeContainer();             // Used to store 'Shape' objects
         private List<VerticalText> m_verticalTextList = new List<VerticalText>();   // Used to store 'VerticalText' objects
-        private string m_pageText = "";                                             // Used to store text for the 'Page'
-
-        public string PageText
-        {
-            get
-            {
-                return m_pageText;
-            }
-            set
-            {
-                m_pageText = value;
-            }
-        }
+        private string m_rtfTextCode = "";                                          // Used to store text formatting
 
         public ShapeContainer ShapeContainer
         {
@@ -66,6 +54,18 @@ namespace My_Note
             set
             {
                 m_verticalTextList = value;
+            }
+        }
+
+        public string RTFTextCode
+        {
+            get
+            {
+                return m_rtfTextCode;
+            }
+            set
+            {
+                m_rtfTextCode = value;
             }
         }
 
@@ -119,7 +119,7 @@ namespace My_Note
         {
             m_shapeContainer = (ShapeContainer)a_info.GetValue("ShapeContainer", typeof(ShapeContainer));
             m_verticalTextList = (List<VerticalText>)a_info.GetValue("VerticalTextList", typeof(List<VerticalText>));
-            m_pageText = (string)a_info.GetValue("PageText", typeof(string));
+            m_rtfTextCode = (string)a_info.GetValue("RTFTextCode", typeof(string));
         } /* public Page(SerializationInfo a_info, StreamingContext a_context) */
 
         /*
@@ -147,7 +147,7 @@ namespace My_Note
         {
             a_info.AddValue("ShapeContainer", m_shapeContainer);
             a_info.AddValue("VerticalTextList", m_verticalTextList);
-            a_info.AddValue("PageText", m_pageText);
+            a_info.AddValue("RTFTextCode", m_rtfTextCode);
         } /* public void GetObjectData(SerializationInfo a_info, StreamingContext a_context) */
     }
 }

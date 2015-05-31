@@ -58,6 +58,7 @@ namespace My_Note
         // Updated by objects using this class
         protected override void OnPaintBackground(PaintEventArgs e)
         {
+            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
             m_thisWidth = this.Size.Width;
             m_thisHeight = this.Size.Height;
             m_lineBegin = 5;
@@ -68,9 +69,10 @@ namespace My_Note
         // Draws a set of lines to resemble a page in a notebook
         protected override void OnPaint(PaintEventArgs e)
         {
+            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
             base.OnPaint(e);  // This draws the shapes by 'owner' object
             // The rest draws lines
-            for (int i = 0; i < 30; i++)
+            for (int i = 0; i < 28; i++)
             {
                 e.Graphics.DrawLine(m_bluePen, m_lineBegin, m_nextLine, m_lineEnd, m_nextLine);
                 m_nextLine += lineSpaceForFont.MICROSOFT_SANS_SERIF;

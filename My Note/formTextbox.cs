@@ -109,6 +109,7 @@ namespace My_Note
         {
             richTextBox.Invalidate();
             transparentPanel.Invalidate();
+            mslog("text changed");
         } /* private void richTextBox_TextChanged(object sender, EventArgs e) */
 
         #endregion
@@ -149,8 +150,17 @@ namespace My_Note
                 // If currently in text editing mode
                 if (m_currentSelectedControl == e_SelectedControl.TEXT)
                 {
-                    Point newPoint = new Point(mouseEventArgs.X - 40, mouseEventArgs.Y - 35);
-                    int charIndex = richTextBox.GetCharIndexFromPosition(newPoint);
+                    Point capturedPoint = new Point(mouseEventArgs.X - 40, mouseEventArgs.Y - 35);
+                    int charIndex = richTextBox.GetCharIndexFromPosition(capturedPoint);
+                    int lastChar = richTextBox.TextLength;
+                    Point lastCharPoint = richTextBox.GetPositionFromCharIndex(lastChar);
+
+                    if (lastCharPoint.X == capturedPoint.X ||
+                        lastCharPoint.Y < capturedPoint.Y)
+                    {
+                        charIndex++;
+                    }
+
                     richTextBox.SelectionStart = charIndex;
                     richTextBox.SelectionLength = 0;
                     richTextBox.Select();
@@ -530,7 +540,7 @@ namespace My_Note
         private void transparentPanel_Paint(object sender, PaintEventArgs e)
         {
             // Apply a smoothing mode to smooth out the line.
-            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
             // Begin drawing
             for (int i = 0; i < m_shapesStorage.NumberOfShapes() - 1; i++)
             {

@@ -484,16 +484,24 @@ namespace My_Note
             switch (selectedIndex)
             {
                 case 0:
-                    richTextBox.Font = new Font("Calibri", 12);
+                    //richTextBox.Font = new Font("Calibri", 12);
+                    richTextBox.SelectionFont = new Font("Calibri", 12);
+                    m_currentRichTextFont = new Font("Calibri", 12);
                     break;
                 case 1:
-                    richTextBox.Font = new Font("Consolas", 12);
+                    //richTextBox.Font = new Font("Consolas", 12);
+                    richTextBox.SelectionFont = new Font("Consolas", 12);
+                    m_currentRichTextFont = new Font("Consolas", 12);
                     break;
                 case 2:
-                    richTextBox.Font = new Font("Microsoft Sans Serif", 12);
+                    //richTextBox.Font = new Font("Microsoft Sans Serif", 12);
+                    richTextBox.SelectionFont = new Font("Microsoft Sans Serif", 12);
+                    m_currentRichTextFont = new Font("Microsoft Sans Serif", 12);
                     break;
                 case 3:
+                    //richTextBox.Font = new Font("Times New Roman", 12);
                     richTextBox.SelectionFont = new Font("Times New Roman", 12);
+                    m_currentRichTextFont = new Font("Times New Roman", 12);
                     break;
             }
         } /* private void fontComboBox_SelectedIndexChanged(object sender, System.EventArgs e) */
