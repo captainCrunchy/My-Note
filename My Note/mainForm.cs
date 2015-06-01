@@ -1033,74 +1033,59 @@ namespace My_Note
             richTextBox.SelectionFont = new Font("Microsoft Sans Serif", 12, FontStyle.Strikeout);
         }
 
-        private static Font idealFont = new Font("Microsoft Sans Serif", 12);  // static
-        private Font m_currentRichTextFont = new Font("Microsoft Sans Serif", 12);  // dynamic
-        private bool textWasPasted = false;
-        private int pastedTextLength = 0;
-        private int pasteStartIndex = 0;
-        /*
+        private static Font idealFont = new Font("Microsoft Sans Serif", 12);  // static (used to control line height 'for spaces')
+        private Font m_currentRichTextFont = new Font("Microsoft Sans Serif", 12);  // dynamic (initially set but gets changed)
+
+        private Point currentCharIndexPoint = new Point();
+        private Point endOfLinePoint = new Point();
+        private Point endOfPagePoint = new Point();
+        /*  DESCRIPTION: this method performs many functions. Prevents enter key when there are maximum number of lines, also
+         *  disables all keys except for 'backspace' when the text of rich text box is at the end
+         *  converts the font of every 'space' to 'ideal font' that help maintain the line height
          *  4:11pm 5/31/2015
          */
         private void richTextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            //mslog("keyVal = " + e.KeyValue);
             int textLength = richTextBox.TextLength;
-            if ((int)e.KeyValue == 72 || (int)e.KeyValue == 32)
+            if ((int)e.KeyValue == 32)
             {
-                //mslog("ideal font");
                 richTextBox.SelectionFont = idealFont;
             }
             else
             {
-                //mslog("current font");
                 richTextBox.SelectionFont = m_currentRichTextFont;
             }
-            bool ctrlV = e.Modifiers == Keys.Control && e.KeyCode == Keys.V;
-            bool shiftIns = e.Modifiers == Keys.Shift && e.KeyCode == Keys.Insert;
-
-            if (ctrlV || shiftIns)
+            if (e.KeyCode == Keys.Enter)
             {
-                textWasPasted = true;
-                //mslog("pasted");
-                string enteredText = Clipboard.GetText();
-                pastedTextLength = enteredText.Length;
-                pasteStartIndex = richTextBox.SelectionStart;
-                int currentSelectionStart = richTextBox.SelectionStart;
-                //for (int i = currentSelectionStart; i < (currentSelectionStart+enteredText.Length); i++)
-                for (int i = 0; i < enteredText.Length ; i++)
+                int linesCount = richTextBox.Lines.Length;
+                if (linesCount == 28)
                 {
-                    //mslog("-> " + enteredText[i]);
+                    e.SuppressKeyPress = true;
                 }
-                int textLengthNow = richTextBox.TextLength;
-                //richTextBox.select
-                //enteredText = e.
             }
+            
+            // if there are 28 lines and end of this line is near end 
+            int currentCharIndex = richTextBox.SelectionStart;
+            currentCharIndexPoint = richTextBox.GetPositionFromCharIndex(currentCharIndex);
+            //mslog("current " + currentCharIndex);
+
+            endOfLinePoint = richTextBox.GetPositionFromCharIndex(richTextBox.SelectionCharOffset);
+            endOfPagePoint = richTextBox.GetPositionFromCharIndex(richTextBox.TextLength - 1);
+            //if (endOfPagePoint.X > 460 && endOfPagePoint.Y == 540) // works but it is not enough
+            if ((endOfPagePoint.X > 460 && endOfPagePoint.Y == 540) ||
+                (currentCharIndexPoint.X > 460 && richTextBox.Lines.Length == 28)) // works but it is not enough
+            {
+                if (e.KeyCode != Keys.Back)
+                {
+                    e.SuppressKeyPress = true;
+                }
+            }
+            //mslog("X == " + currentCharIndexPoint.X);
         }
-        
-        /*
-         *  5:50pm 5/31/2015
-         */
-        private void richTextBox_KeyUp(object sender, KeyEventArgs e)
+
+        private void richTextBox_ContentsResized(object sender, ContentsResizedEventArgs e)
         {
-            //int textLengthNow = richTextBox.TextLength;
-            if (textWasPasted == true)
-            {
-                for (int i = pasteStartIndex; i < pasteStartIndex + pastedTextLength; i++)
-                {
-                    //mslog("--> " + richTextBox.Text[i]);
-                    if (richTextBox.Text[i] == ' ')
-                    {
-                        mslog("found a space");
-                        richTextBox.SelectionStart = i;
-                        richTextBox.SelectionLength = 1;
-                        richTextBox.Select();
-                        richTextBox.SelectionFont = idealFont;
-                    }
-                }
-                textWasPasted = false;
-            }
+            mslog("eRect = " + e.NewRectangle);
         }
-
-        
     }
 }
