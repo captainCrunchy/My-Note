@@ -109,6 +109,7 @@ namespace My_Note
         {
             richTextBox.Invalidate();
             transparentPanel.Invalidate();
+            //mslog("textChanged");
         } /* private void richTextBox_TextChanged(object sender, EventArgs e) */
 
         #endregion

@@ -971,42 +971,155 @@ namespace My_Note
             helpForm.ShowDialog();
         }
 
-        /*
-         *  11:47am 5/31/2015
-         */
-        private void textColorButton_Click(object sender, EventArgs e)
-        {
-            DialogResult textColorDialog = drawColorDialog.ShowDialog();
-            if (textColorDialog == DialogResult.OK)
-            {
-                richTextBox.SelectionColor = drawColorDialog.Color;
-            }
-        }
-
-        /*
+        private bool m_highlightColorEnabled = false;
+        private Color m_currentHighlightColor = SystemColors.Window;
+        private Color m_currentTextColor = SystemColors.WindowText;
+        /*  If some text is selected, then only that text is highlighted. If no text is selected then highlighting will
+         *  become enabled until this method is called again.
          *  12:30pm 5/31/2015
          */
         private void highlightColorButton_Click(object sender, EventArgs e)
         {
-            DialogResult textHighlightDialog = drawColorDialog.ShowDialog();
-            if (textHighlightDialog == DialogResult.OK)
+            int textSelectionLength = richTextBox.SelectionLength;
+            if (textSelectionLength > 0)
             {
-                richTextBox.SelectionBackColor = drawColorDialog.Color;
+                // Change selection back color
+                richTextBox.SelectionBackColor = changeHighlightColorButton.BackColor;
+
+                // Place the cursor at the end of the selection
+                richTextBox.SelectionStart = richTextBox.SelectionStart + textSelectionLength;
+                richTextBox.SelectionLength = 0;
+                richTextBox.Select();
+            }
+            else
+            {
+                if (m_highlightColorEnabled == true)
+                {
+                    m_highlightColorEnabled = false;
+                    highlightColorButton.BackColor = Color.Transparent;
+                    m_currentHighlightColor = SystemColors.Window;
+                }
+                else
+                {
+                    m_highlightColorEnabled = true;
+                    highlightColorButton.BackColor = m_selectedControlButtonColor;
+                    m_currentHighlightColor = changeHighlightColorButton.BackColor;
+                }
+                richTextBox.Select();  // Place the cursor back where it was
             }
         }
 
+        /*
+         *  3:15pm 6/2/2015
+         */
+        private void changeHighlightColorButton_Click(object sender, EventArgs e)
+        {
+            if (richTextBox.SelectionLength > 0)  // redraw lines only if necessary
+            {
+                transparentPanel.Refresh();
+            }
+            DialogResult highlightColorDialogResult = drawColorDialog.ShowDialog();
+            if (highlightColorDialogResult == DialogResult.OK)
+            {
+                changeHighlightColorButton.BackColor = drawColorDialog.Color;
+            }
+            
+        }
+
+        private bool m_textColorEnabled = false;
+        /*  If some text is selected, then only that text color is changed. If no text is selected then text color will
+         *  become enabled until this method is called again.
+         *  11:47am 5/31/2015
+         */
+        private void textColorButton_Click(object sender, EventArgs e)
+        {
+            int textSelectionLength = richTextBox.SelectionLength;
+            if (textSelectionLength > 0)
+            {
+                // Change selection back color
+                richTextBox.SelectionColor = changeTextColorButton.BackColor;
+
+                // Place the cursor at the end of the selection
+                richTextBox.SelectionStart = richTextBox.SelectionStart + textSelectionLength;
+                richTextBox.SelectionLength = 0;
+                richTextBox.Select();
+            }
+            else
+            {
+                if (m_textColorEnabled == true)
+                {
+                    m_textColorEnabled = false;
+                    textColorButton.BackColor = Color.Transparent;
+                    m_currentTextColor = SystemColors.WindowText;
+                }
+                else
+                {
+                    m_textColorEnabled = true;
+                    textColorButton.BackColor = m_selectedControlButtonColor;
+                    m_currentTextColor = changeTextColorButton.BackColor;
+                }
+                richTextBox.Select();  // Place the cursor back where it was
+            }
+        }
+
+        /*
+         *  3:21pm 6/2/2015
+         */
+        private void changeTextColorButton_Click(object sender, EventArgs e)
+        {
+            if (richTextBox.SelectionLength > 0)  // redraw lines only if necessary
+            {
+                transparentPanel.Refresh();
+            }
+            DialogResult textColorDialogResult = drawColorDialog.ShowDialog();
+            if (textColorDialogResult == DialogResult.OK)
+            {
+                textColorButton.BackColor = drawColorDialog.Color;
+            }
+        }
+
+        // Temp
         private void popupButton_Click(object sender, EventArgs e)
         {
             string rtfTextCode = richTextBox.Rtf;
 
         }
 
+        private bool m_boldTextEnabled = false;
         /*
          *  11:52am 5/31/2015
          */
         private void boldButton_Click(object sender, EventArgs e)
         {
-            richTextBox.SelectionFont = new Font("Microsoft Sans Serif", 12, FontStyle.Bold);
+            int textSelectionLength = richTextBox.SelectionLength;
+            if (textSelectionLength > 0)
+            {
+                richTextBox.SelectionFont = new Font("Microsoft Sans Serif", 12, FontStyle.Bold);
+            }
+            else
+            {
+                if (m_boldTextEnabled == true)
+                {
+                    m_boldTextEnabled = false;
+                    boldButton.BackColor = Color.Transparent;
+                    // update current font
+                }
+                else
+                {
+                    m_textColorEnabled = true;
+                    boldButton.BackColor = m_selectedControlButtonColor;
+                    // update current font
+                }
+
+            }
+        }
+
+        /*
+         *  5:08pm 6/2/2015
+         */
+        private void updateCurrentFontAttributes()
+        {
+            
         }
 
         /*
@@ -1033,59 +1146,74 @@ namespace My_Note
             richTextBox.SelectionFont = new Font("Microsoft Sans Serif", 12, FontStyle.Strikeout);
         }
 
-        private static Font idealFont = new Font("Microsoft Sans Serif", 12);  // static (used to control line height 'for spaces')
-        private Font m_currentRichTextFont = new Font("Microsoft Sans Serif", 12);  // dynamic (initially set but gets changed)
+        private Font m_idealFont = new Font("Microsoft Sans Serif", 12);  // used to control line height 'for spaces'
+        private Font m_currentRichTextBoxFont = new Font("Microsoft Sans Serif", 12);  // current font
 
-        private Point currentCharIndexPoint = new Point();
         private Point endOfLinePoint = new Point();
-        private Point endOfPagePoint = new Point();
         /*  DESCRIPTION: this method performs many functions. Prevents enter key when there are maximum number of lines, also
          *  disables all keys except for 'backspace' when the text of rich text box is at the end
          *  converts the font of every 'space' to 'ideal font' that help maintain the line height
          *  4:11pm 5/31/2015
+         *  To control the text to stay within the boundaries of the rich text box word wrap should be disabled because it can
+         *  'push' text down when typing in the middle of the rich text box. Disabling word wrap presents a problem by extending
+         *  the line horizontally beyond the bounds of rich text box. This can be controlled by adding a 'RightMargin' but it will
+         *  ignore the word wrap. The solution is to limit the length of each line manually
          */
         private void richTextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            int textLength = richTextBox.TextLength;
-            if ((int)e.KeyValue == 32)
+            richTextBox.SelectionColor = m_currentTextColor;
+            richTextBox.SelectionBackColor = m_currentHighlightColor;
+            // Prevent too many lines
+            if (richTextBox.Lines.Length == 28)
             {
-                richTextBox.SelectionFont = idealFont;
+                if (e.KeyCode == Keys.Enter)
+                {
+                    e.SuppressKeyPress = true;
+                }
+            }
+
+            // Format for 'space'
+            if (e.KeyCode == Keys.Space)
+            {
+                richTextBox.SelectionFont = m_idealFont;
             }
             else
             {
-                richTextBox.SelectionFont = m_currentRichTextFont;
+                richTextBox.SelectionFont = m_currentRichTextBoxFont;
             }
-            if (e.KeyCode == Keys.Enter)
+
+            // Prevent lines too long
+            if (richTextBox.TextLength != 0)
             {
-                int linesCount = richTextBox.Lines.Length;
-                if (linesCount == 28)
+                int currentLineIndex = richTextBox.GetLineFromCharIndex(richTextBox.SelectionStart);
+                int lastCharIndexBeforeNextLine = 0;
+                for (int i = 0; i <= currentLineIndex; i++)
                 {
-                    e.SuppressKeyPress = true;
+                    lastCharIndexBeforeNextLine += richTextBox.Lines[i].Length;
+                    lastCharIndexBeforeNextLine++;  // for each '\n'
+                }
+                lastCharIndexBeforeNextLine--;
+                lastCharIndexBeforeNextLine--;
+                int totalLength = richTextBox.TextLength;
+
+                if (richTextBox.Text[lastCharIndexBeforeNextLine] == '\n')
+                {
+                    endOfLinePoint = richTextBox.GetPositionFromCharIndex(lastCharIndexBeforeNextLine + 1);
+                }
+                else
+                {
+                    endOfLinePoint = richTextBox.GetPositionFromCharIndex(lastCharIndexBeforeNextLine);
+                }
+
+                if (endOfLinePoint.X >= 450)
+                {
+                    if (!(e.KeyCode == Keys.Up || e.KeyCode == Keys.Down || e.KeyCode == Keys.Left ||
+                        e.KeyCode == Keys.Right || e.KeyCode == Keys.Back || e.KeyCode == Keys.Enter))
+                    {
+                        e.SuppressKeyPress = true;
+                    }
                 }
             }
-            
-            // if there are 28 lines and end of this line is near end 
-            int currentCharIndex = richTextBox.SelectionStart;
-            currentCharIndexPoint = richTextBox.GetPositionFromCharIndex(currentCharIndex);
-            //mslog("current " + currentCharIndex);
-
-            endOfLinePoint = richTextBox.GetPositionFromCharIndex(richTextBox.SelectionCharOffset);
-            endOfPagePoint = richTextBox.GetPositionFromCharIndex(richTextBox.TextLength - 1);
-            //if (endOfPagePoint.X > 460 && endOfPagePoint.Y == 540) // works but it is not enough
-            if ((endOfPagePoint.X > 460 && endOfPagePoint.Y == 540) ||
-                (currentCharIndexPoint.X > 460 && richTextBox.Lines.Length == 28)) // works but it is not enough
-            {
-                if (e.KeyCode != Keys.Back)
-                {
-                    e.SuppressKeyPress = true;
-                }
-            }
-            //mslog("X == " + currentCharIndexPoint.X);
-        }
-
-        private void richTextBox_ContentsResized(object sender, ContentsResizedEventArgs e)
-        {
-            mslog("eRect = " + e.NewRectangle);
         }
     }
 }

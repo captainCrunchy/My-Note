@@ -51,6 +51,8 @@
             this.myNoteHelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolbarPanel = new System.Windows.Forms.Panel();
+            this.changeHighlightColorButton = new System.Windows.Forms.Button();
+            this.changeTextColorButton = new System.Windows.Forms.Button();
             this.drawColorButton = new System.Windows.Forms.Button();
             this.whiteColorButton = new System.Windows.Forms.Button();
             this.blackColorButton = new System.Windows.Forms.Button();
@@ -82,8 +84,6 @@
             this.pencilSelectButton = new System.Windows.Forms.Button();
             this.textSelectButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.pictureBox18 = new System.Windows.Forms.PictureBox();
-            this.pictureBox17 = new System.Windows.Forms.PictureBox();
             this.textColorButton = new System.Windows.Forms.Button();
             this.highlightColorButton = new System.Windows.Forms.Button();
             this.strikeoutButton = new System.Windows.Forms.Button();
@@ -107,8 +107,6 @@
             this.popupButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.toolbarPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox18)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox17)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -291,6 +289,8 @@
             // toolbarPanel
             // 
             this.toolbarPanel.BackColor = System.Drawing.Color.Silver;
+            this.toolbarPanel.Controls.Add(this.changeHighlightColorButton);
+            this.toolbarPanel.Controls.Add(this.changeTextColorButton);
             this.toolbarPanel.Controls.Add(this.drawColorButton);
             this.toolbarPanel.Controls.Add(this.whiteColorButton);
             this.toolbarPanel.Controls.Add(this.blackColorButton);
@@ -322,8 +322,6 @@
             this.toolbarPanel.Controls.Add(this.pencilSelectButton);
             this.toolbarPanel.Controls.Add(this.textSelectButton);
             this.toolbarPanel.Controls.Add(this.label1);
-            this.toolbarPanel.Controls.Add(this.pictureBox18);
-            this.toolbarPanel.Controls.Add(this.pictureBox17);
             this.toolbarPanel.Controls.Add(this.textColorButton);
             this.toolbarPanel.Controls.Add(this.highlightColorButton);
             this.toolbarPanel.Controls.Add(this.strikeoutButton);
@@ -335,6 +333,26 @@
             this.toolbarPanel.Name = "toolbarPanel";
             this.toolbarPanel.Size = new System.Drawing.Size(812, 57);
             this.toolbarPanel.TabIndex = 1;
+            // 
+            // changeHighlightColorButton
+            // 
+            this.changeHighlightColorButton.BackColor = System.Drawing.Color.Yellow;
+            this.changeHighlightColorButton.Location = new System.Drawing.Point(156, 38);
+            this.changeHighlightColorButton.Name = "changeHighlightColorButton";
+            this.changeHighlightColorButton.Size = new System.Drawing.Size(33, 16);
+            this.changeHighlightColorButton.TabIndex = 67;
+            this.changeHighlightColorButton.UseVisualStyleBackColor = false;
+            this.changeHighlightColorButton.Click += new System.EventHandler(this.changeHighlightColorButton_Click);
+            // 
+            // changeTextColorButton
+            // 
+            this.changeTextColorButton.BackColor = System.Drawing.Color.Green;
+            this.changeTextColorButton.Location = new System.Drawing.Point(195, 38);
+            this.changeTextColorButton.Name = "changeTextColorButton";
+            this.changeTextColorButton.Size = new System.Drawing.Size(33, 16);
+            this.changeTextColorButton.TabIndex = 66;
+            this.changeTextColorButton.UseVisualStyleBackColor = false;
+            this.changeTextColorButton.Click += new System.EventHandler(this.changeTextColorButton_Click);
             // 
             // drawColorButton
             // 
@@ -666,24 +684,6 @@
             this.label1.TabIndex = 34;
             this.label1.Text = "Pencil";
             // 
-            // pictureBox18
-            // 
-            this.pictureBox18.BackColor = System.Drawing.Color.YellowGreen;
-            this.pictureBox18.Location = new System.Drawing.Point(195, 42);
-            this.pictureBox18.Name = "pictureBox18";
-            this.pictureBox18.Size = new System.Drawing.Size(33, 10);
-            this.pictureBox18.TabIndex = 33;
-            this.pictureBox18.TabStop = false;
-            // 
-            // pictureBox17
-            // 
-            this.pictureBox17.BackColor = System.Drawing.Color.Yellow;
-            this.pictureBox17.Location = new System.Drawing.Point(156, 42);
-            this.pictureBox17.Name = "pictureBox17";
-            this.pictureBox17.Size = new System.Drawing.Size(33, 10);
-            this.pictureBox17.TabIndex = 32;
-            this.pictureBox17.TabStop = false;
-            // 
             // textColorButton
             // 
             this.textColorButton.BackgroundImage = global::My_Note.Properties.Resources.txtColorClr;
@@ -777,7 +777,7 @@
             this.richTextBox.Size = new System.Drawing.Size(480, 570);
             this.richTextBox.TabIndex = 2;
             this.richTextBox.Text = "";
-            this.richTextBox.ContentsResized += new System.Windows.Forms.ContentsResizedEventHandler(this.richTextBox_ContentsResized);
+            this.richTextBox.WordWrap = false;
             this.richTextBox.TextChanged += new System.EventHandler(this.richTextBox_TextChanged);
             this.richTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.richTextBox_KeyDown);
             // 
@@ -867,7 +867,7 @@
             this.logTextBox.Multiline = true;
             this.logTextBox.Name = "logTextBox";
             this.logTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.logTextBox.Size = new System.Drawing.Size(140, 474);
+            this.logTextBox.Size = new System.Drawing.Size(150, 474);
             this.logTextBox.TabIndex = 53;
             // 
             // clearButton
@@ -934,8 +934,6 @@
             this.menuStrip1.PerformLayout();
             this.toolbarPanel.ResumeLayout(false);
             this.toolbarPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox18)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox17)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -957,8 +955,6 @@
         private System.Windows.Forms.ComboBox fontComboBox;
         private System.Windows.Forms.ColorDialog drawColorDialog;
         private System.Windows.Forms.RichTextBox richTextBox;
-        private System.Windows.Forms.PictureBox pictureBox17;
-        private System.Windows.Forms.PictureBox pictureBox18;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button pencilSelectButton;
         private System.Windows.Forms.Button textSelectButton;
@@ -1020,6 +1016,8 @@
         private System.Windows.Forms.ToolStripMenuItem printMarginsAreaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem printFullPageAreaToolStripMenuItem;
         private System.Windows.Forms.Button popupButton;
+        private System.Windows.Forms.Button changeHighlightColorButton;
+        private System.Windows.Forms.Button changeTextColorButton;
     }
 }
 
