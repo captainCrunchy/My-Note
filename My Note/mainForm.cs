@@ -1023,7 +1023,7 @@ namespace My_Note
             {
                 changeHighlightColorButton.BackColor = drawColorDialog.Color;
             }
-            
+
         }
 
         private bool m_textColorEnabled = false;
@@ -1091,10 +1091,13 @@ namespace My_Note
          */
         private void boldButton_Click(object sender, EventArgs e)
         {
+            if (richTextBox.SelectionFont == null) return;
             int textSelectionLength = richTextBox.SelectionLength;
             if (textSelectionLength > 0)
             {
-                richTextBox.SelectionFont = new Font("Microsoft Sans Serif", 12, FontStyle.Bold);
+                Font selFont = richTextBox.SelectionFont;
+                Font nextFont = new Font(selFont, selFont.Style ^ FontStyle.Bold);
+                richTextBox.SelectionFont = nextFont;
             }
             else
             {
@@ -1102,48 +1105,183 @@ namespace My_Note
                 {
                     m_boldTextEnabled = false;
                     boldButton.BackColor = Color.Transparent;
-                    // update current font
                 }
                 else
                 {
-                    m_textColorEnabled = true;
+                    m_boldTextEnabled = true;
                     boldButton.BackColor = m_selectedControlButtonColor;
-                    // update current font
                 }
-
+                updateCurrentFontStyles();
             }
+            richTextBox.Select();
         }
 
-        /*
-         *  5:08pm 6/2/2015
-         */
-        private void updateCurrentFontAttributes()
-        {
-            
-        }
-
+        private bool m_italicTextEnabled = false;
         /*
          *  11:54am 5/31/2015
          */
         private void italicButton_Click(object sender, EventArgs e)
         {
-            richTextBox.SelectionFont = new Font("Microsoft Sans Serif", 12, FontStyle.Italic);
+            if (richTextBox.SelectionFont == null) return;
+            int textSelectionLength = richTextBox.SelectionLength;
+            if (textSelectionLength > 0)
+            {
+                Font selFont = richTextBox.SelectionFont;
+                Font nextFont = new Font(selFont, selFont.Style ^ FontStyle.Italic);
+                richTextBox.SelectionFont = nextFont;
+            }
+            else
+            {
+                if (m_italicTextEnabled == true)
+                {
+                    m_italicTextEnabled = false;
+                    italicButton.BackColor = Color.Transparent;
+                }
+                else
+                {
+                    m_italicTextEnabled = true;
+                    italicButton.BackColor = m_selectedControlButtonColor;
+                }
+                updateCurrentFontStyles();
+            }
+            richTextBox.Select();
         }
-
+        private bool m_underlineTextEnabled = false;
         /*
          *  11:57am 5/31/2015
          */
         private void underlineButton_Click(object sender, EventArgs e)
         {
-            richTextBox.SelectionFont = new Font("Microsoft Sans Serif", 12, FontStyle.Underline);
+            if (richTextBox.SelectionFont == null) return;
+            int textSelectionLength = richTextBox.SelectionLength;
+            if (textSelectionLength > 0)
+            {
+                Font selFont = richTextBox.SelectionFont;
+                Font nextFont = new Font(selFont, selFont.Style ^ FontStyle.Underline);
+                richTextBox.SelectionFont = nextFont;
+            }
+            else
+            {
+                if (m_underlineTextEnabled == true)
+                {
+                    m_underlineTextEnabled = false;
+                    underlineButton.BackColor = Color.Transparent;
+                }
+                else
+                {
+                    m_underlineTextEnabled = true;
+                    underlineButton.BackColor = m_selectedControlButtonColor;
+                }
+                updateCurrentFontStyles();
+            }
+            richTextBox.Select();
         }
 
+        private bool m_strikeoutTextEnabled = false;
         /*
          *  12:03pm 5/31/2015
          */
         private void strikeoutButton_Click(object sender, EventArgs e)
         {
-            richTextBox.SelectionFont = new Font("Microsoft Sans Serif", 12, FontStyle.Strikeout);
+            if (richTextBox.SelectionFont == null) return;
+            int textSelectionLength = richTextBox.SelectionLength;
+            if (textSelectionLength > 0)
+            {
+                Font selFont = richTextBox.SelectionFont;
+                Font nextFont = new Font(selFont, selFont.Style ^ FontStyle.Strikeout);
+                richTextBox.SelectionFont = nextFont;
+            }
+            else
+            {
+                if (m_strikeoutTextEnabled == true)
+                {
+                    m_strikeoutTextEnabled = false;
+                    strikeoutButton.BackColor = Color.Transparent;
+                }
+                else
+                {
+                    m_strikeoutTextEnabled = true;
+                    strikeoutButton.BackColor = m_selectedControlButtonColor;
+                }
+                updateCurrentFontStyles();
+            }
+            richTextBox.Select();
+        }
+
+        /*
+         *  5:08pm 6/2/2015
+         */
+        private void updateCurrentFontStyles()
+        {
+            string currentFontName = m_currentRichTextBoxFont.Name;
+            float currentFontSize = m_currentRichTextBoxFont.Size;
+            Font nextFont = new Font(currentFontName, currentFontSize);
+            if (m_boldTextEnabled == true)
+                nextFont = new Font(nextFont, nextFont.Style ^ FontStyle.Bold);
+            if (m_italicTextEnabled == true)
+                nextFont = new Font(nextFont, nextFont.Style ^ FontStyle.Italic);
+            if (m_underlineTextEnabled == true)
+                nextFont = new Font(nextFont, nextFont.Style ^ FontStyle.Underline);
+            if (m_strikeoutTextEnabled == true)
+                nextFont = new Font(nextFont, nextFont.Style ^ FontStyle.Strikeout);
+            m_currentRichTextBoxFont = nextFont;
+            //mslog("style" + m_currentRichTextBoxFont.Style);
+        }
+
+        /*  Updates UI for Text Controls when multi text selection is made, or when selecting new control. fontComboBox and
+         *  other controls get updated twice depending on which control calls this method. This is because this method is used
+         *  for several functionalities
+         *  4:51pm 6/10/2015
+         */
+        private void updateUIForTextControls()
+        {
+            if (m_currentSelectedControl == e_SelectedControl.TEXT)
+            {
+                //fontComboBox.Enabled = true;
+                //boldButton.Enabled = true;
+                //italicButton.Enabled = true;
+                //underlineButton.Enabled = true;
+                //strikeoutButton.Enabled = true;
+                highlightColorButton.Enabled = true;
+                textColorButton.Enabled = true;
+                changeHighlightColorButton.Enabled = true;
+                changeTextColorButton.Enabled = true;
+
+                if (richTextBox.SelectionLength > 0)  // Can only be true if TEXT control is selected
+                {
+                    fontComboBox.Enabled = false;
+                    boldButton.Enabled = false;
+                    italicButton.Enabled = false;
+                    underlineButton.Enabled = false;
+                    strikeoutButton.Enabled = false;
+                }
+                else
+                {
+                    fontComboBox.Enabled = true;
+                    boldButton.Enabled = true;
+                    italicButton.Enabled = true;
+                    underlineButton.Enabled = true;
+                    strikeoutButton.Enabled = true;
+                }
+            }
+            else
+            {
+                fontComboBox.Enabled = false;
+                //boldButton.BackColor = Color.Transparent;
+                boldButton.Enabled = false;
+                //italicButton.BackColor = Color.Transparent;
+                italicButton.Enabled = false;
+                //underlineButton.BackColor = Color.Transparent;
+                underlineButton.Enabled = false;
+                //strikeoutButton.BackColor = Color.Transparent;
+                strikeoutButton.Enabled = false;
+                //highlightColorButton.BackColor = Color.Transparent;
+                highlightColorButton.Enabled = false;
+                //textColorButton.BackColor = Color.Transparent;
+                textColorButton.Enabled = false;
+                changeHighlightColorButton.Enabled = false;
+                changeTextColorButton.Enabled = false;
+            }
         }
 
         private Font m_idealFont = new Font("Microsoft Sans Serif", 12);  // used to control line height 'for spaces'

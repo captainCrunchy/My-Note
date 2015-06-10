@@ -484,23 +484,15 @@ namespace My_Note
             switch (selectedIndex)
             {
                 case 0:
-                    //richTextBox.Font = new Font("Calibri", 12);
-                    richTextBox.SelectionFont = new Font("Calibri", 12);
                     m_currentRichTextBoxFont = new Font("Calibri", 12);
                     break;
                 case 1:
-                    //richTextBox.Font = new Font("Consolas", 12);
-                    richTextBox.SelectionFont = new Font("Consolas", 12);
                     m_currentRichTextBoxFont = new Font("Consolas", 12);
                     break;
                 case 2:
-                    //richTextBox.Font = new Font("Microsoft Sans Serif", 12);
-                    richTextBox.SelectionFont = new Font("Microsoft Sans Serif", 12);
                     m_currentRichTextBoxFont = new Font("Microsoft Sans Serif", 12);
                     break;
                 case 3:
-                    //richTextBox.Font = new Font("Times New Roman", 12);
-                    richTextBox.SelectionFont = new Font("Times New Roman", 12);
                     m_currentRichTextBoxFont = new Font("Times New Roman", 12);
                     break;
             }
@@ -537,7 +529,6 @@ namespace My_Note
             dashedSelectButton.BackColor = Color.Transparent;
             dottedSelectButton.BackColor = Color.Transparent;
             vertTextButton.BackColor = Color.Transparent;
-
             if (canHideVertTextButtons)
             {
                 foreach (VerticalText v in m_verticalTextList)
@@ -550,6 +541,11 @@ namespace My_Note
                 richTextBox.Invalidate();
                 backPanel.Invalidate();
             }
+            if (m_currentSelectedControl != e_SelectedControl.TEXT)
+            {
+                richTextBox.SelectionLength = 0;
+            }
+            updateUIForTextControls();
         }
 
         /*  This method sets the current control to 'text' edit control. It updates the mouse cursor to match one for text
