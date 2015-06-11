@@ -496,6 +496,9 @@ namespace My_Note
                     m_currentRichTextBoxFont = new Font("Times New Roman", 12);
                     break;
             }
+            updateCurrentFontStyles();
+            richTextBox.SelectionFont = m_currentRichTextBoxFont;
+            richTextBox.Select();
         } /* private void fontComboBox_SelectedIndexChanged(object sender, System.EventArgs e) */
 
         #endregion

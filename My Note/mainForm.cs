@@ -144,6 +144,14 @@ namespace My_Note
 
             m_transparentPanelGraphics = this.transparentPanel.CreateGraphics();  // formTextbox.cs
             m_transparentPanelPen = new Pen(m_currentDrawColor);  // formTextbox.cs
+            //m_dashLineValues = {5, 5};
+            m_dashLinePen = new Pen(m_currentDrawColor, m_currentPenWidth);
+            m_dashLinePen.DashPattern = m_dashLineValues;
+            //m_transparentPanelGraphics.DrawLine(dashPen, m_drawStartPoint, e.Location);
+            //m_dottedLineValues = {2, 2};
+            m_dottedLinePen = new Pen(m_currentDrawColor, m_currentPenWidth);
+            m_dottedLinePen.DashPattern = m_dottedLineValues;
+            //m_transparentPanelGraphics.DrawLine(dashPen, m_drawStartPoint, e.Location);
 
             m_subjectOnePanelGraphics = subjectOnePanel.CreateGraphics();  // mainForm.cs
             m_subjectTwoPanelGraphics = subjectTwoPanel.CreateGraphics();  // mainForm.cs
@@ -947,6 +955,13 @@ namespace My_Note
             logTextBox.Text = "";
         }
 
+        // Temp
+        private void popupButton_Click(object sender, EventArgs e)
+        {
+            string rtfTextCode = richTextBox.Rtf;
+
+        }
+
         #endregion
 
         /*
@@ -1009,12 +1024,15 @@ namespace My_Note
             }
         }
 
-        /*
+        /*  If highlighter color is changed, by user selecting some color and clicking 'OK' while some text is selected,
+         *  then text backcolor is changed, highlighter color is updated, cursor moved to the end of selection. If the user
+         *  clicks 'Cancel' then no changes are made and the text stays selected.
          *  3:15pm 6/2/2015
          */
         private void changeHighlightColorButton_Click(object sender, EventArgs e)
         {
-            if (richTextBox.SelectionLength > 0)  // redraw lines only if necessary
+            int textSelectionLength = richTextBox.SelectionLength;
+            if (textSelectionLength > 0)  // redraw lines only if necessary
             {
                 transparentPanel.Refresh();
             }
@@ -1022,13 +1040,20 @@ namespace My_Note
             if (highlightColorDialogResult == DialogResult.OK)
             {
                 changeHighlightColorButton.BackColor = drawColorDialog.Color;
+                if (richTextBox.SelectionLength > 0)
+                {
+                    richTextBox.SelectionBackColor = drawColorDialog.Color;
+                    richTextBox.SelectionStart = richTextBox.SelectionStart + textSelectionLength;
+                    richTextBox.SelectionLength = 0;
+                }
             }
-
+            richTextBox.Select();
+            transparentPanel.Invalidate();
         }
 
         private bool m_textColorEnabled = false;
-        /*  If some text is selected, then only that text color is changed. If no text is selected then text color will
-         *  become enabled until this method is called again.
+        /*  If some text is selected, then only that text color is changed, and cursor is moved to the end of selection.
+         *  If no text is selected then text color will become enabled until this method is called again.
          *  11:47am 5/31/2015
          */
         private void textColorButton_Click(object sender, EventArgs e)
@@ -1062,27 +1087,31 @@ namespace My_Note
             }
         }
 
-        /*
+        /*  If text color is changed, by user selecting some color and clicking 'OK' while some text is selected,
+         *  then text forecolor is changed, text color is updated, cursor moved to the end of selection. If the user
+         *  clicks 'Cancel' then no changes are made and the text stays selected.
          *  3:21pm 6/2/2015
          */
         private void changeTextColorButton_Click(object sender, EventArgs e)
         {
-            if (richTextBox.SelectionLength > 0)  // redraw lines only if necessary
+            int textSelectionLength = richTextBox.SelectionLength;
+            if (textSelectionLength > 0)  // redraw lines only if necessary
             {
                 transparentPanel.Refresh();
             }
             DialogResult textColorDialogResult = drawColorDialog.ShowDialog();
             if (textColorDialogResult == DialogResult.OK)
             {
-                textColorButton.BackColor = drawColorDialog.Color;
+                changeTextColorButton.BackColor = drawColorDialog.Color;
+                if (richTextBox.SelectionLength > 0)
+                {
+                    richTextBox.SelectionBackColor = drawColorDialog.Color;
+                    richTextBox.SelectionStart = richTextBox.SelectionStart + textSelectionLength;
+                    richTextBox.SelectionLength = 0;
+                }
             }
-        }
-
-        // Temp
-        private void popupButton_Click(object sender, EventArgs e)
-        {
-            string rtfTextCode = richTextBox.Rtf;
-
+            richTextBox.Select();
+            transparentPanel.Invalidate();
         }
 
         private bool m_boldTextEnabled = false;
@@ -1225,35 +1254,43 @@ namespace My_Note
             if (m_strikeoutTextEnabled == true)
                 nextFont = new Font(nextFont, nextFont.Style ^ FontStyle.Strikeout);
             m_currentRichTextBoxFont = nextFont;
-            //mslog("style" + m_currentRichTextBoxFont.Style);
         }
 
         /*  Updates UI for Text Controls when multi text selection is made, or when selecting new control. fontComboBox and
          *  other controls get updated twice depending on which control calls this method. This is because this method is used
-         *  for several functionalities
+         *  for several functionalities. Font and FontStyle can only be applied to one word at a time
          *  4:51pm 6/10/2015
          */
         private void updateUIForTextControls()
         {
             if (m_currentSelectedControl == e_SelectedControl.TEXT)
             {
-                //fontComboBox.Enabled = true;
-                //boldButton.Enabled = true;
-                //italicButton.Enabled = true;
-                //underlineButton.Enabled = true;
-                //strikeoutButton.Enabled = true;
                 highlightColorButton.Enabled = true;
                 textColorButton.Enabled = true;
                 changeHighlightColorButton.Enabled = true;
                 changeTextColorButton.Enabled = true;
-
-                if (richTextBox.SelectionLength > 0)  // Can only be true if TEXT control is selected
+                if (richTextBox.SelectionFont == null)
                 {
                     fontComboBox.Enabled = false;
                     boldButton.Enabled = false;
                     italicButton.Enabled = false;
                     underlineButton.Enabled = false;
                     strikeoutButton.Enabled = false;
+                }
+                if (richTextBox.SelectionLength > 0)
+                {
+                    for (int i = richTextBox.SelectionStart; i < richTextBox.SelectionStart + richTextBox.SelectionLength; i++)
+                    {
+                        if (richTextBox.Text[i] == ' ')
+                        {
+                            fontComboBox.Enabled = false;
+                            boldButton.Enabled = false;
+                            italicButton.Enabled = false;
+                            underlineButton.Enabled = false;
+                            strikeoutButton.Enabled = false;
+                            break;
+                        }
+                    }
                 }
                 else
                 {
@@ -1267,17 +1304,11 @@ namespace My_Note
             else
             {
                 fontComboBox.Enabled = false;
-                //boldButton.BackColor = Color.Transparent;
                 boldButton.Enabled = false;
-                //italicButton.BackColor = Color.Transparent;
                 italicButton.Enabled = false;
-                //underlineButton.BackColor = Color.Transparent;
                 underlineButton.Enabled = false;
-                //strikeoutButton.BackColor = Color.Transparent;
                 strikeoutButton.Enabled = false;
-                //highlightColorButton.BackColor = Color.Transparent;
                 highlightColorButton.Enabled = false;
-                //textColorButton.BackColor = Color.Transparent;
                 textColorButton.Enabled = false;
                 changeHighlightColorButton.Enabled = false;
                 changeTextColorButton.Enabled = false;
@@ -1332,6 +1363,10 @@ namespace My_Note
                 }
                 lastCharIndexBeforeNextLine--;
                 lastCharIndexBeforeNextLine--;
+                if (lastCharIndexBeforeNextLine < 0)  // prevent an (out of bounds) exception
+                {
+                    return;
+                }
                 int totalLength = richTextBox.TextLength;
 
                 if (richTextBox.Text[lastCharIndexBeforeNextLine] == '\n')
@@ -1352,6 +1387,15 @@ namespace My_Note
                     }
                 }
             }
+        }
+
+        /*  If some text is selected, this will ensure it stays highlighted as the focus is changed
+         *  11:30am 6/11/2015
+         */
+        private void fontComboBox_DropDown(object sender, EventArgs e)
+        {
+            richTextBox.Select();
+            transparentPanel.Refresh();
         }
     }
 }

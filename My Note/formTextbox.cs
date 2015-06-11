@@ -50,6 +50,19 @@ namespace My_Note
 {
     public partial class MainForm : Form
     {
+        private Point[] m_arrowDynamicArray;// = new Point[6];
+        private Rectangle m_rectangleDynamicRectangle;
+        private Rectangle m_ellipseDynamicRectangle;
+        private Point[] m_solidLineDynamicArray;
+
+        private Point[] m_dashLineDynamicArray;
+        private float[] m_dashLineValues = { 5, 5 };
+        private Pen m_dashLinePen;
+
+        private Point[] m_dottedLineDynamicArray;
+        private float[] m_dottedLineValues = { 2, 2 };
+        private Pen m_dottedLinePen;
+
         // Region contains member variables for this class
         #region Member Variables
 
@@ -154,17 +167,16 @@ namespace My_Note
                     int charIndex = richTextBox.GetCharIndexFromPosition(capturedPoint);
                     int lastChar = richTextBox.TextLength;
                     Point lastCharPoint = richTextBox.GetPositionFromCharIndex(lastChar);
-
                     if (lastCharPoint.X == capturedPoint.X ||
                         lastCharPoint.Y < capturedPoint.Y)
                     {
                         charIndex++;
                     }
-
                     richTextBox.SelectionStart = charIndex;
                     richTextBox.SelectionLength = 0;
                     richTextBox.Select();
                     transparentPanel.Refresh();
+                    updateUIForTextControls();
                 }
             }
         } /* private void transparentPanel_Click(object sender, System.EventArgs e) */
@@ -215,21 +227,60 @@ namespace My_Note
                 {
                     m_isErasing = true;
                 }
-                // This technique saves many lines of code and  uses less test conditions
+
+                // Start to draw arrows (dynamically), this approach saves many lines of code
                 if (((int)m_currentSelectedControl > 2) &&
-                    ((int)m_currentSelectedControl < 14))
+                    ((int)m_currentSelectedControl < 11))
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                    m_arrowDynamicArray = new Point[6];
+                }
+                if (m_currentSelectedControl == e_SelectedControl.RECTANGLE)  // 11
                 {
                     m_isDrawing = true;
                     m_drawStartPoint = e.Location;
                 }
-
-                if (((int)m_currentSelectedControl > 13) &&
-                    ((int)m_currentSelectedControl < 16))
+                if (m_currentSelectedControl == e_SelectedControl.ELLIPSE) // 12
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                }
+                if (m_currentSelectedControl == e_SelectedControl.SOLID)  // 13
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                    m_solidLineDynamicArray = new Point[2];
+                }
+                if (m_currentSelectedControl == e_SelectedControl.DASHED) //14
                 {
                     m_isDrawing = true;
                     m_drawStartPoint = e.Location;
                     m_canDash = true;
+                    m_dashLineDynamicArray = new Point[2];
                 }
+                if (m_currentSelectedControl == e_SelectedControl.DOTTED)
+                {
+                    m_isDrawing = true;
+                    m_drawStartPoint = e.Location;
+                    m_canDash = true;
+                    m_dottedLineDynamicArray = new Point[2];
+                }
+                //// This technique saves many lines of code and  uses less test conditions
+                //if (((int)m_currentSelectedControl > 2) &&
+                //    ((int)m_currentSelectedControl < 14))
+                //{
+                //    m_isDrawing = true;
+                //    m_drawStartPoint = e.Location;
+                //}
+
+                //if (((int)m_currentSelectedControl > 13) &&
+                //    ((int)m_currentSelectedControl < 16))
+                //{
+                //    m_isDrawing = true;
+                //    m_drawStartPoint = e.Location;
+                //    m_canDash = true;
+                //}
             }
         } /* private void transparentPanel_MouseDown(object sender, MouseEventArgs e) */
 
@@ -387,6 +438,7 @@ namespace My_Note
                     richTextBox.Invalidate();
                     transparentPanel.Invalidate();
                     m_isSelectingText = false;
+                    updateUIForTextControls();
                 }
                 if (m_currentSelectedControl == e_SelectedControl.PENCIL)  // Finished using pencil
                 {
@@ -404,11 +456,13 @@ namespace My_Note
                     if (m_currentSelectedControl == e_SelectedControl.WARROW && (e.Location.X < m_drawStartPoint.X))
                     {
                         saveWestArrow(e);
+                        m_arrowDynamicArray = null;
                     }
                     if (m_currentSelectedControl == e_SelectedControl.NWARROW &&
                         (e.Location.X < m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y))
                     {
                         saveNorthWestArrow(e);
+                        m_arrowDynamicArray = null;
                     }
                     if (m_currentSelectedControl == e_SelectedControl.NARROW && (e.Location.Y < m_drawStartPoint.Y))
                     {
@@ -439,25 +493,30 @@ namespace My_Note
                     }
                     if (m_currentSelectedControl == e_SelectedControl.RECTANGLE)
                     {
+                        m_rectangleDynamicRectangle = Rectangle.Empty;
                         saveRectangle(e);
                     }
                     if (m_currentSelectedControl == e_SelectedControl.ELLIPSE)
                     {
+                        m_ellipseDynamicRectangle = Rectangle.Empty;
                         saveEllipse(e);
                     }
                     if (m_currentSelectedControl == e_SelectedControl.SOLID)
                     {
+                        m_solidLineDynamicArray = null;
                         saveSolidLine(e);
                     }
                     if (m_currentSelectedControl == e_SelectedControl.DASHED)
                     {
                         saveDashedLine(e);
                         m_canDash = false;
+                        m_dashLineDynamicArray = null;
                     }
                     if (m_currentSelectedControl == e_SelectedControl.DOTTED)
                     {
                         saveDottedLine(e);
                         m_canDash = false;
+                        m_dottedLineDynamicArray = null;
                     }
                     m_isDrawing = false;
                 }
@@ -557,6 +616,33 @@ namespace My_Note
             {
                 m_verticalTextList[i].drawVerticalText(e);
             }
+            if (m_arrowDynamicArray != null)
+            {
+                for (int i = 0; i < m_arrowDynamicArray.Length; i = i + 2)
+                {
+                    e.Graphics.DrawLine(m_transparentPanelPen, m_arrowDynamicArray[i], m_arrowDynamicArray[i + 1]);
+                }
+            }
+            if (m_rectangleDynamicRectangle.IsEmpty == false)
+            {
+                e.Graphics.DrawRectangle(m_transparentPanelPen, m_rectangleDynamicRectangle);
+            }
+            if (m_ellipseDynamicRectangle.IsEmpty == false)
+            {
+                e.Graphics.DrawEllipse(m_transparentPanelPen, m_ellipseDynamicRectangle);
+            }
+            if (m_solidLineDynamicArray != null)
+            {
+                e.Graphics.DrawLine(m_transparentPanelPen, m_solidLineDynamicArray[0], m_solidLineDynamicArray[1]);
+            }
+            if (m_dashLineDynamicArray != null)
+            {
+                e.Graphics.DrawLine(m_dashLinePen, m_dashLineDynamicArray[0], m_dashLineDynamicArray[1]);
+            }
+            if (m_dottedLineDynamicArray != null)
+            {
+                e.Graphics.DrawLine(m_dottedLinePen, m_dottedLineDynamicArray[0], m_dottedLineDynamicArray[1]);
+            }
         } /* private void transparentPanel_Paint(object sender, PaintEventArgs e) */
 
         #endregion
@@ -652,15 +738,19 @@ namespace My_Note
             // Draw the line part of the arrow
             m_lastPosition.X = e.Location.X;  // Restrict drawing direction (west)
             m_lastPosition.Y = m_drawStartPoint.Y;  // Restrict vertical movement
-            m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_drawStartPoint, m_lastPosition);
+            m_arrowDynamicArray[0] = m_drawStartPoint;
+            m_arrowDynamicArray[1] = m_lastPosition;
 
             // Draw the arrowhead part of the arrow
             m_arrowRightSide.X = m_lastPosition.X + 5;
             m_arrowRightSide.Y = m_drawStartPoint.Y - 5;
-            m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_arrowRightSide, m_lastPosition);
+            m_arrowDynamicArray[2] = m_arrowRightSide;
+            m_arrowDynamicArray[3] = m_lastPosition;
+            
             m_arrowLeftSide.X = m_lastPosition.X + 5;
             m_arrowLeftSide.Y = m_drawStartPoint.Y + 5;
-            m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_lastPosition, m_arrowLeftSide);
+            m_arrowDynamicArray[4] = m_arrowLeftSide;
+            m_arrowDynamicArray[5] = m_lastPosition;
 
             transparentPanel.Invalidate();
             richTextBox.Invalidate();
@@ -764,16 +854,23 @@ namespace My_Note
 
             m_lastPosition.X = m_drawStartPoint.X - m_arrowFarPoint;
             m_lastPosition.Y = m_drawStartPoint.Y - m_arrowFarPoint;
-
-            m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_drawStartPoint, m_lastPosition);
+            m_arrowDynamicArray[0] = m_drawStartPoint;
+            m_arrowDynamicArray[1] = m_lastPosition;
+            //m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_drawStartPoint, m_lastPosition);
 
             // Draw the arrowhead part of the arrow
             m_arrowRightSide.X = m_lastPosition.X + 8;
             m_arrowRightSide.Y = m_lastPosition.Y;
-            m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_arrowRightSide, m_lastPosition);
+            //m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_arrowRightSide, m_lastPosition);
+            m_arrowDynamicArray[2] = m_arrowRightSide;
+            m_arrowDynamicArray[3] = m_lastPosition;
+
+
             m_arrowLeftSide.X = m_lastPosition.X;
             m_arrowLeftSide.Y = m_lastPosition.Y + 8;
-            m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_arrowLeftSide, m_lastPosition);
+            //m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_arrowLeftSide, m_lastPosition);
+            m_arrowDynamicArray[4] = m_arrowLeftSide;
+            m_arrowDynamicArray[5] = m_lastPosition;
 
             transparentPanel.Invalidate();
             richTextBox.Invalidate();
@@ -1496,10 +1593,12 @@ namespace My_Note
             Int32 rectWidth = e.Location.X - m_drawStartPoint.X;
             Int32 rectHeight = e.Location.Y - m_drawStartPoint.Y;
 
-            Rectangle currentRect = new Rectangle(Math.Min(e.X, m_drawStartPoint.X), Math.Min(e.Y, m_drawStartPoint.Y), 
-                Math.Abs(e.X - m_drawStartPoint.X), Math.Abs(e.Y - m_drawStartPoint.Y));
+            //Rectangle currentRect = new Rectangle(Math.Min(e.X, m_drawStartPoint.X), Math.Min(e.Y, m_drawStartPoint.Y), 
+            //    Math.Abs(e.X - m_drawStartPoint.X), Math.Abs(e.Y - m_drawStartPoint.Y));
             
-            m_transparentPanelGraphics.DrawRectangle(m_transparentPanelPen, currentRect);
+            //m_transparentPanelGraphics.DrawRectangle(m_transparentPanelPen, currentRect);
+            m_rectangleDynamicRectangle = new Rectangle(Math.Min(e.X, m_drawStartPoint.X), Math.Min(e.Y, m_drawStartPoint.Y),
+                Math.Abs(e.X - m_drawStartPoint.X), Math.Abs(e.Y - m_drawStartPoint.Y));
 
             transparentPanel.Invalidate();
             richTextBox.Invalidate();
@@ -1587,8 +1686,10 @@ namespace My_Note
             Int32 rectWidth = e.Location.X - m_drawStartPoint.X;
             Int32 rectHeight = e.Location.Y - m_drawStartPoint.Y;
 
-            Rectangle currentEllipse = new Rectangle(m_drawStartPoint.X, m_drawStartPoint.Y, rectWidth, rectHeight);
-            m_transparentPanelGraphics.DrawEllipse(m_transparentPanelPen, currentEllipse);
+            //Rectangle currentEllipse = new Rectangle(m_drawStartPoint.X, m_drawStartPoint.Y, rectWidth, rectHeight);
+            //m_transparentPanelGraphics.DrawEllipse(m_transparentPanelPen, currentEllipse);
+
+            m_ellipseDynamicRectangle = new Rectangle(m_drawStartPoint.X, m_drawStartPoint.Y, rectWidth, rectHeight);
 
             transparentPanel.Invalidate();
             richTextBox.Invalidate();
@@ -1673,7 +1774,9 @@ namespace My_Note
          */
         private void drawSolidLine(MouseEventArgs e)
         {
-            m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_drawStartPoint, e.Location);
+            //m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_drawStartPoint, e.Location);
+            m_solidLineDynamicArray[0] = m_drawStartPoint;
+            m_solidLineDynamicArray[1] = e.Location;
 
             transparentPanel.Invalidate();
             richTextBox.Invalidate();
@@ -1739,10 +1842,13 @@ namespace My_Note
          */
         private void drawDashedLine(MouseEventArgs e)
         {
-            float[] dashValues = { 5, 5 };
-            Pen dashPen = new Pen(m_currentDrawColor, m_currentPenWidth);
-            dashPen.DashPattern = dashValues;
-            m_transparentPanelGraphics.DrawLine(dashPen, m_drawStartPoint, e.Location);
+            //float[] dashValues = { 5, 5 };
+            //Pen dashPen = new Pen(m_currentDrawColor, m_currentPenWidth);
+            //dashPen.DashPattern = dashValues;
+            //m_transparentPanelGraphics.DrawLine(dashPen, m_drawStartPoint, e.Location);
+
+            m_dashLineDynamicArray[0] = m_drawStartPoint;
+            m_dashLineDynamicArray[1] = e.Location;
 
             transparentPanel.Invalidate();
             richTextBox.Invalidate();
@@ -1820,10 +1926,13 @@ namespace My_Note
          */
         private void drawDottedLine(MouseEventArgs e)
         {
-            float[] dashValues = { 2, 2 };
-            Pen dashPen = new Pen(m_currentDrawColor, m_currentPenWidth);
-            dashPen.DashPattern = dashValues;
-            m_transparentPanelGraphics.DrawLine(dashPen, m_drawStartPoint, e.Location);
+            //float[] dashValues = { 2, 2 };
+            //Pen dashPen = new Pen(m_currentDrawColor, m_currentPenWidth);
+            //dashPen.DashPattern = dashValues;
+            //m_transparentPanelGraphics.DrawLine(dashPen, m_drawStartPoint, e.Location);
+            
+            m_dottedLineDynamicArray[0] = m_drawStartPoint;
+            m_dottedLineDynamicArray[1] = e.Location;
 
             transparentPanel.Invalidate();
             richTextBox.Invalidate();

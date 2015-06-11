@@ -37,12 +37,6 @@ namespace My_Note
         private float m_nextLine;                       // Y-coordinate of the line (dynamic)
         private Pen m_bluePen = new Pen(Color.Blue);    // Used to draw horizontal lines
         private Pen m_redPen = new Pen(Color.Red);      // Used to draw vertical lines
-        
-        // Used to adjust line spacing based on user selected font
-        private struct lineSpaceForFont
-        {
-            public const float MICROSOFT_SANS_SERIF = 20;
-        }
 
         // The modification to make the panel 'transparent'
         protected override CreateParams CreateParams
@@ -75,7 +69,7 @@ namespace My_Note
             for (int i = 0; i < 28; i++)
             {
                 e.Graphics.DrawLine(m_bluePen, m_lineBegin, m_nextLine, m_lineEnd, m_nextLine);
-                m_nextLine += lineSpaceForFont.MICROSOFT_SANS_SERIF;
+                m_nextLine += 20;
             }
             e.Graphics.DrawLine(m_redPen, 35, 5, 35, m_thisHeight - 5);
         }
