@@ -33,7 +33,11 @@ using System.IO;
  *    formTextBox.cs:
  *      This file is responsible for appearances and events of the richTextBox and its layers. Such additional layers are
  *      transparent and background panels. Events handled in this files are tasks such as applying text editing and drawing
- *      shapes onto the panels, and erasing them based on currently selected controls and options.
+ *      shapes onto the panels, and erasing them based on currently selected controls and options. The mechanics of drawing
+ *      certain shapes like arrows, rectangles, ovals, and lines have been separated into two categories. One category is
+ *      while the user has the mouse down and is moving it, shapes are being drawn and displayed at optimal speed. Other category
+ *      is when the user releases the mouse, shapes are saved using individual points and are redrawn so in the future; this is
+ *      done in order to accomodate the erase functionality.
  *      
  *  CODE STRUCTURE:
  *    MainForm class:
@@ -107,7 +111,7 @@ namespace My_Note
          *  public MainForm();
          * 
          * DESCRIPTION
-         *  This constructor is responsible for initializig and assigning values to member variables and
+         *  This constructor is responsible for initializing and assigning values to member variables and
          *  UI elements of this class. Some variables initialized here are declared in different files, which
          *  are also parts of this class.
          *  
@@ -138,20 +142,16 @@ namespace My_Note
             m_currentSelectedControl = e_SelectedControl.TEXT;  // mainForm.cs
             m_selectedControlButtonColor = Color.SandyBrown;  // mainForm.cs
 
-            textSelectButton.BackColor = m_selectedControlButtonColor;  // UI element
-            fontComboBox.Text = "Microsoft Sans Serif";  // UI element
-            richTextBox.Font = new Font("Microsoft Sans Serif", 12);  // UI element
+            textSelectButton.BackColor = m_selectedControlButtonColor;  // formToolbar.cs (UI element)
+            fontComboBox.Text = "Microsoft Sans Serif";  // formToolbar.cs (UI element)
+            richTextBox.Font = new Font("Microsoft Sans Serif", 12);  // formTextbox.cs (UI element)
 
             m_transparentPanelGraphics = this.transparentPanel.CreateGraphics();  // formTextbox.cs
             m_transparentPanelPen = new Pen(m_currentDrawColor);  // formTextbox.cs
-            //m_dashLineValues = {5, 5};
-            m_dashLinePen = new Pen(m_currentDrawColor, m_currentPenWidth);
-            m_dashLinePen.DashPattern = m_dashLineValues;
-            //m_transparentPanelGraphics.DrawLine(dashPen, m_drawStartPoint, e.Location);
-            //m_dottedLineValues = {2, 2};
-            m_dottedLinePen = new Pen(m_currentDrawColor, m_currentPenWidth);
-            m_dottedLinePen.DashPattern = m_dottedLineValues;
-            //m_transparentPanelGraphics.DrawLine(dashPen, m_drawStartPoint, e.Location);
+            m_dashLinePen = new Pen(m_currentDrawColor, m_currentPenWidth);  // formTextbox.cs
+            m_dashLinePen.DashPattern = m_dashLineValues;  // formTextbox.cs
+            m_dottedLinePen = new Pen(m_currentDrawColor, m_currentPenWidth);  // formTextbox.cs
+            m_dottedLinePen.DashPattern = m_dottedLineValues;  // formTextbox.cs
 
             m_subjectOnePanelGraphics = subjectOnePanel.CreateGraphics();  // mainForm.cs
             m_subjectTwoPanelGraphics = subjectTwoPanel.CreateGraphics();  // mainForm.cs
@@ -350,10 +350,6 @@ namespace My_Note
             }
         } /* private void MainForm_FormClosing(object sender, FormClosingEventArgs e) */
 
-
-        /*
-         *  3:09pm 5/25/2015
-         */
         /*
          * NAME
          *  saveAllContent() - saves all content to data persistence object and saves it to disk
@@ -383,7 +379,7 @@ namespace My_Note
 
         #endregion
 
-        // Region contains methods that handle functionality for Subjects in the notebook
+        // Region contains methods that handle Subjects in the notebook
         #region Subjects Methods
 
         /*
@@ -536,9 +532,6 @@ namespace My_Note
             this.Invalidate();
         } /* private void subjectOnePanel_MouseDown(object sender, MouseEventArgs e) */
 
-        /*
-         *  4:12pm 5/19/2015
-         */
         /*
          * NAME
          *  subjectTwoPanel_MouseDown() - presents second subject UI and its data
@@ -963,439 +956,5 @@ namespace My_Note
         }
 
         #endregion
-
-        /*
-         *  7:35am 5/31/2015
-         */
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            AboutForm aboutForm = new AboutForm();
-            aboutForm.StartPosition = FormStartPosition.CenterParent;
-            aboutForm.FormBorderStyle = FormBorderStyle.Fixed3D;
-            aboutForm.ShowDialog();
-        }
-
-        /*
-         *  8:15am 5/31/2015
-         */
-        private void myNoteHelpToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            HelpForm helpForm = new HelpForm();
-            helpForm.StartPosition = FormStartPosition.CenterParent;
-            helpForm.FormBorderStyle = FormBorderStyle.Fixed3D;
-            helpForm.ShowDialog();
-        }
-
-        private bool m_highlightColorEnabled = false;
-        private Color m_currentHighlightColor = SystemColors.Window;
-        private Color m_currentTextColor = SystemColors.WindowText;
-        /*  If some text is selected, then only that text is highlighted. If no text is selected then highlighting will
-         *  become enabled until this method is called again.
-         *  12:30pm 5/31/2015
-         */
-        private void highlightColorButton_Click(object sender, EventArgs e)
-        {
-            int textSelectionLength = richTextBox.SelectionLength;
-            if (textSelectionLength > 0)
-            {
-                // Change selection back color
-                richTextBox.SelectionBackColor = changeHighlightColorButton.BackColor;
-
-                // Place the cursor at the end of the selection
-                richTextBox.SelectionStart = richTextBox.SelectionStart + textSelectionLength;
-                richTextBox.SelectionLength = 0;
-                richTextBox.Select();
-            }
-            else
-            {
-                if (m_highlightColorEnabled == true)
-                {
-                    m_highlightColorEnabled = false;
-                    highlightColorButton.BackColor = Color.Transparent;
-                    m_currentHighlightColor = SystemColors.Window;
-                }
-                else
-                {
-                    m_highlightColorEnabled = true;
-                    highlightColorButton.BackColor = m_selectedControlButtonColor;
-                    m_currentHighlightColor = changeHighlightColorButton.BackColor;
-                }
-                richTextBox.Select();  // Place the cursor back where it was
-            }
-        }
-
-        /*  If highlighter color is changed, by user selecting some color and clicking 'OK' while some text is selected,
-         *  then text backcolor is changed, highlighter color is updated, cursor moved to the end of selection. If the user
-         *  clicks 'Cancel' then no changes are made and the text stays selected.
-         *  3:15pm 6/2/2015
-         */
-        private void changeHighlightColorButton_Click(object sender, EventArgs e)
-        {
-            int textSelectionLength = richTextBox.SelectionLength;
-            if (textSelectionLength > 0)  // redraw lines only if necessary
-            {
-                transparentPanel.Refresh();
-            }
-            DialogResult highlightColorDialogResult = drawColorDialog.ShowDialog();
-            if (highlightColorDialogResult == DialogResult.OK)
-            {
-                changeHighlightColorButton.BackColor = drawColorDialog.Color;
-                if (richTextBox.SelectionLength > 0)
-                {
-                    richTextBox.SelectionBackColor = drawColorDialog.Color;
-                    richTextBox.SelectionStart = richTextBox.SelectionStart + textSelectionLength;
-                    richTextBox.SelectionLength = 0;
-                }
-            }
-            richTextBox.Select();
-            transparentPanel.Invalidate();
-        }
-
-        private bool m_textColorEnabled = false;
-        /*  If some text is selected, then only that text color is changed, and cursor is moved to the end of selection.
-         *  If no text is selected then text color will become enabled until this method is called again.
-         *  11:47am 5/31/2015
-         */
-        private void textColorButton_Click(object sender, EventArgs e)
-        {
-            int textSelectionLength = richTextBox.SelectionLength;
-            if (textSelectionLength > 0)
-            {
-                // Change selection back color
-                richTextBox.SelectionColor = changeTextColorButton.BackColor;
-
-                // Place the cursor at the end of the selection
-                richTextBox.SelectionStart = richTextBox.SelectionStart + textSelectionLength;
-                richTextBox.SelectionLength = 0;
-                richTextBox.Select();
-            }
-            else
-            {
-                if (m_textColorEnabled == true)
-                {
-                    m_textColorEnabled = false;
-                    textColorButton.BackColor = Color.Transparent;
-                    m_currentTextColor = SystemColors.WindowText;
-                }
-                else
-                {
-                    m_textColorEnabled = true;
-                    textColorButton.BackColor = m_selectedControlButtonColor;
-                    m_currentTextColor = changeTextColorButton.BackColor;
-                }
-                richTextBox.Select();  // Place the cursor back where it was
-            }
-        }
-
-        /*  If text color is changed, by user selecting some color and clicking 'OK' while some text is selected,
-         *  then text forecolor is changed, text color is updated, cursor moved to the end of selection. If the user
-         *  clicks 'Cancel' then no changes are made and the text stays selected.
-         *  3:21pm 6/2/2015
-         */
-        private void changeTextColorButton_Click(object sender, EventArgs e)
-        {
-            int textSelectionLength = richTextBox.SelectionLength;
-            if (textSelectionLength > 0)  // redraw lines only if necessary
-            {
-                transparentPanel.Refresh();
-            }
-            DialogResult textColorDialogResult = drawColorDialog.ShowDialog();
-            if (textColorDialogResult == DialogResult.OK)
-            {
-                changeTextColorButton.BackColor = drawColorDialog.Color;
-                if (richTextBox.SelectionLength > 0)
-                {
-                    richTextBox.SelectionBackColor = drawColorDialog.Color;
-                    richTextBox.SelectionStart = richTextBox.SelectionStart + textSelectionLength;
-                    richTextBox.SelectionLength = 0;
-                }
-            }
-            richTextBox.Select();
-            transparentPanel.Invalidate();
-        }
-
-        private bool m_boldTextEnabled = false;
-        /*
-         *  11:52am 5/31/2015
-         */
-        private void boldButton_Click(object sender, EventArgs e)
-        {
-            if (richTextBox.SelectionFont == null) return;
-            int textSelectionLength = richTextBox.SelectionLength;
-            if (textSelectionLength > 0)
-            {
-                Font selFont = richTextBox.SelectionFont;
-                Font nextFont = new Font(selFont, selFont.Style ^ FontStyle.Bold);
-                richTextBox.SelectionFont = nextFont;
-            }
-            else
-            {
-                if (m_boldTextEnabled == true)
-                {
-                    m_boldTextEnabled = false;
-                    boldButton.BackColor = Color.Transparent;
-                }
-                else
-                {
-                    m_boldTextEnabled = true;
-                    boldButton.BackColor = m_selectedControlButtonColor;
-                }
-                updateCurrentFontStyles();
-            }
-            richTextBox.Select();
-        }
-
-        private bool m_italicTextEnabled = false;
-        /*
-         *  11:54am 5/31/2015
-         */
-        private void italicButton_Click(object sender, EventArgs e)
-        {
-            if (richTextBox.SelectionFont == null) return;
-            int textSelectionLength = richTextBox.SelectionLength;
-            if (textSelectionLength > 0)
-            {
-                Font selFont = richTextBox.SelectionFont;
-                Font nextFont = new Font(selFont, selFont.Style ^ FontStyle.Italic);
-                richTextBox.SelectionFont = nextFont;
-            }
-            else
-            {
-                if (m_italicTextEnabled == true)
-                {
-                    m_italicTextEnabled = false;
-                    italicButton.BackColor = Color.Transparent;
-                }
-                else
-                {
-                    m_italicTextEnabled = true;
-                    italicButton.BackColor = m_selectedControlButtonColor;
-                }
-                updateCurrentFontStyles();
-            }
-            richTextBox.Select();
-        }
-        private bool m_underlineTextEnabled = false;
-        /*
-         *  11:57am 5/31/2015
-         */
-        private void underlineButton_Click(object sender, EventArgs e)
-        {
-            if (richTextBox.SelectionFont == null) return;
-            int textSelectionLength = richTextBox.SelectionLength;
-            if (textSelectionLength > 0)
-            {
-                Font selFont = richTextBox.SelectionFont;
-                Font nextFont = new Font(selFont, selFont.Style ^ FontStyle.Underline);
-                richTextBox.SelectionFont = nextFont;
-            }
-            else
-            {
-                if (m_underlineTextEnabled == true)
-                {
-                    m_underlineTextEnabled = false;
-                    underlineButton.BackColor = Color.Transparent;
-                }
-                else
-                {
-                    m_underlineTextEnabled = true;
-                    underlineButton.BackColor = m_selectedControlButtonColor;
-                }
-                updateCurrentFontStyles();
-            }
-            richTextBox.Select();
-        }
-
-        private bool m_strikeoutTextEnabled = false;
-        /*
-         *  12:03pm 5/31/2015
-         */
-        private void strikeoutButton_Click(object sender, EventArgs e)
-        {
-            if (richTextBox.SelectionFont == null) return;
-            int textSelectionLength = richTextBox.SelectionLength;
-            if (textSelectionLength > 0)
-            {
-                Font selFont = richTextBox.SelectionFont;
-                Font nextFont = new Font(selFont, selFont.Style ^ FontStyle.Strikeout);
-                richTextBox.SelectionFont = nextFont;
-            }
-            else
-            {
-                if (m_strikeoutTextEnabled == true)
-                {
-                    m_strikeoutTextEnabled = false;
-                    strikeoutButton.BackColor = Color.Transparent;
-                }
-                else
-                {
-                    m_strikeoutTextEnabled = true;
-                    strikeoutButton.BackColor = m_selectedControlButtonColor;
-                }
-                updateCurrentFontStyles();
-            }
-            richTextBox.Select();
-        }
-
-        /*
-         *  5:08pm 6/2/2015
-         */
-        private void updateCurrentFontStyles()
-        {
-            string currentFontName = m_currentRichTextBoxFont.Name;
-            float currentFontSize = m_currentRichTextBoxFont.Size;
-            Font nextFont = new Font(currentFontName, currentFontSize);
-            if (m_boldTextEnabled == true)
-                nextFont = new Font(nextFont, nextFont.Style ^ FontStyle.Bold);
-            if (m_italicTextEnabled == true)
-                nextFont = new Font(nextFont, nextFont.Style ^ FontStyle.Italic);
-            if (m_underlineTextEnabled == true)
-                nextFont = new Font(nextFont, nextFont.Style ^ FontStyle.Underline);
-            if (m_strikeoutTextEnabled == true)
-                nextFont = new Font(nextFont, nextFont.Style ^ FontStyle.Strikeout);
-            m_currentRichTextBoxFont = nextFont;
-        }
-
-        /*  Updates UI for Text Controls when multi text selection is made, or when selecting new control. fontComboBox and
-         *  other controls get updated twice depending on which control calls this method. This is because this method is used
-         *  for several functionalities. Font and FontStyle can only be applied to one word at a time
-         *  4:51pm 6/10/2015
-         */
-        private void updateUIForTextControls()
-        {
-            if (m_currentSelectedControl == e_SelectedControl.TEXT)
-            {
-                highlightColorButton.Enabled = true;
-                textColorButton.Enabled = true;
-                changeHighlightColorButton.Enabled = true;
-                changeTextColorButton.Enabled = true;
-                if (richTextBox.SelectionFont == null)
-                {
-                    fontComboBox.Enabled = false;
-                    boldButton.Enabled = false;
-                    italicButton.Enabled = false;
-                    underlineButton.Enabled = false;
-                    strikeoutButton.Enabled = false;
-                }
-                if (richTextBox.SelectionLength > 0)
-                {
-                    for (int i = richTextBox.SelectionStart; i < richTextBox.SelectionStart + richTextBox.SelectionLength; i++)
-                    {
-                        if (richTextBox.Text[i] == ' ')
-                        {
-                            fontComboBox.Enabled = false;
-                            boldButton.Enabled = false;
-                            italicButton.Enabled = false;
-                            underlineButton.Enabled = false;
-                            strikeoutButton.Enabled = false;
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    fontComboBox.Enabled = true;
-                    boldButton.Enabled = true;
-                    italicButton.Enabled = true;
-                    underlineButton.Enabled = true;
-                    strikeoutButton.Enabled = true;
-                }
-            }
-            else
-            {
-                fontComboBox.Enabled = false;
-                boldButton.Enabled = false;
-                italicButton.Enabled = false;
-                underlineButton.Enabled = false;
-                strikeoutButton.Enabled = false;
-                highlightColorButton.Enabled = false;
-                textColorButton.Enabled = false;
-                changeHighlightColorButton.Enabled = false;
-                changeTextColorButton.Enabled = false;
-            }
-        }
-
-        private Font m_idealFont = new Font("Microsoft Sans Serif", 12);  // used to control line height 'for spaces'
-        private Font m_currentRichTextBoxFont = new Font("Microsoft Sans Serif", 12);  // current font
-
-        private Point endOfLinePoint = new Point();
-        /*  DESCRIPTION: this method performs many functions. Prevents enter key when there are maximum number of lines, also
-         *  disables all keys except for 'backspace' when the text of rich text box is at the end
-         *  converts the font of every 'space' to 'ideal font' that help maintain the line height
-         *  4:11pm 5/31/2015
-         *  To control the text to stay within the boundaries of the rich text box word wrap should be disabled because it can
-         *  'push' text down when typing in the middle of the rich text box. Disabling word wrap presents a problem by extending
-         *  the line horizontally beyond the bounds of rich text box. This can be controlled by adding a 'RightMargin' but it will
-         *  ignore the word wrap. The solution is to limit the length of each line manually
-         */
-        private void richTextBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            richTextBox.SelectionColor = m_currentTextColor;
-            richTextBox.SelectionBackColor = m_currentHighlightColor;
-            // Prevent too many lines
-            if (richTextBox.Lines.Length == 28)
-            {
-                if (e.KeyCode == Keys.Enter)
-                {
-                    e.SuppressKeyPress = true;
-                }
-            }
-
-            // Format for 'space'
-            if (e.KeyCode == Keys.Space)
-            {
-                richTextBox.SelectionFont = m_idealFont;
-            }
-            else
-            {
-                richTextBox.SelectionFont = m_currentRichTextBoxFont;
-            }
-
-            // Prevent lines too long
-            if (richTextBox.TextLength != 0)
-            {
-                int currentLineIndex = richTextBox.GetLineFromCharIndex(richTextBox.SelectionStart);
-                int lastCharIndexBeforeNextLine = 0;
-                for (int i = 0; i <= currentLineIndex; i++)
-                {
-                    lastCharIndexBeforeNextLine += richTextBox.Lines[i].Length;
-                    lastCharIndexBeforeNextLine++;  // for each '\n'
-                }
-                lastCharIndexBeforeNextLine--;
-                lastCharIndexBeforeNextLine--;
-                if (lastCharIndexBeforeNextLine < 0)  // prevent an (out of bounds) exception
-                {
-                    return;
-                }
-                int totalLength = richTextBox.TextLength;
-
-                if (richTextBox.Text[lastCharIndexBeforeNextLine] == '\n')
-                {
-                    endOfLinePoint = richTextBox.GetPositionFromCharIndex(lastCharIndexBeforeNextLine + 1);
-                }
-                else
-                {
-                    endOfLinePoint = richTextBox.GetPositionFromCharIndex(lastCharIndexBeforeNextLine);
-                }
-
-                if (endOfLinePoint.X >= 450)
-                {
-                    if (!(e.KeyCode == Keys.Up || e.KeyCode == Keys.Down || e.KeyCode == Keys.Left ||
-                        e.KeyCode == Keys.Right || e.KeyCode == Keys.Back || e.KeyCode == Keys.Enter))
-                    {
-                        e.SuppressKeyPress = true;
-                    }
-                }
-            }
-        }
-
-        /*  If some text is selected, this will ensure it stays highlighted as the focus is changed
-         *  11:30am 6/11/2015
-         */
-        private void fontComboBox_DropDown(object sender, EventArgs e)
-        {
-            richTextBox.Select();
-            transparentPanel.Refresh();
-        }
     }
 }

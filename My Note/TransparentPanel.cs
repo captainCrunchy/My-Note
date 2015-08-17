@@ -49,7 +49,27 @@ namespace My_Note
             }
         }
         
-        // Updated by objects using this class
+        /*
+         * NAME
+         *  OnPaintBackground() - assigns values to member variables
+         *  
+         * SYNOPSIS
+         *  protected override void OnPaintBackground(PaintEventArgs e);
+         *      e   -> does nothing
+         * 
+         * DESCRIPTION
+         *  This method is used by owner objects of instances of this class. It assigns values to
+         *  member variables and properties of this class.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  2:11pm 3/1/2015
+         */
         protected override void OnPaintBackground(PaintEventArgs e)
         {
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
@@ -58,9 +78,28 @@ namespace My_Note
             m_lineBegin = 5;
             m_lineEnd = m_thisWidth - 10;
             m_nextLine = 55;
-        }
+        } /* protected override void OnPaintBackground(PaintEventArgs e) */
         
-        // Draws a set of lines to resemble a page in a notebook
+        /*
+         * NAME
+         *  OnPaint() - used to draw lines on panel
+         *  
+         * SYNOPSIS
+         *  protected override void OnPaint(PaintEventArgs e);
+         *      e   -> used in base class
+         * 
+         * DESCRIPTION
+         *  Draws a set of lines on panel to resemble a page in a notebook.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  2:15pm 3/1/2015
+         */
         protected override void OnPaint(PaintEventArgs e)
         {
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
@@ -72,6 +111,6 @@ namespace My_Note
                 m_nextLine += 20;
             }
             e.Graphics.DrawLine(m_redPen, 35, 5, 35, m_thisHeight - 5);
-        }
+        } /* protected override void OnPaint(PaintEventArgs e) */
     }
 }

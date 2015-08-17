@@ -156,6 +156,7 @@ namespace My_Note
         // Region contains elements associated with m_moveButton
         #region m_moveButton Methods
 
+        // Gets or sets move button
         public Button MoveButton
         {
             get
@@ -305,6 +306,7 @@ namespace My_Note
         // Region contains elements associated with m_optionsButton
         #region m_optionsButton Methods
 
+        // Gets or sets options button
         public Button OptionsButton
         {
             get
@@ -317,6 +319,7 @@ namespace My_Note
             }
         }
 
+        // Gets or sets transparent panel reference
         public TransparentPanel OwnerTranspPanel
         {
             get
@@ -329,6 +332,7 @@ namespace My_Note
             }
         }
 
+        // Gets or sets rich text box reference
         public RichTextBox OwnerRichTextBox
         {
             get
@@ -341,6 +345,7 @@ namespace My_Note
             }
         }
 
+        // Gets or sets back panel reference
         public Panel OwnerBackPanel
         {
             get
@@ -402,6 +407,7 @@ namespace My_Note
         // Region contains elements associated with m_deleteButton
         #region m_deleteButton Methods
 
+        // Gets or sets delete button
         public Button DeleteButton
         {
             get
@@ -414,6 +420,7 @@ namespace My_Note
             }
         }
 
+        // Gets or sets VerticalText container reference
         public List<VerticalText>OwnerVerticalTextList
         {
             get
@@ -480,6 +487,7 @@ namespace My_Note
         // Region contains elements associated with m_rotateButton
         #region m_rotateButton Methods
 
+        // Gets or sets rotate button
         public Button RotateButton
         {
             get

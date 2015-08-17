@@ -31,7 +31,11 @@ using System.Drawing.Printing;
  *    formTextBox.cs:
  *      This file is responsible for appearances and events of the richTextBox and its layers. Such additional layers are
  *      transparent and background panels. Events handled in this files are tasks such as applying text editing and drawing
- *      shapes onto the panels, and erasing them based on currently selected controls and options.
+ *      shapes onto the panels, and erasing them based on currently selected controls and options. The mechanics of drawing
+ *      certain shapes like arrows, rectangles, ovals, and lines have been separated into two categories. One category is
+ *      while the user has the mouse down and is moving it, shapes are being drawn and displayed at optimal speed. Other category
+ *      is when the user releases the mouse, shapes are saved using individual points and are redrawn so in the future; this is
+ *      done in order to accomodate the erase functionality.
  *      
  *  CODE STRUCTURE:
  *    MainForm class:
@@ -41,7 +45,8 @@ using System.Drawing.Printing;
  *    formMenuStrip.cs: (YOU ARE HERE)
  *      This file organizes code by separating it into regions based on UI element functionality. Member variables are grouped
  *      together. 'File', 'Edit', and 'Help menus methods get their own regions to handle all functionality of their submenus,
- *      items, and respective helper methods.
+ *      items, and respective helper methods. Some member variables need to be initialized in the constructor which is in the 
+ *      mainForm.cs file.
  */
 
 namespace My_Note
@@ -888,6 +893,64 @@ namespace My_Note
         // Region contains methods for 'Help' menu items
         #region Help Menu Item Methods
 
+        /*
+         * NAME
+         *  aboutToolStripMenuItem_Click() - displays a form with information about this application
+         * 
+         * SYNOPSIS
+         *  private void aboutToolStripMenuItem_Click(object sender, EventArgs e);
+         *      sender  -> does nothing
+         *      e       -> does nothing
+         *      
+         * DESCRIPTION
+         *  This event handler is displays a form with short information about this application.
+         * 
+         * RETURNS
+         *  Nothing
+         * 
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  7:35am 5/31/2015
+         */
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutForm aboutForm = new AboutForm();
+            aboutForm.StartPosition = FormStartPosition.CenterParent;
+            aboutForm.FormBorderStyle = FormBorderStyle.Fixed3D;
+            aboutForm.ShowDialog();
+        } /* private void aboutToolStripMenuItem_Click(object sender, EventArgs e) */
+
+        /*
+         * NAME
+         *  myNoteHelpToolStripMenuItem_Click - displays a form with help information
+         * 
+         * SYNOPSIS
+         *  private void myNoteHelpToolStripMenuItem_Click(object sender, EventArgs e);
+         *      sender  -> does nothing
+         *      e       -> does nothing
+         *      
+         * DESCRIPTION
+         *  This event handler is displays a form with information that provides help to the user of
+         *  this application.
+         * 
+         * RETURNS
+         *  Nothing
+         * 
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  8:15am 5/31/2015
+         */
+        private void myNoteHelpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            HelpForm helpForm = new HelpForm();
+            helpForm.StartPosition = FormStartPosition.CenterParent;
+            helpForm.FormBorderStyle = FormBorderStyle.Fixed3D;
+            helpForm.ShowDialog();
+        } /* private void myNoteHelpToolStripMenuItem_Click(object sender, EventArgs e) */
 
         #endregion
     }

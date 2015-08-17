@@ -32,7 +32,11 @@ using System.Drawing.Drawing2D;
  *    formTextBox.cs: (YOU ARE HERE)
  *      This file is responsible for appearances and events of the richTextBox and its layers. Such additional layers are
  *      transparent and background panels. Events handled in this files are tasks such as applying text editing and drawing
- *      shapes onto the panels, and erasing them based on currently selected controls and options.
+ *      shapes onto the panels, and erasing them based on currently selected controls and options. The mechanics of drawing
+ *      certain shapes like arrows, rectangles, ovals, and lines have been separated into two categories. One category is
+ *      while the user has the mouse down and is moving it, shapes are being drawn and displayed at optimal speed. Other category
+ *      is when the user releases the mouse, shapes are saved using individual points and are redrawn so in the future; this is
+ *      done in order to accomodate the erase functionality.
  *      
  *  CODE STRUCTURE:
  *    MainForm class:
@@ -50,51 +54,147 @@ namespace My_Note
 {
     public partial class MainForm : Form
     {
-        private Point[] m_arrowDynamicArray;// = new Point[6];
-        private Rectangle m_rectangleDynamicRectangle;
-        private Rectangle m_ellipseDynamicRectangle;
-        private Point[] m_solidLineDynamicArray;
-
-        private Point[] m_dashLineDynamicArray;
-        private float[] m_dashLineValues = { 5, 5 };
-        private Pen m_dashLinePen;
-
-        private Point[] m_dottedLineDynamicArray;
-        private float[] m_dottedLineValues = { 2, 2 };
-        private Pen m_dottedLinePen;
-
         // Region contains member variables for this class
         #region Member Variables
 
-        private Graphics m_transparentPanelGraphics;                        // Used to reduce repetitive data creation
-        private Pen m_transparentPanelPen;                                  // Used to reduce repetitive data creation
+        private Font m_idealFont = new Font("Microsoft Sans Serif", 12);  /* Font style for all spaces within the text
+                                                                             never changes and controls line height */
+        private Font m_currentRichTextBoxFont = new Font("Microsoft Sans Serif", 12);  // Current rich text box font
+        private Point endOfLinePoint = new Point();             // End of line point to prevent long lines of text
 
-        private ShapeContainer m_shapesStorage = new ShapeContainer();      // Storage of all the drawing data
-        private bool m_isDrawing = false;                                   // Is the mouse currently down and drawing
-        private bool m_isErasing = false;                                   // Is the mouse currently down and erasing
-        private Point m_lastPosition = new Point(0, 0);                     // Last cursor position, used to cut down on repetative data
-        private Color m_currentDrawColor = Color.Black;                     // Current drawing color
-        private float m_currentPenWidth = 1;                                // Current pen width (does not change)
-        private int m_shapeNumber = 0;                                      // Record the shape numbers so they can be drawn separately
-        private Point m_drawStartPoint = new Point(0, 0);                   // Start point of arrow or line
-        private Point m_drawEndPoint = new Point(0, 0);                     // End point of arrow or line
-        
-        private Point m_arrowLeftSide = new Point(0, 0);                    // Left side of the arrow head
-        private Point m_arrowRightSide = new Point(0, 0);                   // Right side of the arrow head
-        private Int32 m_arrowFarPoint = 0;                                  // Used in the diagonal arrows
+        private Graphics m_transparentPanelGraphics;            // Used to reduce repetitive data creation
+        private Pen m_transparentPanelPen;                      // Used to reduce repetitive data creation
 
-        private bool m_canDash = false;                                     // Used when saving dashed or dotted lines
+        private ShapeContainer m_shapesStorage = new ShapeContainer();  // Storage of all the drawing data
+        private bool m_isDrawing = false;                       // Is the mouse currently down and drawing
+        private bool m_isErasing = false;                       // Is the mouse currently down and erasing
+        private Point m_lastPosition = new Point(0, 0);         // Last cursor position, used to cut down on repetative data
+        private Color m_currentDrawColor = Color.Black;         // Current drawing color
+        private float m_currentPenWidth = 1;                    // Current pen width (does not change)
+        private int m_shapeNumber = 0;                          // Record the shape numbers so they can be drawn separately
+
+        private Point m_drawStartPoint = new Point(0, 0);       // Start point of arrow or line
+        private Point m_drawEndPoint = new Point(0, 0);         // End point of arrow or line
+
+        private Point m_arrowLeftSide = new Point(0, 0);        // Left side of the arrow head
+        private Point m_arrowRightSide = new Point(0, 0);       // Right side of the arrow head
+        private Int32 m_arrowFarPoint = 0;                      // Used in the diagonal arrows
+        private Point[] m_arrowDynamicArray;                    // Holds points that form an arrow during mouse_down
+
+        private Point[] m_solidLineDynamicArray;                // Holds points that form a solid line during mouse_down
+        private Point[] m_dashLineDynamicArray;                 // Holds points that form a dashed line during mouse_down
+        private float[] m_dashLineValues = { 5, 5 };            // Values used when drawing a dashed line
+        private Pen m_dashLinePen;                              // Pen used to draw a dashed line
+        private Point[] m_dottedLineDynamicArray;               // Holds points that form a dotted line during mouse down
+        private float[] m_dottedLineValues = { 2, 2 };          // Values used when drawing a dotted line
+        private Pen m_dottedLinePen;                            // Pen used to draw a dotted line
+        private bool m_canDash = false;                         // Used when saving dashed or dotted lines
+
+        private Rectangle m_rectangleDynamicRectangle;          // Holds points that form a rectangle during mouse_down
+        private Rectangle m_ellipseDynamicRectangle;            // Holds points that form an ellipse during mouse_down
         
         private List<VerticalText> m_verticalTextList = new List<VerticalText>();  // Used to store VerticalText instances
         
-        private int m_richTextBoxSelectStartCharIndex = 0;                  // Record start index before text selection using mouse
-        private int m_richTextBoxSelectCurrentCharIndex = 0;                // Record current index during text selection using mouse
-        private bool m_isSelectingText = false;                             // Is the mouse currently down and selecting text
+        private int m_richTextBoxSelectStartCharIndex = 0;      // Record start index before text selection using mouse
+        private int m_richTextBoxSelectCurrentCharIndex = 0;    // Record current index during text selection using mouse
+        private bool m_isSelectingText = false;                 // Is the mouse currently down and selecting text
 
         #endregion
 
         // Region contains methods for richTextBox
         #region richTextBox Methods
+
+        /*  DESCRIPTION: this method performs many functions. Prevents enter key when there are maximum number of lines, also
+         *  disables all keys except for 'backspace' when the text of rich text box is at the end
+         *  converts the font of every 'space' to 'ideal font' that help maintain the line height
+         *  4:11pm 5/31/2015
+         *  To control the text to stay within the boundaries of the rich text box word wrap should be disabled because it can
+         *  'push' text down when typing in the middle of the rich text box. Disabling word wrap presents a problem by extending
+         *  the line horizontally beyond the bounds of rich text box. This can be controlled by adding a 'RightMargin' but it will
+         *  ignore the word wrap. The solution is to limit the length of each line manually
+         */
+        /*
+         * NAME
+         *  richTextBox_KeyDown() - controls the size of overall text on each page with each keystroke
+         *  
+         * SYNOPSIS
+         *  private void richTextBox_KeyDown(object sender, KeyEventArgs e);
+         *      sender  -> does nothing
+         *      e       -> does nothing
+         * 
+         * DESCRIPTION
+         *  This event handler method implements several techniques to control the overall size of user-entered text on
+         *  each page by performing checks with each keystroke. It limits the number of lines to 28 by restricting the
+         *  use of 'Enter' key if all the lines are filled. It limits the number of characters on each line by restricting
+         *  the use of all keys except those that do not generate more characters. If user inputs 'space' in the text,
+         *  then 'space' is formatted to default font in order to regulate line heights based on that one font.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  4:11pm 5/31/2015
+         */
+        private void richTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            richTextBox.SelectionColor = m_currentTextColor;
+            richTextBox.SelectionBackColor = m_currentTextHighlightColor;
+            // Prevent too many lines
+            if (richTextBox.Lines.Length == 28)
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    e.SuppressKeyPress = true;
+                }
+            }
+
+            // Font for 'space' to control line height
+            if (e.KeyCode == Keys.Space)
+            {
+                richTextBox.SelectionFont = m_idealFont;
+            }
+            else
+            {
+                richTextBox.SelectionFont = m_currentRichTextBoxFont;
+            }
+
+            // Prevent lines from becoming too long
+            if (richTextBox.TextLength != 0)
+            {
+                int currentLineIndex = richTextBox.GetLineFromCharIndex(richTextBox.SelectionStart);
+                int lastCharIndexBeforeNextLine = 0;
+                for (int i = 0; i <= currentLineIndex; i++)  // find the index of last character on current line
+                {
+                    lastCharIndexBeforeNextLine += richTextBox.Lines[i].Length;
+                    lastCharIndexBeforeNextLine++;  // for each '\n'
+                }
+                lastCharIndexBeforeNextLine--;
+                lastCharIndexBeforeNextLine--;
+                if (lastCharIndexBeforeNextLine < 0)  // prevent an (out of bounds) exception
+                {
+                    return;
+                }
+                if (richTextBox.Text[lastCharIndexBeforeNextLine] == '\n')  // account for use of new line character
+                {
+                    endOfLinePoint = richTextBox.GetPositionFromCharIndex(lastCharIndexBeforeNextLine + 1);
+                }
+                else
+                {
+                    endOfLinePoint = richTextBox.GetPositionFromCharIndex(lastCharIndexBeforeNextLine);
+                }
+                if (endOfLinePoint.X >= 450)  // restrict the addition of any more characters on the line
+                {
+                    if (!(e.KeyCode == Keys.Up || e.KeyCode == Keys.Down || e.KeyCode == Keys.Left ||
+                        e.KeyCode == Keys.Right || e.KeyCode == Keys.Back || e.KeyCode == Keys.Enter))
+                    {
+                        e.SuppressKeyPress = true;
+                    }
+                }
+            }
+        } /* private void richTextBox_KeyDown(object sender, KeyEventArgs e) */
 
         /*
          * NAME
@@ -122,12 +222,11 @@ namespace My_Note
         {
             richTextBox.Invalidate();
             transparentPanel.Invalidate();
-            //mslog("textChanged");
         } /* private void richTextBox_TextChanged(object sender, EventArgs e) */
 
         #endregion
 
-        // Region contains event handler methods for transparentPanel
+        // Region contains methods for transparentPanel
         #region transparentPanelEvent Methods
 
         /*
@@ -236,7 +335,7 @@ namespace My_Note
                     m_drawStartPoint = e.Location;
                     m_arrowDynamicArray = new Point[6];
                 }
-                if (m_currentSelectedControl == e_SelectedControl.RECTANGLE)  // 11
+                if (m_currentSelectedControl == e_SelectedControl.RECTANGLE) // 11
                 {
                     m_isDrawing = true;
                     m_drawStartPoint = e.Location;
@@ -252,35 +351,20 @@ namespace My_Note
                     m_drawStartPoint = e.Location;
                     m_solidLineDynamicArray = new Point[2];
                 }
-                if (m_currentSelectedControl == e_SelectedControl.DASHED) //14
+                if (m_currentSelectedControl == e_SelectedControl.DASHED) // 14
                 {
                     m_isDrawing = true;
                     m_drawStartPoint = e.Location;
                     m_canDash = true;
                     m_dashLineDynamicArray = new Point[2];
                 }
-                if (m_currentSelectedControl == e_SelectedControl.DOTTED)
+                if (m_currentSelectedControl == e_SelectedControl.DOTTED) // 15
                 {
                     m_isDrawing = true;
                     m_drawStartPoint = e.Location;
                     m_canDash = true;
                     m_dottedLineDynamicArray = new Point[2];
                 }
-                //// This technique saves many lines of code and  uses less test conditions
-                //if (((int)m_currentSelectedControl > 2) &&
-                //    ((int)m_currentSelectedControl < 14))
-                //{
-                //    m_isDrawing = true;
-                //    m_drawStartPoint = e.Location;
-                //}
-
-                //if (((int)m_currentSelectedControl > 13) &&
-                //    ((int)m_currentSelectedControl < 16))
-                //{
-                //    m_isDrawing = true;
-                //    m_drawStartPoint = e.Location;
-                //    m_canDash = true;
-                //}
             }
         } /* private void transparentPanel_MouseDown(object sender, MouseEventArgs e) */
 
@@ -467,29 +551,35 @@ namespace My_Note
                     if (m_currentSelectedControl == e_SelectedControl.NARROW && (e.Location.Y < m_drawStartPoint.Y))
                     {
                         saveNorthArrow(e);
+                        m_arrowDynamicArray = null;
                     }
                     if (m_currentSelectedControl == e_SelectedControl.NEARROW &&
                         (e.Location.X > m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y))
                     {
                         saveNorthEastArrow(e);
+                        m_arrowDynamicArray = null;
                     }
                     if (m_currentSelectedControl == e_SelectedControl.EARROW && (e.Location.X > m_drawStartPoint.X))
                     {
                         saveEastArrow(e);
+                        m_arrowDynamicArray = null;
                     }
                     if (m_currentSelectedControl == e_SelectedControl.SEARROW &&
                         (e.Location.X > m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y))
                     {
                         saveSouthEastArrow(e);
+                        m_arrowDynamicArray = null;
                     }
                     if (m_currentSelectedControl == e_SelectedControl.SARROW && (e.Location.Y > m_drawStartPoint.Y))
                     {
                         saveSouthArrow(e);
+                        m_arrowDynamicArray = null;
                     }
                     if (m_currentSelectedControl == e_SelectedControl.SWARROW &&
                         (e.Location.X < m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y))
                     {
                         saveSouthWestArrow(e);
+                        m_arrowDynamicArray = null;
                     }
                     if (m_currentSelectedControl == e_SelectedControl.RECTANGLE)
                     {
@@ -600,7 +690,7 @@ namespace My_Note
         {
             // Apply a smoothing mode to smooth out the line.
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
-            // Begin drawing
+            // Draw all saved shapes
             for (int i = 0; i < m_shapesStorage.NumberOfShapes() - 1; i++)
             {
                 Shape pointOne = m_shapesStorage.GetShape(i);
@@ -612,6 +702,7 @@ namespace My_Note
                     p.Dispose();
                 }
             }
+            // Draw rotatable text
             for (int i = 0; i < m_verticalTextList.Count; i++)
             {
                 m_verticalTextList[i].drawVerticalText(e);
@@ -623,22 +714,27 @@ namespace My_Note
                     e.Graphics.DrawLine(m_transparentPanelPen, m_arrowDynamicArray[i], m_arrowDynamicArray[i + 1]);
                 }
             }
+            // Draw rectangle (while mouse is down)
             if (m_rectangleDynamicRectangle.IsEmpty == false)
             {
                 e.Graphics.DrawRectangle(m_transparentPanelPen, m_rectangleDynamicRectangle);
             }
+            // Draw ellipse (while mouse is down)
             if (m_ellipseDynamicRectangle.IsEmpty == false)
             {
                 e.Graphics.DrawEllipse(m_transparentPanelPen, m_ellipseDynamicRectangle);
             }
+            // Draw solid line (while mouse is down)
             if (m_solidLineDynamicArray != null)
             {
                 e.Graphics.DrawLine(m_transparentPanelPen, m_solidLineDynamicArray[0], m_solidLineDynamicArray[1]);
             }
+            // Draw dashed line (while mouse is down)
             if (m_dashLineDynamicArray != null)
             {
                 e.Graphics.DrawLine(m_dashLinePen, m_dashLineDynamicArray[0], m_dashLineDynamicArray[1]);
             }
+            // Draw dotted line (while mouse is down)
             if (m_dottedLineDynamicArray != null)
             {
                 e.Graphics.DrawLine(m_dottedLinePen, m_dottedLineDynamicArray[0], m_dottedLineDynamicArray[1]);
@@ -856,19 +952,15 @@ namespace My_Note
             m_lastPosition.Y = m_drawStartPoint.Y - m_arrowFarPoint;
             m_arrowDynamicArray[0] = m_drawStartPoint;
             m_arrowDynamicArray[1] = m_lastPosition;
-            //m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_drawStartPoint, m_lastPosition);
 
             // Draw the arrowhead part of the arrow
             m_arrowRightSide.X = m_lastPosition.X + 8;
             m_arrowRightSide.Y = m_lastPosition.Y;
-            //m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_arrowRightSide, m_lastPosition);
             m_arrowDynamicArray[2] = m_arrowRightSide;
             m_arrowDynamicArray[3] = m_lastPosition;
 
-
             m_arrowLeftSide.X = m_lastPosition.X;
             m_arrowLeftSide.Y = m_lastPosition.Y + 8;
-            //m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_arrowLeftSide, m_lastPosition);
             m_arrowDynamicArray[4] = m_arrowLeftSide;
             m_arrowDynamicArray[5] = m_lastPosition;
 
@@ -960,15 +1052,19 @@ namespace My_Note
             // Draw the line part of the arrow
             m_lastPosition.X = m_drawStartPoint.X;  // Restrict horizontal movement
             m_lastPosition.Y = e.Location.Y;  // Restrict drawing direction (north)
-            m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_drawStartPoint, m_lastPosition);
+            m_arrowDynamicArray[0] = m_drawStartPoint;
+            m_arrowDynamicArray[1] = m_lastPosition;
 
             // Draw the arrowhead part of the arrow
             m_arrowRightSide.X = m_lastPosition.X + 5;
             m_arrowRightSide.Y = m_lastPosition.Y + 5;
-            m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_arrowRightSide, m_lastPosition);
+            m_arrowDynamicArray[2] = m_arrowRightSide;
+            m_arrowDynamicArray[3] = m_lastPosition;
+
             m_arrowLeftSide.X = m_lastPosition.X - 5;
             m_arrowLeftSide.Y = m_lastPosition.Y + 5;
-            m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_arrowLeftSide, m_lastPosition);
+            m_arrowDynamicArray[4] = m_arrowLeftSide;
+            m_arrowDynamicArray[5] = m_lastPosition;
 
             transparentPanel.Invalidate();
             richTextBox.Invalidate();
@@ -1072,16 +1168,19 @@ namespace My_Note
 
             m_lastPosition.X = m_drawStartPoint.X + m_arrowFarPoint;
             m_lastPosition.Y = m_drawStartPoint.Y - m_arrowFarPoint;
-
-            m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_drawStartPoint, m_lastPosition);
+            m_arrowDynamicArray[0] = m_drawStartPoint;
+            m_arrowDynamicArray[1] = m_lastPosition;
 
             // Draw the arrowhead part of the arrow
             m_arrowRightSide.X = m_lastPosition.X;
             m_arrowRightSide.Y = m_lastPosition.Y + 8;
-            m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_arrowRightSide, m_lastPosition);
+            m_arrowDynamicArray[2] = m_arrowRightSide;
+            m_arrowDynamicArray[3] = m_lastPosition;
+
             m_arrowLeftSide.X = m_lastPosition.X - 8;
             m_arrowLeftSide.Y = m_lastPosition.Y;
-            m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_arrowLeftSide, m_lastPosition);
+            m_arrowDynamicArray[4] = m_arrowLeftSide;
+            m_arrowDynamicArray[5] = m_lastPosition;
 
             transparentPanel.Invalidate();
             richTextBox.Invalidate();
@@ -1171,15 +1270,19 @@ namespace My_Note
             // Draw the line part of the arrow
             m_lastPosition.X = e.Location.X;  // Restrict drawing direction (east)
             m_lastPosition.Y = m_drawStartPoint.Y;  // Restrict vertical movement
-            m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_drawStartPoint, m_lastPosition);
+            m_arrowDynamicArray[0] = m_drawStartPoint;
+            m_arrowDynamicArray[1] = m_lastPosition;
 
             // Draw the arrowhead part of the arrow
             m_arrowRightSide.X = m_lastPosition.X - 5;
             m_arrowRightSide.Y = m_drawStartPoint.Y + 5;
-            m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_arrowRightSide, m_lastPosition);
+            m_arrowDynamicArray[2] = m_arrowRightSide;
+            m_arrowDynamicArray[3] = m_lastPosition;
+
             m_arrowLeftSide.X = m_lastPosition.X - 5;
             m_arrowLeftSide.Y = m_drawStartPoint.Y - 5;
-            m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_lastPosition, m_arrowLeftSide);
+            m_arrowDynamicArray[4] = m_arrowLeftSide;
+            m_arrowDynamicArray[5] = m_lastPosition;
 
             transparentPanel.Invalidate();
             richTextBox.Invalidate();
@@ -1283,16 +1386,19 @@ namespace My_Note
 
             m_lastPosition.X = m_drawStartPoint.X + m_arrowFarPoint;
             m_lastPosition.Y = m_drawStartPoint.Y + m_arrowFarPoint;
-
-            m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_drawStartPoint, m_lastPosition);
+            m_arrowDynamicArray[0] = m_drawStartPoint;
+            m_arrowDynamicArray[1] = m_lastPosition;
 
             // Draw the arrowhead part of the arrow
             m_arrowRightSide.X = m_lastPosition.X - 8;
             m_arrowRightSide.Y = m_lastPosition.Y;
-            m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_arrowRightSide, m_lastPosition);
+            m_arrowDynamicArray[2] = m_arrowRightSide;
+            m_arrowDynamicArray[3] = m_lastPosition;
+
             m_arrowLeftSide.X = m_lastPosition.X;
             m_arrowLeftSide.Y = m_lastPosition.Y - 8;
-            m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_arrowLeftSide, m_lastPosition);
+            m_arrowDynamicArray[4] = m_arrowLeftSide;
+            m_arrowDynamicArray[5] = m_lastPosition;
 
             transparentPanel.Invalidate();
             richTextBox.Invalidate();
@@ -1382,15 +1488,19 @@ namespace My_Note
             // Draw the line part of the arrow
             m_lastPosition.X = m_drawStartPoint.X;  // Restrict horizontal movement
             m_lastPosition.Y = e.Location.Y;  // Restrict drawing direction (south)
-            m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_drawStartPoint, m_lastPosition);
+            m_arrowDynamicArray[0] = m_drawStartPoint;
+            m_arrowDynamicArray[1] = m_lastPosition;
 
             // Draw the arrowhead part of the arrow
             m_arrowRightSide.X = m_lastPosition.X - 5;
             m_arrowRightSide.Y = m_lastPosition.Y - 5;
-            m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_arrowRightSide, m_lastPosition);
+            m_arrowDynamicArray[2] = m_arrowRightSide;
+            m_arrowDynamicArray[3] = m_lastPosition;
+
             m_arrowLeftSide.X = m_lastPosition.X + 5;
             m_arrowLeftSide.Y = m_lastPosition.Y - 5;
-            m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_arrowLeftSide, m_lastPosition);
+            m_arrowDynamicArray[4] = m_arrowLeftSide;
+            m_arrowDynamicArray[5] = m_lastPosition;
 
             transparentPanel.Invalidate();
             richTextBox.Invalidate();
@@ -1494,16 +1604,19 @@ namespace My_Note
 
             m_lastPosition.X = m_drawStartPoint.X - m_arrowFarPoint;
             m_lastPosition.Y = m_drawStartPoint.Y + m_arrowFarPoint;
-
-            m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_drawStartPoint, m_lastPosition);
+            m_arrowDynamicArray[0] = m_drawStartPoint;
+            m_arrowDynamicArray[1] = m_lastPosition;
 
             // Draw the arrowhead part of the arrow
             m_arrowRightSide.X = m_lastPosition.X;
             m_arrowRightSide.Y = m_lastPosition.Y - 8;
-            m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_arrowRightSide, m_lastPosition);
+            m_arrowDynamicArray[2] = m_arrowRightSide;
+            m_arrowDynamicArray[3] = m_lastPosition;
+
             m_arrowLeftSide.X = m_lastPosition.X + 8;
             m_arrowLeftSide.Y = m_lastPosition.Y;
-            m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_arrowLeftSide, m_lastPosition);
+            m_arrowDynamicArray[4] = m_arrowLeftSide;
+            m_arrowDynamicArray[5] = m_lastPosition;
 
             transparentPanel.Invalidate();
             richTextBox.Invalidate();
@@ -1590,13 +1703,6 @@ namespace My_Note
          */
         private void drawRectangle(MouseEventArgs e)
         {
-            Int32 rectWidth = e.Location.X - m_drawStartPoint.X;
-            Int32 rectHeight = e.Location.Y - m_drawStartPoint.Y;
-
-            //Rectangle currentRect = new Rectangle(Math.Min(e.X, m_drawStartPoint.X), Math.Min(e.Y, m_drawStartPoint.Y), 
-            //    Math.Abs(e.X - m_drawStartPoint.X), Math.Abs(e.Y - m_drawStartPoint.Y));
-            
-            //m_transparentPanelGraphics.DrawRectangle(m_transparentPanelPen, currentRect);
             m_rectangleDynamicRectangle = new Rectangle(Math.Min(e.X, m_drawStartPoint.X), Math.Min(e.Y, m_drawStartPoint.Y),
                 Math.Abs(e.X - m_drawStartPoint.X), Math.Abs(e.Y - m_drawStartPoint.Y));
 
@@ -1686,9 +1792,6 @@ namespace My_Note
             Int32 rectWidth = e.Location.X - m_drawStartPoint.X;
             Int32 rectHeight = e.Location.Y - m_drawStartPoint.Y;
 
-            //Rectangle currentEllipse = new Rectangle(m_drawStartPoint.X, m_drawStartPoint.Y, rectWidth, rectHeight);
-            //m_transparentPanelGraphics.DrawEllipse(m_transparentPanelPen, currentEllipse);
-
             m_ellipseDynamicRectangle = new Rectangle(m_drawStartPoint.X, m_drawStartPoint.Y, rectWidth, rectHeight);
 
             transparentPanel.Invalidate();
@@ -1774,7 +1877,6 @@ namespace My_Note
          */
         private void drawSolidLine(MouseEventArgs e)
         {
-            //m_transparentPanelGraphics.DrawLine(m_transparentPanelPen, m_drawStartPoint, e.Location);
             m_solidLineDynamicArray[0] = m_drawStartPoint;
             m_solidLineDynamicArray[1] = e.Location;
 
@@ -1842,11 +1944,6 @@ namespace My_Note
          */
         private void drawDashedLine(MouseEventArgs e)
         {
-            //float[] dashValues = { 5, 5 };
-            //Pen dashPen = new Pen(m_currentDrawColor, m_currentPenWidth);
-            //dashPen.DashPattern = dashValues;
-            //m_transparentPanelGraphics.DrawLine(dashPen, m_drawStartPoint, e.Location);
-
             m_dashLineDynamicArray[0] = m_drawStartPoint;
             m_dashLineDynamicArray[1] = e.Location;
 
@@ -1926,11 +2023,6 @@ namespace My_Note
          */
         private void drawDottedLine(MouseEventArgs e)
         {
-            //float[] dashValues = { 2, 2 };
-            //Pen dashPen = new Pen(m_currentDrawColor, m_currentPenWidth);
-            //dashPen.DashPattern = dashValues;
-            //m_transparentPanelGraphics.DrawLine(dashPen, m_drawStartPoint, e.Location);
-            
             m_dottedLineDynamicArray[0] = m_drawStartPoint;
             m_dottedLineDynamicArray[1] = e.Location;
 

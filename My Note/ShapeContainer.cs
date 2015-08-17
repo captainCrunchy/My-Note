@@ -37,30 +37,128 @@ namespace My_Note
     {
         private List<Shape> m_shapes;           // stores all the shapes
 
+        /*
+         * NAME
+         *  ShapeContainer() - default constructor
+         *  
+         * SYNOPSIS
+         *  public ShapeContainer();
+         *      
+         * DESCRIPTION
+         *  This constructor gets called when instances of this object are created.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Geoff Samuel
+         *  
+         * DATE
+         *  5/23/2011
+         */
         public ShapeContainer()
         {
             m_shapes = new List<Shape>();
-        }
+        } /* public ShapeContainer() */
 
-        // Returns the number of shapes being stored
+        /*
+         * NAME
+         *  NumberOfShapes() - gets the number of shapes stored
+         *  
+         * SYNOPSIS
+         *  public int NumberOfShapes();
+         *      
+         * DESCRIPTION
+         *  This constructor method gets the number of shapes this container stores.
+         *  
+         * RETURNS
+         *  Returns the number of shapes being stored
+         *  
+         * AUTHOR
+         *  Geoff Samuel
+         *  
+         * DATE
+         *  5/23/2011
+         */
         public int NumberOfShapes()
         {
             return m_shapes.Count;
-        }
+        } /* public int NumberOfShapes() */
 
-        // Add a shape to the database, recording its position, width, color and shape related information
+        /*
+         * NAME
+         *  AddShape() - adds a shape to this container
+         *  
+         * SYNOPSIS
+         *  public void AddShape(Point a_pointLocation, float a_lineWidth, Color a_lineColor, int a_shapeNumber);
+         *      a_pointLocation     -> stores the line location
+         *      a_lineWidth         -> stores the line width
+         *      a_lineColor         -> stores the line color
+         *      a_shapeNumber       -> stores the shape number
+         *      
+         * DESCRIPTION
+         *  Add a shape to the database, recording its position, width, color and shape related information.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Geoff Samuel
+         *  
+         * DATE
+         *  5/23/2011
+         */
         public void AddShape(Point a_pointLocation, float a_lineWidth, Color a_lineColor, int a_shapeNumber)
         {
             m_shapes.Add(new Shape(a_pointLocation, a_lineWidth, a_lineColor, a_shapeNumber));
-        }
+        } /* public void AddShape(Point a_pointLocation, float a_lineWidth, Color a_lineColor, int a_shapeNumber) */
 
-        // Returns a shape of the requested data
+        /*
+         * NAME
+         *  GetShape() - gets a specific shape form container
+         *  
+         * SYNOPSIS
+         *  public Shape GetShape(int a_index);
+         *      a_index    -> index of the shape to be retrieved
+         *      
+         * DESCRIPTION
+         *  Returns a shape of the requested data.
+         *  
+         * RETURNS
+         *  Instance of a Shape object
+         *  
+         * AUTHOR
+         *  Geoff Samuel
+         *  
+         * DATE
+         *  5/23/2011
+         */
         public Shape GetShape(int a_index)
         {
             return m_shapes[a_index];
-        }
+        } /* public Shape GetShape(int a_index) */
 
-        // Removes any point data within a certain threshold of a point
+        /*
+         * NAME
+         *  GetShape() - gets a specific shape form container
+         *  
+         * SYNOPSIS
+         *  public Shape GetShape(int a_index);
+         *      a_pointLocation     -> location of the point to be removed
+         *      a_threshold         -> the proximity of shapes to location to be removed
+         *      
+         * DESCRIPTION
+         *  Removes any point data within a certain threshold of a point.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Geoff Samuel
+         *  
+         * DATE
+         *  5/23/2011
+         */
         public void RemoveShape(Point a_pointLocation, float a_threshold)
         {
             for (int i = 0; i < m_shapes.Count; i++)
@@ -81,7 +179,7 @@ namespace My_Note
                     i -= 1;
                 }
             }
-        }
+        } /* public void RemoveShape(Point a_pointLocation, float a_threshold) */
 
         /*
          * NAME

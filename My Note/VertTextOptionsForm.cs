@@ -43,10 +43,29 @@ namespace My_Note
         private enum e_selectedCloseButton { OKBUTTON, CANCELBUTTON }
         private e_selectedCloseButton m_selectedCloseButton = e_selectedCloseButton.CANCELBUTTON;
 
+        /*
+         * NAME
+         *  VertTextOptionsForm() - default constructor
+         *  
+         * SYNOPSIS
+         *  public VertTextOptionsForm();
+         * 
+         * DESCRIPTION
+         *  This is the default consructor
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  10:48am 5/14/2015
+         */
         public VertTextOptionsForm()
         {
             InitializeComponent();
-        }
+        } /* public VertTextOptionsForm() */
 
         /*
          * NAME

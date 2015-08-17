@@ -36,19 +36,10 @@ namespace My_Note
     [Serializable()]
     sealed public class Shape : ISerializable
     {
-        private Point m_pointLocation;          // position of the point
-        private float m_lineWidth;              // width of the line
-        private Color m_lineColor;              // color of the line
-        private int m_shapeNumber;              // part of which shape it belongs to
-
-        // Custom constructor 
-        public Shape(Point a_pointLocation, float a_lineWidth, Color a_lineColor, int a_shapeNumber)
-        {
-            m_pointLocation = a_pointLocation;  // stores the line location
-            m_lineWidth = a_lineWidth;          // stores the line width
-            m_lineColor = a_lineColor;          // stores the line color
-            m_shapeNumber = a_shapeNumber;      // stores the shape number
-        }
+        private Point m_pointLocation;          // Position of the point
+        private float m_lineWidth;              // Width of the line
+        private Color m_lineColor;              // Color of the line
+        private int m_shapeNumber;              // Part of which shape it belongs to
 
         // Position of the point
         public Point PointLocation
@@ -101,6 +92,38 @@ namespace My_Note
                 m_shapeNumber = value;
             }
         }
+
+        /*
+         * NAME
+         *  Shape() - gets called when creating a custom 'Shape' object
+         *  
+         * SYNOPSIS
+         *  public Shape(Point a_pointLocation, float a_lineWidth, Color a_lineColor, int a_shapeNumber);
+         *      a_pointLocation     -> stores the line location
+         *      a_lineWidth         -> stores the line width
+         *      a_lineColor         -> stores the line color
+         *      a_shapeNumber       -> stores the shape number
+         *      
+         * DESCRIPTION
+         *  This constructor gets called when instances of this object are created by and are being added
+         *  to the ShapeContainer object.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  10:12am 5/20/2015
+         */
+        public Shape(Point a_pointLocation, float a_lineWidth, Color a_lineColor, int a_shapeNumber)
+        {
+            m_pointLocation = a_pointLocation;
+            m_lineWidth = a_lineWidth;
+            m_lineColor = a_lineColor;
+            m_shapeNumber = a_shapeNumber;
+        } /* public Shape(Point a_pointLocation, float a_lineWidth, Color a_lineColor, int a_shapeNumber) */
 
         /*
          * NAME

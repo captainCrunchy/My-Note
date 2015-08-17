@@ -31,7 +31,9 @@ namespace My_Note
 {
     public partial class VTextColorComboBox : ComboBox
     {
-        // Data for each color in the list
+        /// <summary>
+        /// Data for each color in the list
+        /// </summary>
         public class ColorInfo
         {
             public string Text { get; set; }
@@ -41,66 +43,6 @@ namespace My_Note
             {
                 Text = text;
                 Color = color;
-            }
-        }
-
-        public VTextColorComboBox()
-        {
-            InitializeComponent();
-            DropDownStyle = ComboBoxStyle.DropDownList;
-            DrawMode = DrawMode.OwnerDrawFixed;
-            DrawItem += OnDrawItem;
-        }
-
-        // Populate control with standard colors
-        public void AddStandardColors()
-        {
-            Items.Clear();
-            Items.Add(new ColorInfo("Black", Color.Black));
-            Items.Add(new ColorInfo("Gray", Color.Gray));
-            Items.Add(new ColorInfo("Red", Color.Red));
-            Items.Add(new ColorInfo("Orange", Color.Orange));
-            Items.Add(new ColorInfo("Yellow", Color.Yellow));
-            Items.Add(new ColorInfo("White", Color.White));
-            Items.Add(new ColorInfo("Green", Color.Green));
-            Items.Add(new ColorInfo("Teal", Color.Teal));
-            Items.Add(new ColorInfo("Blue", Color.Blue));
-            Items.Add(new ColorInfo("Purple", Color.Purple));
-        }
-
-        // Draw list item
-        protected void OnDrawItem(object sender, DrawItemEventArgs e)
-        {
-            if (e.Index >= 0)
-            {
-                // Get this color
-                ColorInfo color = (ColorInfo)Items[e.Index];
-
-                // Fill background
-                e.DrawBackground();
-
-                // Draw color box
-                Rectangle rect = new Rectangle();
-                rect.X = e.Bounds.X + 2;
-                rect.Y = e.Bounds.Y + 2;
-                rect.Width = 18;
-                rect.Height = e.Bounds.Height - 5;
-                e.Graphics.FillRectangle(new SolidBrush(color.Color), rect);
-                e.Graphics.DrawRectangle(SystemPens.WindowText, rect);
-
-                // Write color name
-                Brush brush;
-                if ((e.State & DrawItemState.Selected) != DrawItemState.None)
-                    brush = SystemBrushes.HighlightText;
-                else
-                    brush = SystemBrushes.WindowText;
-                e.Graphics.DrawString(color.Text, Font, brush,
-                    e.Bounds.X + rect.X + rect.Width + 2,
-                    e.Bounds.Y + ((e.Bounds.Height - Font.Height) / 2));
-
-                // Draw the focus rectangle if appropriate
-                if ((e.State & DrawItemState.NoFocusRect) == DrawItemState.None)
-                    e.DrawFocusRectangle();
             }
         }
 
@@ -143,5 +85,122 @@ namespace My_Note
                 }
             }
         }
+
+        /*
+         * NAME
+         *  VTextColorComboBox() - default constructor
+         *  
+         * SYNOPSIS
+         *  public VTextColorComboBox();
+         * 
+         * DESCRIPTION
+         *  This is the default consructor which initializes several member variables.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Jonathan Wood
+         *  
+         * DATE
+         *  February 11, 2011
+         */
+        public VTextColorComboBox()
+        {
+            InitializeComponent();
+            DropDownStyle = ComboBoxStyle.DropDownList;
+            DrawMode = DrawMode.OwnerDrawFixed;
+            DrawItem += OnDrawItem;
+        } /* VTextColorComboBox() */
+
+        /*
+         * NAME
+         *  AddStandardColors() - adds colors to combo box
+         *  
+         * SYNOPSIS
+         *  public void AddStandardColors();
+         * 
+         * DESCRIPTION
+         *  Populate control with standard colors.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Jonathan Wood
+         *  
+         * DATE
+         *  February 11, 2011
+         */
+        public void AddStandardColors()
+        {
+            Items.Clear();
+            Items.Add(new ColorInfo("Black", Color.Black));
+            Items.Add(new ColorInfo("Gray", Color.Gray));
+            Items.Add(new ColorInfo("Red", Color.Red));
+            Items.Add(new ColorInfo("Orange", Color.Orange));
+            Items.Add(new ColorInfo("Yellow", Color.Yellow));
+            Items.Add(new ColorInfo("White", Color.White));
+            Items.Add(new ColorInfo("Green", Color.Green));
+            Items.Add(new ColorInfo("Teal", Color.Teal));
+            Items.Add(new ColorInfo("Blue", Color.Blue));
+            Items.Add(new ColorInfo("Purple", Color.Purple));
+        } /* public void AddStandardColors() */
+
+        /*
+         * NAME
+         *  OnDrawItem() draws list item
+         *  
+         * SYNOPSIS
+         *  protected void OnDrawItem(object sender, DrawItemEventArgs e);
+         *      sender  -> does nothing
+         *      e       -> does nothing
+         * 
+         * DESCRIPTION
+         *  Draw list item.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Jonathan Wood
+         *  
+         * DATE
+         *  February 11, 2011
+         */
+        protected void OnDrawItem(object sender, DrawItemEventArgs e)
+        {
+            if (e.Index >= 0)
+            {
+                // Get this color
+                ColorInfo color = (ColorInfo)Items[e.Index];
+
+                // Fill background
+                e.DrawBackground();
+
+                // Draw color box
+                Rectangle rect = new Rectangle();
+                rect.X = e.Bounds.X + 2;
+                rect.Y = e.Bounds.Y + 2;
+                rect.Width = 18;
+                rect.Height = e.Bounds.Height - 5;
+                e.Graphics.FillRectangle(new SolidBrush(color.Color), rect);
+                e.Graphics.DrawRectangle(SystemPens.WindowText, rect);
+
+                // Write color name
+                Brush brush;
+                if ((e.State & DrawItemState.Selected) != DrawItemState.None)
+                    brush = SystemBrushes.HighlightText;
+                else
+                    brush = SystemBrushes.WindowText;
+                e.Graphics.DrawString(color.Text, Font, brush,
+                    e.Bounds.X + rect.X + rect.Width + 2,
+                    e.Bounds.Y + ((e.Bounds.Height - Font.Height) / 2));
+
+                // Draw the focus rectangle if appropriate
+                if ((e.State & DrawItemState.NoFocusRect) == DrawItemState.None)
+                    e.DrawFocusRectangle();
+            }
+        } /* protected void OnDrawItem(object sender, DrawItemEventArgs e) */
     }
 }

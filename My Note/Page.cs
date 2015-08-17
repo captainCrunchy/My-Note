@@ -31,8 +31,9 @@ namespace My_Note
     {
         private ShapeContainer m_shapeContainer = new ShapeContainer();             // Used to store 'Shape' objects
         private List<VerticalText> m_verticalTextList = new List<VerticalText>();   // Used to store 'VerticalText' objects
-        private string m_rtfTextCode = "";                                          // Used to store text formatting
+        private string m_rtfTextCode = "";                                          // Used to store rich text formatting
 
+        // Stores 'Shape(s)'
         public ShapeContainer ShapeContainer
         {
             get
@@ -45,6 +46,7 @@ namespace My_Note
             }
         }
 
+        // Stores 'Vertical Text(s)'
         public List<VerticalText> VerticalTextList
         {
             get
@@ -57,6 +59,7 @@ namespace My_Note
             }
         }
 
+        // Remembers rich text formats
         public string RTFTextCode
         {
             get

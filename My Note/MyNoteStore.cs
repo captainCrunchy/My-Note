@@ -31,6 +31,7 @@ namespace My_Note
         private List<Subject> m_savedSubjects;      // Used to store 'Subject' objects
         private int m_autoSaveTimeInterval = 0;     // Remembers user preferred auto-save time interval
 
+        // Stores 'Subjects'
         public List<Subject> SavedSubjects
         {
             get
@@ -39,6 +40,7 @@ namespace My_Note
             }
         }
 
+        // Stores user preference
         public int AutoSaveTimeInterval
         {
             get

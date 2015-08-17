@@ -32,6 +32,7 @@ namespace My_Note
         private List<Page> m_pages = new List<Page>();      // Used to store 'Page' objects
         private int m_currentPageNumber = 1;                // Used to remember last page used in this 'Subject'
 
+        // Holds subject title
         public string SubjectTitle
         {
             get
@@ -44,6 +45,7 @@ namespace My_Note
             }
         }
 
+        // Returns current number of pages
         public int TotalNumberOfPages
         {
             get
@@ -52,6 +54,7 @@ namespace My_Note
             }
         }
 
+        // Stores last page number used
         public int CurrentPageNumber
         {
             get
