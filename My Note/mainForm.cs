@@ -131,6 +131,7 @@ namespace My_Note
             this.FormBorderStyle = FormBorderStyle.Fixed3D;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.Text = "My Note";
 
             m_autoSaveTimer.Tick += new EventHandler(TimerEventProcessor);  // formmMenuStrip.cs
             m_autoSaveNotifyTimer.Tick += new EventHandler(autoSaveNotify);  // formmMenuStrip.cs
@@ -921,39 +922,6 @@ namespace My_Note
             canHideVertTextButtons = true;
             selectTextControl();
         } /* private void updateCurrentPageDisplayForSubject(Subject a_subject, int a_pageNumber) */
-
-        #endregion
-
-        // Temporary elements
-        #region Temporary Methods
-
-        // Temp
-        private void moveLogCursor()
-        {
-            logTextBox.SelectionStart = logTextBox.Text.Length;
-            logTextBox.SelectionLength = 0;
-            logTextBox.ScrollToCaret();
-        }
-        
-        // Temp
-        private void mslog(string a_str)
-        {
-            logTextBox.Text += a_str + "\r\n";
-            moveLogCursor();
-        }
-
-        // Temp
-        private void clearButton_Click(object sender, EventArgs e)
-        {
-            logTextBox.Text = "";
-        }
-
-        // Temp
-        private void popupButton_Click(object sender, EventArgs e)
-        {
-            string rtfTextCode = richTextBox.Rtf;
-
-        }
 
         #endregion
     }

@@ -84,10 +84,10 @@ namespace My_Note
         private Point[] m_solidLineDynamicArray;                // Holds points that form a solid line during mouse_down
         private Point[] m_dashLineDynamicArray;                 // Holds points that form a dashed line during mouse_down
         private float[] m_dashLineValues = { 5, 5 };            // Values used when drawing a dashed line
-        private Pen m_dashLinePen;                              // Pen used to draw a dashed line
+        private Pen m_dashLinePen;                              // Pen used to draw a dashed line (init. in mainForm.cs)
         private Point[] m_dottedLineDynamicArray;               // Holds points that form a dotted line during mouse down
         private float[] m_dottedLineValues = { 2, 2 };          // Values used when drawing a dotted line
-        private Pen m_dottedLinePen;                            // Pen used to draw a dotted line
+        private Pen m_dottedLinePen;                            // Pen used to draw a dotted line (init. in mainForm.cs)
         private bool m_canDash = false;                         // Used when saving dashed or dotted lines
 
         private Rectangle m_rectangleDynamicRectangle;          // Holds points that form a rectangle during mouse_down
@@ -227,7 +227,7 @@ namespace My_Note
         #endregion
 
         // Region contains methods for transparentPanel
-        #region transparentPanelEvent Methods
+        #region transparentPanel Methods
 
         /*
          * NAME
@@ -291,11 +291,15 @@ namespace My_Note
          *                 values, and confirm that left mouse button was clicked
          *      
          * DESCRIPTION
-         *  Prepares drawing controls to be used by setting/updating values of member variables.
-         *  If text control is selected, then this method prepares a multi-character text selection.
-         *  Pencil and eraser controls need simpler preparation processes. Last two conditions cast
-         *  the 'enum' type m_currentSelectedControl to 'int' in order to test as many conditions as
-         *  possible while keeping a minimum required lines of code and maintaining readability.
+         *  This method prepares drawing controls to be used by setting or updating values of member variables
+         *  which dictate locations of UI elements on the panel. It first checks to see if the left mouse was
+         *  pressed before performing any task. If text control is selected, then this method captures the 
+         *  location of the mouse cursor on transparent panel, compensates for the origin offset of rich text
+         *  box from origin of transparent panel, and delivers values to the rich text box to be used for further
+         *  tasks. Pencil and eraser controls have simpler preparation processes. Preparing to draw arrows on
+         *  screen is done by converting the enum value of arrow controls to an integer and testing a wider range
+         *  of drawing controls. This mechanism reduces the number of lines of code. Preparing to draw other
+         *  shapes is done differently for each shape based on that shape's needs.
          * 
          * RETURNS
          *  Nothing
@@ -326,8 +330,6 @@ namespace My_Note
                 {
                     m_isErasing = true;
                 }
-
-                // Start to draw arrows (dynamically), this approach saves many lines of code
                 if (((int)m_currentSelectedControl > 2) &&
                     ((int)m_currentSelectedControl < 11))
                 {
@@ -379,13 +381,16 @@ namespace My_Note
          *                 and confirm that left mouse button was clicked
          *      
          * DESCRIPTION
-         *  Based on the control selected start drawing, saving, or erasing. Some of the shapes are drawn
-         *  and saved immediately in this method (pencil, eraser). Other shapes (lines, arrows, ovals, rectangles)
-         *  are only drawn here to display to the user a dynamic response. They get saved on MouseUp event.
-         *  Eraser only removes anything that is not text. When text control is selected this method is used
-         *  for multi-character and/or multi-line selection in the richTextBox, as the mouse is down and being
-         *  dragged. Such technique is necessary because the richTextBox is 'under' the transparentPanel and is
-         *  capturing a Point 'through' the trasparentPanel, which it then translates into a character index.
+         *  This method performs user interface editing tasks based on the user selected editing control. It first
+         *  checks to see if the left mouse was pressed before performing any task. If text editing control is
+         *  currently selected, then this method performs text selection as the user has the mouse down and is
+         *  moving it. Text selection is accomplished by capturing the mouse location on the transparent panel
+         *  (which is on top of rich text box). The location point then compensates for the origin offset of rich
+         *  text box from the origin of transparent panel. Further calculations are performed to accomodate text
+         *  selection length and are then delivered to rich text box to perform a text selection. Arrows are drawn
+         *  on screen by restricting the direction in which they can be drawn based on which arrow the user has
+         *  selected. Other controls like pencil, eraser, lines, rectangles, and ovals perform their assigned
+         *  tasks.
          * 
          * RETURNS
          *  Nothing
@@ -398,7 +403,7 @@ namespace My_Note
          */
         private void transparentPanel_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == MouseButtons.Left)  // Also validates that mouse is down
             {
                 if (m_currentSelectedControl == e_SelectedControl.TEXT)  // Highlight/select text
                 {
@@ -408,6 +413,7 @@ namespace My_Note
                     richTextBox.SelectionStart = Math.Min(m_richTextBoxSelectStartCharIndex, m_richTextBoxSelectCurrentCharIndex);
                     richTextBox.SelectionLength = Math.Abs(m_richTextBoxSelectCurrentCharIndex - m_richTextBoxSelectStartCharIndex);
                     richTextBox.Select();
+                    transparentPanel.Refresh();
                 }
                 if (m_isDrawing && (m_currentSelectedControl == e_SelectedControl.PENCIL))  // Draw using pencil
                 {
@@ -540,46 +546,38 @@ namespace My_Note
                     if (m_currentSelectedControl == e_SelectedControl.WARROW && (e.Location.X < m_drawStartPoint.X))
                     {
                         saveWestArrow(e);
-                        m_arrowDynamicArray = null;
                     }
                     if (m_currentSelectedControl == e_SelectedControl.NWARROW &&
                         (e.Location.X < m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y))
                     {
                         saveNorthWestArrow(e);
-                        m_arrowDynamicArray = null;
                     }
                     if (m_currentSelectedControl == e_SelectedControl.NARROW && (e.Location.Y < m_drawStartPoint.Y))
                     {
                         saveNorthArrow(e);
-                        m_arrowDynamicArray = null;
                     }
                     if (m_currentSelectedControl == e_SelectedControl.NEARROW &&
                         (e.Location.X > m_drawStartPoint.X) && (e.Location.Y < m_drawStartPoint.Y))
                     {
                         saveNorthEastArrow(e);
-                        m_arrowDynamicArray = null;
                     }
                     if (m_currentSelectedControl == e_SelectedControl.EARROW && (e.Location.X > m_drawStartPoint.X))
                     {
                         saveEastArrow(e);
-                        m_arrowDynamicArray = null;
                     }
                     if (m_currentSelectedControl == e_SelectedControl.SEARROW &&
                         (e.Location.X > m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y))
                     {
                         saveSouthEastArrow(e);
-                        m_arrowDynamicArray = null;
                     }
                     if (m_currentSelectedControl == e_SelectedControl.SARROW && (e.Location.Y > m_drawStartPoint.Y))
                     {
                         saveSouthArrow(e);
-                        m_arrowDynamicArray = null;
                     }
                     if (m_currentSelectedControl == e_SelectedControl.SWARROW &&
                         (e.Location.X < m_drawStartPoint.X) && (e.Location.Y > m_drawStartPoint.Y))
                     {
                         saveSouthWestArrow(e);
-                        m_arrowDynamicArray = null;
                     }
                     if (m_currentSelectedControl == e_SelectedControl.RECTANGLE)
                     {
@@ -598,17 +596,18 @@ namespace My_Note
                     }
                     if (m_currentSelectedControl == e_SelectedControl.DASHED)
                     {
-                        saveDashedLine(e);
-                        m_canDash = false;
                         m_dashLineDynamicArray = null;
+                        saveDashedLine(e);
+                        
                     }
                     if (m_currentSelectedControl == e_SelectedControl.DOTTED)
                     {
                         saveDottedLine(e);
-                        m_canDash = false;
                         m_dottedLineDynamicArray = null;
                     }
                     m_isDrawing = false;
+                    m_canDash = false;
+                    m_arrowDynamicArray = null;
                 }
                 if (m_currentSelectedControl == e_SelectedControl.VERTTEXT)  // Added VerticalText object
                 {
@@ -669,13 +668,15 @@ namespace My_Note
          *      e       -> used for smoothing drawing and drawing lines
          *      
          * DESCRIPTION
-         *  Redraws the tranparentPanel graphics. This is done by accessing the m_shapesStorage object of the
-         *  ShapeContainer class, which holds a list of shapes. Each shape in this list is represented as a
-         *  set of points with a common shape number. The 'for-loop' below accesses two points from the list
-         *  at a time; if they share the same shape number, then they are connected to form a line. If the shape
-         *  numbers are different, then a new shape begins to form. This method gets triggered by the OnPaint()
-         *  method of the TransparentPanel.cs custom subclass and by the base.OnPaint(e) method. It also redraws
-         *  the VerticalText objects by iterating over the container that holds them.
+         *  Redraws the transparentPanel graphics. Two types of shapes are drawn on this panel, those that are
+         *  already saved and those currently being drawn by the user when the user has the mouse down and is
+         *  moving the mouse to adjust the size of the shape. Saved shapes reside in m_shapesStorage and
+         *  m_verticalTextList containers which are accessed and drawn by this method using a for-loop.
+         *  Unsaved shapes (lines, arrows, rectangles, ellipses) are simply drawn on this panel using the
+         *  minimum required points to form the shape during the mouse down and mouse move events. These shapes
+         *  are saved and added to the rest of the saved shapes during the mouse up event and are redrawn along
+         *  with the rest of the saved shapes. Each shape (except VerticalText) is separated by and drawn based
+         *  on a shape number which gets assigned upon mouse up event.
          * 
          * RETURNS
          *  Nothing
@@ -688,9 +689,9 @@ namespace My_Note
          */
         private void transparentPanel_Paint(object sender, PaintEventArgs e)
         {
-            // Apply a smoothing mode to smooth out the line.
+            // Apply a smoothing mode to speed up drawing process
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
-            // Draw all saved shapes
+            // Draw saved shapes
             for (int i = 0; i < m_shapesStorage.NumberOfShapes() - 1; i++)
             {
                 Shape pointOne = m_shapesStorage.GetShape(i);
@@ -702,11 +703,12 @@ namespace My_Note
                     p.Dispose();
                 }
             }
-            // Draw rotatable text
+            // Draw saved rotatable text shapes
             for (int i = 0; i < m_verticalTextList.Count; i++)
             {
                 m_verticalTextList[i].drawVerticalText(e);
             }
+            // Draw arrow (while mouse is down and mouse is moving)
             if (m_arrowDynamicArray != null)
             {
                 for (int i = 0; i < m_arrowDynamicArray.Length; i = i + 2)
@@ -714,27 +716,27 @@ namespace My_Note
                     e.Graphics.DrawLine(m_transparentPanelPen, m_arrowDynamicArray[i], m_arrowDynamicArray[i + 1]);
                 }
             }
-            // Draw rectangle (while mouse is down)
+            // Draw rectangle (while mouse is down and mouse is moving)
             if (m_rectangleDynamicRectangle.IsEmpty == false)
             {
                 e.Graphics.DrawRectangle(m_transparentPanelPen, m_rectangleDynamicRectangle);
             }
-            // Draw ellipse (while mouse is down)
+            // Draw ellipse (while mouse is down and mouse is moving)
             if (m_ellipseDynamicRectangle.IsEmpty == false)
             {
                 e.Graphics.DrawEllipse(m_transparentPanelPen, m_ellipseDynamicRectangle);
             }
-            // Draw solid line (while mouse is down)
+            // Draw solid line (while mouse is down and mouse is moving)
             if (m_solidLineDynamicArray != null)
             {
                 e.Graphics.DrawLine(m_transparentPanelPen, m_solidLineDynamicArray[0], m_solidLineDynamicArray[1]);
             }
-            // Draw dashed line (while mouse is down)
+            // Draw dashed line (while mouse is down and mouse is moving)
             if (m_dashLineDynamicArray != null)
             {
                 e.Graphics.DrawLine(m_dashLinePen, m_dashLineDynamicArray[0], m_dashLineDynamicArray[1]);
             }
-            // Draw dotted line (while mouse is down)
+            // Draw dotted line (while mouse is down and mouse is moving)
             if (m_dottedLineDynamicArray != null)
             {
                 e.Graphics.DrawLine(m_dottedLinePen, m_dottedLineDynamicArray[0], m_dottedLineDynamicArray[1]);
@@ -1996,7 +1998,9 @@ namespace My_Note
                     m_shapesStorage.AddShape(pointList[i], m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
                 }
             }
-            transparentPanel.Refresh();
+            transparentPanel.Invalidate();
+            richTextBox.Invalidate();
+            backPanel.Invalidate();
         } /* private void saveDashedLine(MouseEventArgs e) */
 
         /*
@@ -2075,7 +2079,9 @@ namespace My_Note
                     m_shapesStorage.AddShape(pointList[i], m_currentPenWidth, m_currentDrawColor, m_shapeNumber);
                 }
             }
-            transparentPanel.Refresh();
+            transparentPanel.Invalidate();
+            richTextBox.Invalidate();
+            backPanel.Invalidate();
         } /* private void saveDottedLine(MouseEventArgs e) */
 
         /*

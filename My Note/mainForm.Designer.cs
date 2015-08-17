@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -101,10 +102,7 @@
             this.subjectThreePanel = new System.Windows.Forms.Panel();
             this.subjectFourPanel = new System.Windows.Forms.Panel();
             this.subjectFivePanel = new System.Windows.Forms.Panel();
-            this.logTextBox = new System.Windows.Forms.TextBox();
-            this.clearButton = new System.Windows.Forms.Button();
             this.transparentPanel = new My_Note.TransparentPanel();
-            this.popupButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.toolbarPanel.SuspendLayout();
             this.SuspendLayout();
@@ -884,26 +882,6 @@
             this.subjectFivePanel.TabIndex = 51;
             this.subjectFivePanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.subjectFivePanel_MouseDown);
             // 
-            // logTextBox
-            // 
-            this.logTextBox.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.logTextBox.Location = new System.Drawing.Point(0, 123);
-            this.logTextBox.Multiline = true;
-            this.logTextBox.Name = "logTextBox";
-            this.logTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.logTextBox.Size = new System.Drawing.Size(150, 474);
-            this.logTextBox.TabIndex = 53;
-            // 
-            // clearButton
-            // 
-            this.clearButton.Location = new System.Drawing.Point(28, 603);
-            this.clearButton.Name = "clearButton";
-            this.clearButton.Size = new System.Drawing.Size(75, 23);
-            this.clearButton.TabIndex = 54;
-            this.clearButton.Text = "Clear Log";
-            this.clearButton.UseVisualStyleBackColor = true;
-            this.clearButton.Click += new System.EventHandler(this.clearButton_Click);
-            // 
             // transparentPanel
             // 
             this.transparentPanel.Location = new System.Drawing.Point(146, 90);
@@ -917,24 +895,11 @@
             this.transparentPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseMove);
             this.transparentPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.transparentPanel_MouseUp);
             // 
-            // popupButton
-            // 
-            this.popupButton.Location = new System.Drawing.Point(28, 642);
-            this.popupButton.Name = "popupButton";
-            this.popupButton.Size = new System.Drawing.Size(75, 23);
-            this.popupButton.TabIndex = 55;
-            this.popupButton.Text = "popUp";
-            this.popupButton.UseVisualStyleBackColor = true;
-            this.popupButton.Click += new System.EventHandler(this.popupButton_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(812, 717);
-            this.Controls.Add(this.popupButton);
-            this.Controls.Add(this.clearButton);
-            this.Controls.Add(this.logTextBox);
             this.Controls.Add(this.subjectFivePanel);
             this.Controls.Add(this.subjectFourPanel);
             this.Controls.Add(this.subjectThreePanel);
@@ -947,6 +912,7 @@
             this.Controls.Add(this.toolbarPanel);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.backPanel);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
             this.Text = "Form1";
@@ -1030,8 +996,6 @@
         private System.Windows.Forms.Panel subjectThreePanel;
         private System.Windows.Forms.Panel subjectFourPanel;
         private System.Windows.Forms.Panel subjectFivePanel;
-        private System.Windows.Forms.TextBox logTextBox;
-        private System.Windows.Forms.Button clearButton;
         private System.Windows.Forms.ToolStripMenuItem renameNameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem printPreviewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem previewMarginsAreaToolStripMenuItem;
@@ -1039,7 +1003,6 @@
         private System.Windows.Forms.ToolStripMenuItem printPageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem printMarginsAreaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem printFullPageAreaToolStripMenuItem;
-        private System.Windows.Forms.Button popupButton;
         private System.Windows.Forms.Button changeHighlightColorButton;
         private System.Windows.Forms.Button changeTextColorButton;
     }

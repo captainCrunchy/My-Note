@@ -704,6 +704,7 @@ namespace My_Note
                 changeHighlightColorButton.Enabled = false;
                 changeTextColorButton.Enabled = false;
             }
+            transparentPanel.Refresh();
         } /* private void updateUIForTextControls() */
 
         #endregion
@@ -1235,12 +1236,15 @@ namespace My_Note
          */
         private void drawColorButton_Click(object sender, EventArgs e)
         {
+            transparentPanel.Refresh();
             DialogResult drawColorDialogResult = drawColorDialog.ShowDialog();
             if (drawColorDialogResult == DialogResult.OK)
             {
                 // Apply new color
                 m_currentDrawColor = drawColorDialog.Color;
                 m_transparentPanelPen.Color = m_currentDrawColor;
+                m_dashLinePen.Color = m_currentDrawColor;
+                m_dottedLinePen.Color = m_currentDrawColor;
                 drawColorButton.BackColor = m_currentDrawColor;
             }
         } /* private void drawColorButton_Click(object sender, EventArgs e) */
@@ -1271,7 +1275,10 @@ namespace My_Note
         {
             m_currentDrawColor = blackColorButton.BackColor;
             m_transparentPanelPen.Color = m_currentDrawColor;
+            m_dashLinePen.Color = m_currentDrawColor;
+            m_dottedLinePen.Color = m_currentDrawColor;
             drawColorButton.BackColor = m_currentDrawColor;
+            transparentPanel.Refresh();
         } /* private void blackColorButton_Click(object sender, EventArgs e) */
 
         /*
@@ -1300,7 +1307,10 @@ namespace My_Note
         {
             m_currentDrawColor = whiteColorButton.BackColor;
             m_transparentPanelPen.Color = m_currentDrawColor;
+            m_dashLinePen.Color = m_currentDrawColor;
+            m_dottedLinePen.Color = m_currentDrawColor;
             drawColorButton.BackColor = m_currentDrawColor;
+            transparentPanel.Refresh();
         } /* private void whiteColorButton_Click(object sender, EventArgs e) */
 
         /*
@@ -1329,7 +1339,10 @@ namespace My_Note
         {
             m_currentDrawColor = grayColorButton.BackColor;
             m_transparentPanelPen.Color = m_currentDrawColor;
+            m_dashLinePen.Color = m_currentDrawColor;
+            m_dottedLinePen.Color = m_currentDrawColor;
             drawColorButton.BackColor = m_currentDrawColor;
+            transparentPanel.Refresh();
         } /* private void grayColorButton_Click(object sender, EventArgs e) */
 
         /*
@@ -1358,7 +1371,10 @@ namespace My_Note
         {
             m_currentDrawColor = greenColorButton.BackColor;
             m_transparentPanelPen.Color = m_currentDrawColor;
+            m_dashLinePen.Color = m_currentDrawColor;
+            m_dottedLinePen.Color = m_currentDrawColor;
             drawColorButton.BackColor = m_currentDrawColor;
+            transparentPanel.Refresh();
         } /* private void greenColorButton_Click(object sender, EventArgs e) */
 
         /*
@@ -1387,7 +1403,10 @@ namespace My_Note
         {
             m_currentDrawColor = redColorButton.BackColor;
             m_transparentPanelPen.Color = m_currentDrawColor;
+            m_dashLinePen.Color = m_currentDrawColor;
+            m_dottedLinePen.Color = m_currentDrawColor;
             drawColorButton.BackColor = m_currentDrawColor;
+            transparentPanel.Refresh();
         } /* private void redColorButton_Click(object sender, EventArgs e) */
 
         /*
@@ -1415,7 +1434,10 @@ namespace My_Note
         {
             m_currentDrawColor = tealColorButton.BackColor;
             m_transparentPanelPen.Color = m_currentDrawColor;
+            m_dashLinePen.Color = m_currentDrawColor;
+            m_dottedLinePen.Color = m_currentDrawColor;
             drawColorButton.BackColor = m_currentDrawColor;
+            transparentPanel.Refresh();
         } /* private void tealColorButton_Click(object sender, EventArgs e) */
 
         /*
@@ -1444,7 +1466,10 @@ namespace My_Note
         {
             m_currentDrawColor = orangeColorButton.BackColor;
             m_transparentPanelPen.Color = m_currentDrawColor;
+            m_dashLinePen.Color = m_currentDrawColor;
+            m_dottedLinePen.Color = m_currentDrawColor;
             drawColorButton.BackColor = m_currentDrawColor;
+            transparentPanel.Refresh();
         } /* private void orangeColorButton_Click(object sender, EventArgs e) */
 
         /*
@@ -1473,7 +1498,10 @@ namespace My_Note
         {
             m_currentDrawColor = blueColorButton.BackColor;
             m_transparentPanelPen.Color = m_currentDrawColor;
+            m_dashLinePen.Color = m_currentDrawColor;
+            m_dottedLinePen.Color = m_currentDrawColor;
             drawColorButton.BackColor = m_currentDrawColor;
+            transparentPanel.Refresh();
         } /* private void blueColorButton_Click(object sender, EventArgs e) */
 
         /*
@@ -1502,7 +1530,10 @@ namespace My_Note
         {
             m_currentDrawColor = yellowColorButton.BackColor;
             m_transparentPanelPen.Color = m_currentDrawColor;
+            m_dashLinePen.Color = m_currentDrawColor;
+            m_dottedLinePen.Color = m_currentDrawColor;
             drawColorButton.BackColor = m_currentDrawColor;
+            transparentPanel.Refresh();
         } /* private void yellowColorButton_Click(object sender, EventArgs e) */
 
         /*
@@ -1531,7 +1562,10 @@ namespace My_Note
         {
             m_currentDrawColor = purpleColorButton.BackColor;
             m_transparentPanelPen.Color = m_currentDrawColor;
+            m_dashLinePen.Color = m_currentDrawColor;
+            m_dottedLinePen.Color = m_currentDrawColor;
             drawColorButton.BackColor = m_currentDrawColor;
+            transparentPanel.Refresh();
         } /* private void purpleColorButton_Click(object sender, EventArgs e) */
 
         #endregion
