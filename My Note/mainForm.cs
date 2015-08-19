@@ -95,8 +95,13 @@ namespace My_Note
         private Label m_pageNumberLabel = new Label();                      // Indicates current page number in 'Subject'
         private int m_currentPageNumber = 1;                                // Used for save/load data and UI objects
         private Subject m_currentSubject;                                   // Reference to current subject on screen
-        private const string m_savePath = "savedNotes.txt";                 // References save path on disk 
         private const string m_newSubjectTitle = "New Subject";             // Used to assign and compare labels
+
+        /* Save path for the entire notebook. Placed in 'C:\Users\YourName\AppData\Local\savedNotes.txt'. It is created
+           at startup, the moment the user enters the subject title for the first subject in the notebook. Used in this
+           class and data persistence classes. */
+        private string m_savePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "savedNotes.txt");
+        
 
         #endregion
 
@@ -326,7 +331,9 @@ namespace My_Note
          *  used to exit; i.e. by clicking the 'x', using Alt+F4, etc... It presents to the user a dialog asking them if
          *  they would like to save changes to their work. The user has three options to choose from: Yes, No, or Cancel.
          *  Selecting 'Yes' saves changes and exits the program. Selecting 'No' exits the application without saving any
-         *  changes. Selecting 'Cancel' aborts the operation; that is, does not save or exit the application.
+         *  changes. Selecting 'Cancel' aborts the operation; that is, does not save or exit the application. If the
+         *  application is running for the first time and the user decided to exit before they gave their first subject
+         *  a title, then no save prompt is presented and the application just closes.
          *  
          * RETURNS
          *  Nothing
@@ -339,6 +346,12 @@ namespace My_Note
          */
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            // If application is running the first time (prevents exceptions)
+            if (!File.Exists(m_savePath))
+            {
+                return;
+            }
+            // If application has been run before
             string saveNoteString = "Do you want to save your work?";
             DialogResult saveNoteDialog = MessageBox.Show(saveNoteString, "Save Changes", MessageBoxButtons.YesNoCancel);
             if (saveNoteDialog == DialogResult.Yes)

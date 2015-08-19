@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(VertTextOptionsForm));
             this.FontStyleLabel = new System.Windows.Forms.Label();
             this.FontStyleComboBox = new System.Windows.Forms.ComboBox();
             this.FontSizeComboBox = new System.Windows.Forms.ComboBox();
@@ -166,8 +167,9 @@
             this.Controls.Add(this.FontSizeComboBox);
             this.Controls.Add(this.FontStyleComboBox);
             this.Controls.Add(this.FontStyleLabel);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "VertTextOptionsForm";
-            this.Text = "Text Options";
+            this.Text = "Vertical Text Options";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.VertTextOptionsForm_FormClosing);
             this.Load += new System.EventHandler(this.VertTextOptionsForm_Load);
             this.ResumeLayout(false);

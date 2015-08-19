@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RenameSubjectForm));
             this.renameLabel = new System.Windows.Forms.Label();
             this.renameTextBox = new System.Windows.Forms.TextBox();
             this.renameOKButton = new System.Windows.Forms.Button();
@@ -82,6 +83,7 @@
             this.Controls.Add(this.renameOKButton);
             this.Controls.Add(this.renameTextBox);
             this.Controls.Add(this.renameLabel);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "RenameSubjectForm";
             this.Text = "Rename Subject";
             this.Load += new System.EventHandler(this.RenameSubjectForm_Load);

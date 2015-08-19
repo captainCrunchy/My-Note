@@ -463,7 +463,7 @@ namespace My_Note
             if (e.Button == MouseButtons.Left)
             {
                 DialogResult dialogResult = MessageBox.Show("Are you sure you want to delete this text?",
-                    "Click yes or no", MessageBoxButtons.OKCancel);
+                    "Confirm Delete", MessageBoxButtons.OKCancel);
                 if (dialogResult == DialogResult.OK)
                 {
                     foreach (VerticalText v in m_ownerVerticalTextList)

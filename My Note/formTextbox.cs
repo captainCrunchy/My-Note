@@ -104,15 +104,6 @@ namespace My_Note
         // Region contains methods for richTextBox
         #region richTextBox Methods
 
-        /*  DESCRIPTION: this method performs many functions. Prevents enter key when there are maximum number of lines, also
-         *  disables all keys except for 'backspace' when the text of rich text box is at the end
-         *  converts the font of every 'space' to 'ideal font' that help maintain the line height
-         *  4:11pm 5/31/2015
-         *  To control the text to stay within the boundaries of the rich text box word wrap should be disabled because it can
-         *  'push' text down when typing in the middle of the rich text box. Disabling word wrap presents a problem by extending
-         *  the line horizontally beyond the bounds of rich text box. This can be controlled by adding a 'RightMargin' but it will
-         *  ignore the word wrap. The solution is to limit the length of each line manually
-         */
         /*
          * NAME
          *  richTextBox_KeyDown() - controls the size of overall text on each page with each keystroke
@@ -120,7 +111,7 @@ namespace My_Note
          * SYNOPSIS
          *  private void richTextBox_KeyDown(object sender, KeyEventArgs e);
          *      sender  -> does nothing
-         *      e       -> does nothing
+         *      e       -> used to check which key was pressed
          * 
          * DESCRIPTION
          *  This event handler method implements several techniques to control the overall size of user-entered text on
@@ -140,6 +131,15 @@ namespace My_Note
          */
         private void richTextBox_KeyDown(object sender, KeyEventArgs e)
         {
+            // Prevent any unpredictable behavior
+            if (richTextBox.SelectionLength > 0)
+            {
+                if (e.KeyCode != Keys.Back)
+                {
+                    e.SuppressKeyPress = true;
+                    return;
+                }
+            }
             richTextBox.SelectionColor = m_currentTextColor;
             richTextBox.SelectionBackColor = m_currentTextHighlightColor;
             // Prevent too many lines
@@ -195,6 +195,37 @@ namespace My_Note
                 }
             }
         } /* private void richTextBox_KeyDown(object sender, KeyEventArgs e) */
+
+        /*
+         * NAME
+         *  richTextBox_KeyUp() - refreshes UI controls for text formatting
+         *  
+         * SYNOPSIS
+         *  private void richTextBox_KeyUp(object sender, KeyEventArgs e);
+         *      sender  -> does nothing
+         *      e       -> used to check which key was pressed
+         * 
+         * DESCRIPTION
+         *  This event handler method is called to update the user interface elements after a key was pressed. It was
+         *  mainly created to address the issue of when multi-text selection was made to be deleted and enable text
+         *  formatting controls again.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  4:11pm 5/31/2015
+         */
+        private void richTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Back)
+            {
+                updateUIForTextControls();
+            }
+        } /* private void richTextBox_KeyUp(object sender, KeyEventArgs e) */
 
         /*
          * NAME

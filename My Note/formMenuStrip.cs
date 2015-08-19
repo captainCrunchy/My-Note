@@ -130,6 +130,7 @@ namespace My_Note
             documentToPreview.OriginAtMargins = false;
             documentToPreview.PrintPage += marginsArea_PrintPage;
             PrintPreviewDialog previewDialog = new PrintPreviewDialog();
+            previewDialog.ShowIcon = false;
             previewDialog.Document = documentToPreview;
             previewDialog.ShowDialog();
         } /* private void previewMarginsAreaToolStripMenuItem_Click(object sender, EventArgs e) */
@@ -169,6 +170,7 @@ namespace My_Note
             documentToPreview.OriginAtMargins = false;
             documentToPreview.PrintPage += fullPageArea_PrintPage;
             PrintPreviewDialog previewDialog = new PrintPreviewDialog();
+            previewDialog.ShowIcon = false;
             previewDialog.Document = documentToPreview;
             previewDialog.ShowDialog();
         } /* private void previewFullPageAreaToolStripMenuItem_Click(object sender, EventArgs e) */
