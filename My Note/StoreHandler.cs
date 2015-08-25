@@ -17,7 +17,8 @@ using System.Runtime.Serialization.Formatters.Binary;
  *      to disk, or deserialize it when restoring from disk.
  *      
  *  CODE STRUCTURE:
- *      There is no specific code structure in this class.
+ *      - Constructors
+ *      - Regular methods
  */
 
 namespace My_Note
@@ -32,7 +33,8 @@ namespace My_Note
          *  public StoreHandler();
          *      
          * DESCRIPTION
-         *  This constructor gets called when an instance of this object is created and used in the application.
+         *  This constructor gets called when an instance of this object is created and used in
+         *  the application.
          *  
          * RETURNS
          *  Nothing
@@ -58,8 +60,8 @@ namespace My_Note
          *      a_myNoteStore   -> the object to be serialized and written to disk
          *      
          * DESCRIPTION
-         *  This method serializes and saves an instance of MyNoteStore object to disk to
-         *  a specified path. The file is saved in binary format.
+         *  This method serializes and saves an instance of MyNoteStore object to disk to a specified
+         *  path. The file is saved in binary format.
          *  
          * RETURNS
          *  Nothing

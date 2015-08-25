@@ -19,35 +19,32 @@ using System.IO;
  *      common controls such as 'File' and 'Help' menu options, text editing and drawing controls, and a 'combined' panel
  *      for text editing and drawing shapes. This MainForm class is divided into four (.cs) files, which are simply extensions
  *      of this class; i.e. each is a 'public partial class MainForm : Form'. This was done to keep the code organized and
- *      readable. The user is interacting with some part of this class at all times.
- *    mainForm.cs: (YOU ARE HERE)
- *      This file implements tasks that are responsible for starting and running the application. It performs general tasks
- *      like handling the user inteface elements of the form and communication with data persistence objects. It is also
- *      responsible for coordinating tasks between other 'partial class' files.
- *    formMenuStrip.cs:
- *      This file handles events that are triggered by elements of the menu strip in the form and their appearances based on
- *      current data. Example: File, Edit, ..., Help.
- *    formToolbar.cs:
- *      This file is responsible for appearance of controls in the toolbar and their events. These controls trigger such tasks
- *      as text editing, drawing shapes, and erasing.
- *    formTextBox.cs:
- *      This file is responsible for appearances and events of the richTextBox and its layers. Such additional layers are
- *      transparent and background panels. Events handled in this files are tasks such as applying text editing and drawing
- *      shapes onto the panels, and erasing them based on currently selected controls and options. The mechanics of drawing
- *      certain shapes like arrows, rectangles, ovals, and lines have been separated into two categories. One category is
- *      while the user has the mouse down and is moving it, shapes are being drawn and displayed at optimal speed. Other category
- *      is when the user releases the mouse, shapes are saved using individual points and are redrawn so in the future; this is
- *      done in order to accomodate the erase functionality.
+ *      readable. The following are descriptions of the four (.cs) files, including this one, that make up this class.
+ *      
+ *      mainForm.cs: (CURRENTLY HERE)
+ *          This file implements tasks that are responsible for starting and running the application. It performs general tasks
+ *          like handling the user inteface elements of the form and communication with data persistence objects. It is also
+ *          responsible for coordinating tasks between other 'partial class' files.
+ *      formMenuStrip.cs:
+ *          This file handles events that are triggered by elements of the menu strip in the form and their appearances based
+ *          on current data. Example: File, Edit, ..., Help.
+ *      formToolbar.cs:
+ *          This file is responsible for appearance of controls in the toolbar and their events. These controls trigger such
+ *          tasks as text editing, drawing shapes, and erasing.
+ *      formTextBox.cs:
+ *          This file is responsible for appearances and events of the richTextBox and its layers. Such additional layers are
+ *          the transparent panel and the background panel. Events handled in this files are tasks such as applying text editing
+ *          and drawing shapes onto the panels, and erasing them based on currently selected controls and options. The mechanics
+ *          of drawing certain shapes like arrows, rectangles, ovals, and lines have been separated into two categories. First
+ *          category is when the user has the mouse down and is moving it, shapes are being drawn and displayed at optimal speed.
+ *          Second category is when the user releases the mouse, shapes are saved using individual points and are redrawn again
+ *          from the saved container, this is done in order to accomodate the erase functionality.
  *      
  *  CODE STRUCTURE:
- *    MainForm class:
- *      This class is divided into four (.cs) files based on functionality. Each is responsible for performing specific tasks
- *      based on the user interface elements and controls. Each (.cs) file declares and initializes member variables that are
- *      needed in that file. Some member variables can only be initialized in the constructor, which is in the mainForm.cs file.
- *    mainForm.cs: (YOU ARE HERE)
- *      This file is organized by separating code into 'regions' based on specific functionalities. It contains member variables
- *      used in this file. It initializes member variables used in other files, which are parts of this 'partial class', because
- *      the main constructor is in this file. Regions contain code that is specific to elements of this file and this application. 
+ *      Member Variables - Region contains member variables for this class
+ *      MainForm Methods - Region contains methods for MainForm load, save, and other general functionality
+ *      Subjects Methods - Region contains methods that handle Subjects in the notebook
+ *      Pages Methods - Region contains methods that handle Pages in each Subject
  */
 
 namespace My_Note
@@ -63,11 +60,11 @@ namespace My_Note
             TEXT, PENCIL, ERASER, WARROW, NWARROW, NARROW, NEARROW, EARROW, SEARROW,
             SARROW, SWARROW, RECTANGLE, ELLIPSE, SOLID, DASHED, DOTTED, VERTTEXT
         }
-        private e_SelectedControl m_currentSelectedControl;                 // Current control selected
-        private Color m_selectedControlButtonColor;                         // Current color for current control
+        private e_SelectedControl m_currentSelectedControl;                             // Current control selected
+        private Color m_selectedControlButtonColor;                                     // Current color for current control
 
-        private MyNoteStore m_mainMyNoteStore;                              // Holds data before it is written to disk
-        private StoreHandler m_mainStoreHandler = new StoreHandler();       // Writes data to disk
+        private MyNoteStore m_mainMyNoteStore;                                          // Main data peristence object
+        private StoreHandler m_mainStoreHandler = new StoreHandler();                   // Writes data persistence object to disk
 
         // Member variables for each 'Subject' are created here in order to reduce dynamic creation
         // of drawing objects in order to optimize performance during drawing, saving, and loading
@@ -90,19 +87,19 @@ namespace My_Note
         private Font m_subjectPanelFont = new Font("Microsoft Sans Serif", 12);         // Font for 'Subject' title
         private SolidBrush m_fullSubjectPanelBrush = new SolidBrush(Color.Black);       // Brush for used 'Subject' title
         private SolidBrush m_emptySubjectPanelBrush = new SolidBrush(Color.DarkGray);   // Brush for empty 'Subject' title
-        private StringFormat m_drawFormat = new StringFormat();             // Format for drawing a title string vertically
+        private StringFormat m_drawFormat = new StringFormat();                         // Format for vertical title string
 
-        private Label m_pageNumberLabel = new Label();                      // Indicates current page number in 'Subject'
-        private int m_currentPageNumber = 1;                                // Used for save/load data and UI objects
-        private Subject m_currentSubject;                                   // Reference to current subject on screen
-        private const string m_newSubjectTitle = "New Subject";             // Used to assign and compare labels
+        private Label m_pageNumberLabel = new Label();                                  // Page number label
+        private int m_currentPageNumber = 1;                                            // Current page number
+        private Subject m_currentSubject;                                               // Reference to current subject
+        private const string m_newSubjectTitle = "New Subject";                         // Used to assign and compare labels
 
-        /* Save path for the entire notebook. Placed in 'C:\Users\YourName\AppData\Local\savedNotes.txt'. It is created
-           at startup, the moment the user enters the subject title for the first subject in the notebook. Used in this
-           class and data persistence classes. */
-        private string m_savePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "savedNotes.txt");
+        // Save path for the entire notebook. Placed in 'C:\Users\UserName\AppData\Local\savedNotes.txt'. It is created
+        // at startup, the moment the user enters the subject title for the first subject in the notebook. Used in this
+        // class and data persistence classes.
+        private string m_savePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), 
+            "savedNotes.txt");
         
-
         #endregion
 
         // Region contains methods for MainForm load, save, and other general functionality
@@ -116,9 +113,9 @@ namespace My_Note
          *  public MainForm();
          * 
          * DESCRIPTION
-         *  This constructor is responsible for initializing and assigning values to member variables and
-         *  UI elements of this class. Some variables initialized here are declared in different files, which
-         *  are also parts of this class.
+         *  This constructor is responsible for initializing and assigning values to member variables
+         *  and UI elements of this class. Some variables initialized here are declared in different
+         *  (.cs) files, which are also parts of this class.
          *  
          * RETURNS
          *  Nothing
@@ -185,11 +182,10 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This method gets called before elements are shown on screen. It is used to update and assign
-         *  properties to elements before they are shown on screen after they have been initialized in the
-         *  in the constructor. It also prepares the 'data persistence' object by creating it or getting
-         *  it from disk using the data persistence handler object. If file exists, then it is loaded into
-         *  memory. Otherwise 'data store' is created and will be populated in MainForm_Shown().
+         *  This event handler is used to assign values after they have been initialized in the
+         *  constructor but before they are shown on screen. If this is the first time running the
+         *  application, then the data persistence object is initialized. Otherwise it gets its
+         *  values from disk.
          *  
          * RETURNS
          *  Nothing
@@ -229,12 +225,12 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  The main functionality of this method will be applied the very first time the user runs this
-         *  application. It asks the user to enter a title for the first 'Subject' in the notebook. A data
-         *  file is then created and written to disk for the very first time. Reason for performing this
-         *  task here is for appearances; i.e. to show to the user the background and an empty notebook with
-         *  subject tabs that have no titles. It uses a custom rename form to which an existing 'Subject'
-         *  title is passed, which returns a non-default title.
+         *  This event handler assigns values to the data persistence object, if this is the first
+         *  time running the application. It prompts the user to enter a title for the first subject.
+         *  One the data persistence object gets its values a binary file is created, gets written to
+         *  disk, and is saved for the first time. It does not allow the user to continue without
+         *  entering a title for the first subject. This event handler also updates values for some
+         *  member variables and calls methods that update user interface elements.
          *  
          * RETURNS
          *  Nothing
@@ -299,9 +295,8 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This method gets called automatically based on the events within the form to repaint the form. The
-         *  amount of tasks performed by this event handler are kept to a minimum due to the frequency of this
-         *  method call. It triggers other methods that update and repaint the 'tabs' for 'Subject' titles.
+         *  This event handler gets called automatically based on any changes within the form to. It
+         *  triggers a method that repaints user interface elements dealing with subject tabs.
          *  
          * RETURNS
          *  Nothing
@@ -327,13 +322,14 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This method gets called automatically when the user is exiting the application, regardless of the method they
-         *  used to exit; i.e. by clicking the 'x', using Alt+F4, etc... It presents to the user a dialog asking them if
-         *  they would like to save changes to their work. The user has three options to choose from: Yes, No, or Cancel.
-         *  Selecting 'Yes' saves changes and exits the program. Selecting 'No' exits the application without saving any
-         *  changes. Selecting 'Cancel' aborts the operation; that is, does not save or exit the application. If the
-         *  application is running for the first time and the user decided to exit before they gave their first subject
-         *  a title, then no save prompt is presented and the application just closes.
+         *  This event handler gets called automatically when the user is exiting the application,
+         *  regardless of how the user decided to exit, i.e. by clicking the 'x', using Alt+F4, etc..
+         *  It presents the user with a dialog asking  to save changes to current work. The user has
+         *  three options to choose from: Yes, No, or Cancel. Selecting 'Yes' saves changes and exits
+         *  the program. Selecting 'No' exits the application without saving any changes. Selecting
+         *  'Cancel' aborts the operation; that is, does not save or exit the application. If the
+         *  application is running for the first time and the user decided to exit before giving the
+         *  first subject a title, then no save prompt is presented and the application just closes.
          *  
          * RETURNS
          *  Nothing
@@ -372,9 +368,9 @@ namespace My_Note
          *  private void saveAllContent();
          * 
          * DESCRIPTION
-         *  The purpose of this method is to save all changes in the application and write them to a
-         *  binary file on disk. First, current page and subject are saved by calling the appropriate
-         *  method. Then, the main data persistence handler object is called to perform a write to disk.
+         *  This method triggers other methods to perform save operations. The first method organizes
+         *  and saves all the content on the current page. Second method calls the data persistence
+         *  to serialize the data and store it on disk to a specified save path.
          *  
          * RETURNS
          *  Nothing
@@ -434,15 +430,13 @@ namespace My_Note
 
         /*
          * NAME
-         *  updateSubjectTabs() - updates subject titles on the subject 'tab' panels
+         *  updateSubjectTabs() - updates subject titles
          *  
          * SYNOPSIS
          *  private void updateSubjectTabs();
          * 
          * DESCRIPTION
-         *  This method repaints the subject titles on the panels that are used like subject 'tabs'
-         *  in a real notebook. It gets called from MainForm_Paint() and is kept as simple as it can
-         *  possibly be in order to minimize resource usage.
+         *  This method calls other methods to repaint the subject titles and colors.
          *  
          * RETURNS
          *  Nothing
@@ -478,14 +472,16 @@ namespace My_Note
          *      a_subjectPanelGraphics      -> panel representing the 'Subject' tab on which to draw string
          * 
          * DESCRIPTION
-         *  This method is used to draw 'Subject' titles vertically on the panels that are used like subject tabs in a
-         *  regular notebook. It specifically draws the string using two different colors based on the availability of the
-         *  'Subject'. If the subject has a regular title, then string is drawn using a darker brush. If the 'Subject'
-         *  is empty and has not been assigned a non-default title, then the string is drawn using a lighter brush to
-         *  help visually indicate so. Many of the variables used for the DrawString() method have already been declared
-         *  and initialized in this class to prevent creating and assigning them dynamically in order to increase
-         *  drawing performance. The original code used in this method was taken from Microsoft's .NET website and
-         *  modified to fit the needs of this application. Credits have been documented.
+         *  This method is used to draw 'Subject' titles vertically on the panels that are used like
+         *  subject tabs in a regular notebook. It specifically draws the string using two different
+         *  colors based on the availability of the 'Subject'. If the subject has a regular title,
+         *  then string is drawn using a darker brush. If the 'Subject' is empty and has not been
+         *  assigned a non-default title, then the string is drawn using a lighter brush to help
+         *  visually indicate so. Many of the variables used for the DrawString() method have already
+         *  been declared and initialized in this class to prevent creating and assigning them dynamically
+         *  in order to increase drawing performance. The original code used in this method was taken
+         *  from Microsoft's .NET website and modified to fit the needs of this application. Credits
+         *  have been documented.
          *  
          * RETURNS
          *  Nothing
@@ -520,11 +516,12 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This event handler is triggered upon clickig the panel representing the first 'Subject' in the
-         *  notebook. It checks to see if this subject is currently empty or if it is already presented before
-         *  it performs its tasks. Its tasks include saving the current page, updating the user interface to the
-         *  first 'Subject', and updating the colors for 'Subject' tabs and their titles. It presents the page
-         *  that was last used in this 'Subject' in order to deliver a more appealing functionality to the user.
+         *  This event handler is triggered upon clickig the panel representing the first 'Subject'
+         *  in the notebook. It checks to see if this subject is currently empty or if it is already
+         *  presented before it performs its tasks. Its tasks include saving the current page, updating
+         *  the user interface to the first 'Subject', and updating the colors for 'Subject' tabs and
+         *  their titles. It presents the page that was last used in this 'Subject' in order to deliver
+         *  a more appealing functionality to the user.
          *  
          * RETURNS
          *  Nothing
@@ -556,11 +553,12 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This event handler is triggered upon clickig the panel representing the second 'Subject' in the
-         *  notebook. It checks to see if this subject is currently empty or if it is already presented before
-         *  it performs its tasks. Its tasks include saving the current page, updating the user interface to the
-         *  second 'Subject', and updating the colors for 'Subject' tabs and their titles. It presents the page
-         *  that was last used in this 'Subject' in order to deliver a more appealing functionality to the user.
+         *  This event handler is triggered upon clickig the panel representing the second 'Subject'
+         *  in the notebook. It checks to see if this subject is currently empty or if it is already
+         *  presented before it performs its tasks. Its tasks include saving the current page, updating
+         *  the user interface to the second 'Subject', and updating the colors for 'Subject' tabs and
+         *  their titles. It presents the page that was last used in this 'Subject' in order to deliver
+         *  a more appealing functionality to the user.
          *  
          * RETURNS
          *  Nothing
@@ -592,11 +590,12 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This event handler is triggered upon clickig the panel representing the third 'Subject' in the
-         *  notebook. It checks to see if this subject is currently empty or if it is already presented before
-         *  it performs its tasks. Its tasks include saving the current page, updating the user interface to the
-         *  third 'Subject', and updating the colors for 'Subject' tabs and their titles. It presents the page
-         *  that was last used in this 'Subject' in order to deliver a more appealing functionality to the user.
+         *  This event handler is triggered upon clickig the panel representing the third 'Subject'
+         *  in the notebook. It checks to see if this subject is currently empty or if it is already
+         *  presented before it performs its tasks. Its tasks include saving the current page, updating
+         *  the user interface to the third 'Subject', and updating the colors for 'Subject' tabs and
+         *  their titles. It presents the page that was last used in this 'Subject' in order to deliver
+         *  a more appealing functionality to the user.
          *  
          * RETURNS
          *  Nothing
@@ -628,11 +627,12 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This event handler is triggered upon clickig the panel representing the fourth 'Subject' in the
-         *  notebook. It checks to see if this subject is currently empty or if it is already presented before
-         *  it performs its tasks. Its tasks include saving the current page, updating the user interface to the
-         *  fourth 'Subject', and updating the colors for 'Subject' tabs and their titles. It presents the page
-         *  that was last used in this 'Subject' in order to deliver a more appealing functionality to the user.
+         *  This event handler is triggered upon clickig the panel representing the fourth 'Subject'
+         *  in the notebook. It checks to see if this subject is currently empty or if it is already
+         *  presented before it performs its tasks. Its tasks include saving the current page, updating
+         *  the user interface to the fourth 'Subject', and updating the colors for 'Subject' tabs and
+         *  their titles. It presents the page that was last used in this 'Subject' in order to deliver
+         *  a more appealing functionality to the user.
          *  
          * RETURNS
          *  Nothing
@@ -664,11 +664,12 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This event handler is triggered upon clickig the panel representing the fifth 'Subject' in the
-         *  notebook. It checks to see if this subject is currently empty or if it is already presented before
-         *  it performs its tasks. Its tasks include saving the current page, updating the user interface to the
-         *  fifth 'Subject', and updating the colors for 'Subject' tabs and their titles. It presents the page
-         *  that was last used in this 'Subject' in order to deliver a more appealing functionality to the user.
+         *  This event handler is triggered upon clickig the panel representing the fifth 'Subject'
+         *  in the notebook. It checks to see if this subject is currently empty or if it is already
+         *  presented before it performs its tasks. Its tasks include saving the current page, updating
+         *  the user interface to the fifth 'Subject', and updating the colors for 'Subject' tabs and
+         *  their titles. It presents the page that was last used in this 'Subject' in order to deliver
+         *  a more appealing functionality to the user.
          *  
          * RETURNS
          *  Nothing
@@ -698,8 +699,8 @@ namespace My_Note
          *  private void setDefaultBackColorForTabs();
          * 
          * DESCRIPTION
-         *  This method is called to update the default back color for panels that represent 'Subject' tabs in
-         *  the notebook. It gets called upon startup and during the application usage.
+         *  This method is called to update the default back color for panels that represent 'Subject'
+         *  tabs in the notebook. It gets called upon startup and during the application usage.
          *  
          * RETURNS
          *  Nothing
@@ -734,9 +735,10 @@ namespace My_Note
          *      e       -> does nothing
          *      
          * DESCRIPTION
-         *  This event handler method handles tasks associated with when the user clicks the button to go to the previous
-         *  page, if they are currently not on the first page. It first saves the current page by calling the appropriate
-         *  method. Then, it updates the user interface elements based on current values.
+         *  This event handler method handles tasks associated with when the user clicks the button
+         *  to go to the previous page, if they are currently not on the first page. It first saves
+         *  the current page by calling the appropriate method. Then, it updates the user interface
+         *  elements based on current values.
          * 
          * RETURNS
          *  Nothing
@@ -766,14 +768,16 @@ namespace My_Note
          *      e       -> does nothing
          *      
          * DESCRIPTION
-         *  This event handler method handles tasks associated when the user clicks the button to go to the next page.
-         *  It first checks to see if the user is currently on the last page; if so, then the user is notified of the
-         *  situation using a message box. Then, it checks to see if the user is currently on the last page and it is blank.
-         *  If so, then the user is notified with another message of the situation. Checking to see if the current blank page
-         *  is also the last page is done so because the user can create 'empty' pages in the middle of the 'Subject' by 
-         *  deleting their content. This means empty pages are allowed as long as they are between populated pages and no more
-         *  than one empty page is allowed to be used and saved at the end of each 'Subject'. Finally, this method saves the
-         *  current page and updates the user interface elements with appropriate values before the page is 'turned'.
+         *  This event handler method handles tasks associated when the user clicks the button to go
+         *  to the next page. It first checks to see if the user is currently on the last page. If
+         *  so, then the user is notified of the situation using a message box. Then, it checks to
+         *  see if the user is currently on the last page and it is blank. If so, then the user is
+         *  notified with another message of the situation. Checking to see if the current blank page
+         *  is also the last page is done so because the user can create 'empty' pages in the middle
+         *  of the 'Subject' by deleting their content. This means empty pages are allowed as long as
+         *  they are between populated pages and no more than one empty page is allowed to be used
+         *  and saved at the end of each 'Subject'. Finally, this method saves the current page and
+         *  updates the user interface elements with appropriate values before the page is 'turned'.
          * 
          * RETURNS
          *  Nothing
@@ -816,8 +820,9 @@ namespace My_Note
          *  private bool currentPageIsEmpty();
          *      
          * DESCRIPTION
-         *  This method checks to see if the currently displayed page in the user interface is empty. It starts its testing
-         *  one element at a time and returns false the moment any one of them has content that is used by current page.
+         *  This method checks to see if the currently displayed page in the user interface is empty.
+         *  It starts its testing one element at a time and returns false the moment any one of them
+         *  has content that is used by current page.
          * 
          * RETURNS
          *  True if currently displayed page has no content, otherwise it returns false.
@@ -844,14 +849,16 @@ namespace My_Note
          *  private void saveCurrentPageDisplayed();
          *      
          * DESCRIPTION
-         *  This method is called to save the elements displayed on the current page to its 'Subject'. First, it gets the
-         *  'Page' object corresponding to the current page number from the 'Subject' container instead of creating a new
-         *  page. This is done to minimize the use of resources by not creating and disposing of objects dynamically. Second,
-         *  it updates the values for variables in the page to be saved. VerticalText objects need special care, due to the
-         *  complex nature of their class, that is why they are copied into the container individually. Third, the updated
-         *  'Page' is reinserted in its 'Subject' container with its new values; including the current page, which is saved
-         *  as the last page viewed in this 'Subject' in order to present a more appealing functionality to the user when
-         *  they return to the 'Subject' during an application session.
+         *  This method is called to save the elements displayed on the current page to its 'Subject'.
+         *  First, it gets the 'Page' object corresponding to the current page number from the 'Subject'
+         *  container instead of creating a new page. This is done to minimize the use of resources
+         *  by not creating and disposing of objects dynamically. Second, it updates the values for
+         *  variables in the page to be saved. VerticalText objects need special care, due to the
+         *  complex nature of their class, that is why they are copied into the container individually.
+         *  Third, the updated 'Page' is reinserted in its 'Subject' container with its new values;
+         *  including the current page, which is saved as the last page viewed in this 'Subject' in
+         *  order to present a more appealing functionality to the user when they return to the 'Subject'
+         *  during an application session.
          * 
          * RETURNS
          *  Nothing
@@ -886,13 +893,14 @@ namespace My_Note
          *      int a_pageNumber    -> indicates page number for the 'Page' in the 'Subject' to be used
          *      
          * DESCRIPTION
-         *  This method is used to update the content for the page currently displayed to the user. First, it gets the
-         *  'Page' object corresponding to the current page number from the 'Subject' container. If page does not exist,
-         *  such as the case when the user is at the end of 'Subject', then a blank page is returned from the 'Subject'
-         *  container. Second, content corresponding to the page to be displayed is populated in the user interface elements.
-         *  VerticalText objects require special handling, due to the complex nature of their class, that is why each one
-         *  is copied individually. Each one of them also has several buttons that must also be populated in the UI element.
-         *  Finally, page number label is updated and content is redrawn on screen.
+         *  This method is used to update the content for the page currently displayed to the user.
+         *  First, it gets the 'Page' object corresponding to the current page number from the 'Subject'
+         *  container. If page does not exist, such as the case when the user is at the end of 'Subject',
+         *  then a blank page is returned from the 'Subject' container. Second, content corresponding to
+         *  the page to be displayed is populated in the user interface elements. VerticalText objects
+         *  require special handling, due to the complex nature of their class, that is why each one is
+         *  copied individually. Each one of them also has several buttons that must also be populated
+         *  in the UI element. Finally, page number label is updated and content is redrawn on screen.
          * 
          * RETURNS
          *  Nothing

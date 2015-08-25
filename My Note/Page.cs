@@ -20,8 +20,10 @@ using System.Runtime.Serialization.Formatters.Binary;
  *      this object in the application. GetObjectData() is used for serialization of this object.
  *      
  *  CODE STRUCTURE:
- *      This class organizes code in the following order: member variables, properties, regular methods, data peristence
- *      methods.
+ *      - Member variables
+ *      - Properties
+ *      - Constructors
+ *      - Data persistence and serialization methods
  */
 
 namespace My_Note

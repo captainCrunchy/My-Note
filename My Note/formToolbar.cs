@@ -16,35 +16,33 @@ using System.Drawing;
  *      common controls such as 'File' and 'Help' menu options, text editing and drawing controls, and a 'combined' panel
  *      for text editing and drawing shapes. This MainForm class is divided into four (.cs) files, which are simply extensions
  *      of this class; i.e. each is a 'public partial class MainForm : Form'. This was done to keep the code organized and
- *      readable. The user is interacting with some part of this class at all times.
- *    mainForm.cs:
- *      This file implements tasks that are responsible for starting and running the application. It performs general tasks
- *      like handling the user inteface elements of the form and communication with data persistence objects. It is also
- *      responsible for coordinating tasks between other 'partial class' files.
- *    formMenuStrip.cs:
- *      This file handles events that are triggered by elements of the menu strip in the form and their appearances based on
- *      current data. Example: File, Edit, ..., Help.
- *    formToolbar.cs: (YOU ARE HERE)
- *      This file is responsible for appearance of controls in the toolbar and their events. These controls trigger such tasks
- *      as text editing, drawing shapes, and erasing.
- *    formTextBox.cs:
- *      This file is responsible for appearances and events of the richTextBox and its layers. Such additional layers are
- *      transparent and background panels. Events handled in this files are tasks such as applying text editing and drawing
- *      shapes onto the panels, and erasing them based on currently selected controls and options. The mechanics of drawing
- *      certain shapes like arrows, rectangles, ovals, and lines have been separated into two categories. One category is
- *      while the user has the mouse down and is moving it, shapes are being drawn and displayed at optimal speed. Other category
- *      is when the user releases the mouse, shapes are saved using individual points and are redrawn so in the future; this is
- *      done in order to accomodate the erase functionality.
+ *      readable. The following are descriptions of the four (.cs) files, including this one, that make up this class.
+ *      
+ *      mainForm.cs:
+ *          This file implements tasks that are responsible for starting and running the application. It performs general tasks
+ *          like handling the user inteface elements of the form and communication with data persistence objects. It is also
+ *          responsible for coordinating tasks between other 'partial class' files.
+ *      formMenuStrip.cs:
+ *          This file handles events that are triggered by elements of the menu strip in the form and their appearances based
+ *          on current data. Example: File, Edit, ..., Help.
+ *      formToolbar.cs: (CURRENTLY HERE)
+ *          This file is responsible for appearance of controls in the toolbar and their events. These controls trigger such
+ *          tasks as text editing, drawing shapes, and erasing.
+ *      formTextBox.cs:
+ *          This file is responsible for appearances and events of the richTextBox and its layers. Such additional layers are
+ *          the transparent panel and the background panel. Events handled in this files are tasks such as applying text editing
+ *          and drawing shapes onto the panels, and erasing them based on currently selected controls and options. The mechanics
+ *          of drawing certain shapes like arrows, rectangles, ovals, and lines have been separated into two categories. First
+ *          category is when the user has the mouse down and is moving it, shapes are being drawn and displayed at optimal speed.
+ *          Second category is when the user releases the mouse, shapes are saved using individual points and are redrawn again
+ *          from the saved container, this is done in order to accomodate the erase functionality.
  *      
  *  CODE STRUCTURE:
- *    MainForm class:
- *      This class is divided into four (.cs) files based on functionality. Each is responsible for performing specific tasks
- *      based on the user interface elements and controls. Each (.cs) file declares and initializes member variables that are
- *      needed in that file. Some member variables can only be initialized in the constructor, which is in the mainForm.cs file.
- *    formToolbar.cs: (YOU ARE HERE)
- *      This file is organized by separating methods into regions based on their collective functinality. The following region
- *      names contain the organized code: Member Variables, Text Controls, Drawing Controls, and Drawing Color Controls. Some
- *      member variables need to be initialized in the constructor which is in the mainForm.cs file.
+ *      Member Variables - Region contains member variables for this class
+ *      Text Control Methods - Region contains text control and formatting methods
+ *      Drawing Control Methods - Region contains drawing control methods
+ *      Drawing Color Control Methods - Region contains drawing color selection controls
+ *      Helper Methods - Region contains 'helper' methods
  */
 
 namespace My_Note
@@ -62,13 +60,13 @@ namespace My_Note
         private bool m_italicTextEnabled = false;                           // Is italic text option currently enabled
         private bool m_underlineTextEnabled = false;                        // Is underline text option currently enabled
         private bool m_strikeoutTextEnabled = false;                        // Is strikeout text option currently enabled
-        private bool canHideVertTextButtons = true;                         /* Used to assist in hiding buttons of 
-                                                                               VerticalText when it is not selected */
+        private bool canHideVertTextButtons = true;                         // Used to assist in hiding buttons of 
+                                                                            // VerticalText when it is not selected
 
         #endregion
 
         // Region contains text control and formatting methods
-        #region Text Controls
+        #region Text Control Methods
 
         /*
          * NAME
@@ -80,8 +78,9 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This method calls another method that sets the current control to text editing. Reason for calling a different
-         *  method is because that method is also called by other objects, hence this technique reduces extra lines of code.
+         *  This event handler calls another method that sets the current control to text editing.
+         *  Reason for calling a different method is because that method is also called by other
+         *  objects, hence this technique reduces extra lines of code.
          * 
          * RETURNS
          *  Nothing
@@ -107,10 +106,10 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This event handler method is trigerred when the user drops down the menu of font combo box. It ensures
-         *  that the selected text stays selected even when the focus shifts to the combo box. This gives the user
-         *  the ability to continuosly apply new fonts to currently selected text and shows to the user which text
-         *  they selected.
+         *  This event handler is trigerred when the user drops down the menu of font combo box. It
+         *  ensures that the selected text stays selected even when the focus shifts to the combo box.
+         *  This gives the user the ability to continuosly apply new fonts to currently selected text
+         *  and shows to the user which text they selected.
          * 
          * RETURNS
          *  Nothing
@@ -137,10 +136,11 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This method gets called upon selecting a choice of font style from a combo box. If no text is selected, then
-         *  this method simply sets the future text font and updates the title in the combo box. If some text is selected,
-         *  then the font of the selected text is updated to the selected font and future text font is set. If selected
-         *  text contains more than one type of font, then this feature does nothing.
+         *  This event handler gets called upon selecting a choice of font style from a combo box.
+         *  If no text is selected, then this method simply sets the future text font and updates
+         *  the title in the combo box. If some text is selected, then the font of the selected text
+         *  is updated to the selected font and future text font is set. If selected text contains
+         *  more than one type of font, then this feature does nothing.
          *  
          * RETURNS
          *  Nothing
@@ -184,11 +184,12 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This event handler method applies bold formatting option to text. If no text is selected, then this method
-         *  allows bold format to be enabled or disabled as the user enters text and appropriately updates the selection
-         *  color of the bold text button. If some text is selected, then only that text is set to bold, further bold
-         *  format options are disabled, and the button is never highlighted. If selected text contains more than one
-         *  type of font, then this feature does nothing.
+         *  This event handler applies bold formatting option to text. If no text is selected, then
+         *  this method allows bold format to be enabled or disabled as the user enters text and
+         *  appropriately updates the selection color of the bold text button. If some text is selected,
+         *  then only that text is set to bold, further bold format options are disabled, and the button
+         *  is never highlighted. If selected text contains more than one type of font, then this feature
+         *  does nothing.
          * 
          * RETURNS
          *  Nothing
@@ -236,11 +237,12 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This event handler method applies italic formatting option to text. If no text is selected, then this method
-         *  allows italic format to be enabled or disabled as the user enters text and appropriately updates the selection
-         *  color of the italic text button. If some text is selected, then only that text is set to italic, further
-         *  italic format options are disabled, and the button is never highlighted. If selected text contains more than
-         *  one type of font, then this feature does nothing.
+         *  This event handler applies italic formatting option to text. If no text is selected, then
+         *  this method allows italic format to be enabled or disabled as the user enters text and
+         *  appropriately updates the selection color of the italic text button. If some text is
+         *  selected, then only that text is set to italic, further italic format options are disabled,
+         *  and the button is never highlighted. If selected text contains more than one type of font,
+         *  then this feature does nothing.
          * 
          * RETURNS
          *  Nothing
@@ -288,11 +290,12 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This event handler method applies underline formatting option to text. If no text is selected, then this method
-         *  allows underline format to be enabled or disabled as the user enters text and appropriately updates the selection
-         *  color of the underline text button. If some text is selected, then only that text is set to underline, further 
-         *  underline format options are disabled, and the button is never highlighted. If selected text contains more than
-         *  one type of font, then this feature does nothing.
+         *  This event handler applies underline formatting option to text. If no text is selected,
+         *  then this method allows underline format to be enabled or disabled as the user enters
+         *  text and appropriately updates the selection color of the underline text button. If some
+         *  text is selected, then only that text is set to underline, further underline format
+         *  options are disabled, and the button is never highlighted. If selected text contains
+         *  more than one type of font, then this feature does nothing.
          * 
          * RETURNS
          *  Nothing
@@ -340,11 +343,12 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This event handler method applies strikeout formatting option to text. If no text is selected, then this method
-         *  allows strikeout format to be enabled or disabled as the user enters text and appropriately updates the selection
-         *  color of the strikeout text button. If some text is selected, then only that text is set to strikeout, further 
-         *  strikeout format options are disabled, and the button is never highlighted. If selected text contains more than
-         *  one type of font, then this feature does nothing.
+         *  This event handler applies strikeout formatting option to text. If no text is selected,
+         *  then this method allows strikeout format to be enabled or disabled as the user enters
+         *  text and appropriately updates the selection color of the strikeout text button. If some
+         *  text is selected, then only that text is set to strikeout, further strikeout format
+         *  options are disabled, and the button is never highlighted. If selected text contains
+         *  more than one type of font, then this feature does nothing.
          * 
          * RETURNS
          *  Nothing
@@ -392,11 +396,12 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This event handler method applies highlight formatting option to text. If no text is selected, then this method
-         *  allows highlight format to be enabled or disabled as the user enters text and appropriately updates the selection
-         *  color of the highlight text button. If some text is selected, then only that text is set to highlight, further 
-         *  highlight format options are disabled, and the button is never highlighted. If selected text contains more than
-         *  one type of font, then this feature still highlights the text to the set color.
+         *  This event handler applies highlight formatting option to text. If no text is selected,
+         *  then this method allows highlight format to be enabled or disabled as the user enters
+         *  text and appropriately updates the selection color of the highlight text button. If some
+         *  text is selected, then only that text is set to highlight, further highlight format
+         *  options are disabled, and the button is never highlighted. If selected text contains
+         *  more than one type of font, then this feature still highlights the text to the set color.
          * 
          * RETURNS
          *  Nothing
@@ -448,11 +453,12 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This event handler method shows a color dialog box allowing the user to set the text highlight color. If no text
-         *  is selected, then it simply sets the new color for future text to be typed. If some text is selected, then that
-         *  text highlight color is changed whether it was previously highlighted or not. The new highlight text color is also
-         *  updated for future text. If selected text contains more than one type of font, then all of the selected text will
-         *  be set to the newly selected text highlight color.
+         *  This event handler shows a color dialog box allowing the user to set the text highlight
+         *  color. If no text is selected, then it simply sets the new color for future text to be
+         *  typed. If some text is selected, then that text highlight color is changed whether it was
+         *  previously highlighted or not. The new highlight text color is also updated for future
+         *  text. If selected text contains more than one type of font, then all of the selected text
+         *  will be set to the newly selected text highlight color.
          * 
          * RETURNS
          *  Nothing
@@ -466,7 +472,8 @@ namespace My_Note
         private void changeHighlightColorButton_Click(object sender, EventArgs e)
         {
             int textSelectionLength = richTextBox.SelectionLength;
-            if (textSelectionLength > 0)  // redraw lines only if necessary
+            // redraw lines only if necessary
+            if (textSelectionLength > 0)
             {
                 transparentPanel.Refresh();
             }
@@ -495,10 +502,11 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This event handler method changes the color of text. If no text is selected, then this method allows the color
-         *  to be enabled or disabled as the user enters text and appropriately updates the selection color of text color
-         *  button. If some text is selected, then only that text color is changed, further text color option is disabled,
-         *  and the button is never highlighted. If selected text contains more than one type of font, then this feature will
+         *  This event handler changes the color of text. If no text is selected, then this method
+         *  allows the color to be enabled or disabled as the user enters text and appropriately
+         *  updates the selection color of text color button. If some text is selected, then only that
+         *  text color is changed, further text color option is disabled, and the button is never
+         *  highlighted. If selected text contains more than one type of font, then this feature will
          *  change the color of all the selected text.
          * 
          * RETURNS
@@ -537,7 +545,8 @@ namespace My_Note
                     textColorButton.BackColor = m_selectedControlButtonColor;
                     m_currentTextColor = changeTextColorButton.BackColor;
                 }
-                richTextBox.Select();  // Place the cursor back where it was
+                // Place the cursor back where it was
+                richTextBox.Select();
             }
         } /* private void textColorButton_Click(object sender, EventArgs e) */
 
@@ -551,10 +560,11 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This event handler method shows a color dialog box allowing the user to set the color for text color option . If no
-         *  text is selected, then it simply sets the new color for future text to be typed. If some text is selected, then that
-         *  text color is changed. The new color of text color option is also updated. If selected text contains more than one
-         *  type of font, then all of the selected text will be set to the newly selected text color.
+         *  This event handler shows a color dialog box allowing the user to set the color for text
+         *  color option. If no text is selected, then it simply sets the new color for future text
+         *  to be typed. If some text is selected, then that text color is changed. The new color of
+         *  text color option is also updated. If selected text contains more than one type of font,
+         *  then all of the selected text will be set to the newly selected text color.
          * 
          * RETURNS
          *  Nothing
@@ -568,7 +578,8 @@ namespace My_Note
         private void changeTextColorButton_Click(object sender, EventArgs e)
         {
             int textSelectionLength = richTextBox.SelectionLength;
-            if (textSelectionLength > 0)  // redraw lines only if necessary
+            // redraw lines only if necessary
+            if (textSelectionLength > 0)
             {
                 transparentPanel.Refresh();
             }
@@ -595,9 +606,9 @@ namespace My_Note
          *  private void updateCurrentFontStyles();
          * 
          * DESCRIPTION
-         *  This method gets called by several other methods when the user is applying new font styles to
-         *  either currently selected text or simply setting up for future text to be typed. More than one
-         *  font style can be applied to the same text.
+         *  This method gets called by several other methods when the user is applying new font styles
+         *  to either currently selected text or simply setting up for future text to be typed. More
+         *  than one font style can be applied to the same text.
          * 
          * RETURNS
          *  Nothing
@@ -632,11 +643,13 @@ namespace My_Note
          *  updateUIForTextControls();
          * 
          * DESCRIPTION
-         *  Updates UI for text controls when multi-text selection is made, or when selecting new control. When text control is
-         *  selected or enabled, then user interface for text controls is updated based on current or text values. For example,
-         *  Font and Font Style can only be applied to one word at a time, hence their buttons become either enabled or disabled.
-         *  Empty spaces are never formatted to any font or font style because their font regulates line height. When selecting a
-         *  control other than text editing control, then all text controls are disabled.
+         *  Updates UI for text controls when multi-text selection is made, or when selecting new
+         *  control. When text control is selected or enabled, then user interface for text controls
+         *  is updated based on current or text values. For example, Font and Font Style can only be
+         *  applied to one word at a time, hence their buttons become either enabled or disabled.
+         *  Empty spaces are never formatted to any font or font style because their font regulates
+         *  line height. When selecting a control other than text editing control, then all text
+         *  controls are disabled.
          * 
          * RETURNS
          *  Nothing
@@ -710,7 +723,7 @@ namespace My_Note
         #endregion
 
         // Region contains drawing control methods
-        #region Drawing Controls
+        #region Drawing Control Methods
 
         /*
          * NAME
@@ -722,7 +735,7 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This method sets the current control to pencil editing. Updates the panel's mouse
+         *  This event handler sets the current control to pencil editing. Updates the panel's mouse
          *  cursor to match the current control. Updates selection colors for controls.
          * 
          * RETURNS
@@ -752,7 +765,7 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This method sets the current control to eraser. Updates the panel's mouse cursor
+         *  This event handler sets the current control to eraser. Updates the panel's mouse cursor
          *  to match the current control. Updates selection colors for controls.
          * 
          * RETURNS
@@ -782,8 +795,8 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This method sets the current control to draw west arrow. Updates the panel's mouse
-         *  cursor to match the current control. Updates selection colors for controls.
+         *  This event handler sets the current control to draw west arrow. Updates the panel's
+         *  mouse cursor to match the current control. Updates selection colors for controls.
          * 
          * RETURNS
          *  Nothing
@@ -812,8 +825,9 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This method sets the current control to draw an arrow pointing northwest. Updates the panel's
-         *  mouse cursor to match the current control. Updates selection colors for controls.
+         *  This event handler sets the current control to draw an arrow pointing northwest.
+         *  Updates the panel's mouse cursor to match the current control. Updates selection
+         *  colors for controls.
          * 
          * RETURNS
          *  Nothing
@@ -842,8 +856,8 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This method sets the current control to draw an arrow pointing north. Updates the panel's
-         *  mouse cursor match the current control. Updates selection colors for controls.
+         *  This event handler sets the current control to draw an arrow pointing north. Updates the
+         *  panel's mouse cursor match the current control. Updates selection colors for controls.
          * 
          * RETURNS
          *  Nothing
@@ -872,8 +886,8 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This method sets the current control to draw an arrow pointing northeast. Updates the panel's
-         *  mouse cursor to match the current control. Updates selection colors for controls.
+         *  This event handler sets the current control to draw an arrow pointing northeast. Updates
+         *  the panel's mouse cursor to match the current control. Updates selection colors for controls.
          * 
          * RETURNS
          *  Nothing
@@ -902,8 +916,8 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This method sets the current control to draw an arrow pointing east. Updates the panel's
-         *  mouse cursor match the current control. Updates selection colors for controls.
+         *  This event handler sets the current control to draw an arrow pointing east. Updates the
+         *  panel's mouse cursor match the current control. Updates selection colors for controls.
          * 
          * RETURNS
          *  Nothing
@@ -932,8 +946,8 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This method sets the current control to draw an arrow pointing southeast. Updates the panel's
-         *  mouse cursor to match the current control. Updates selection colors for controls.
+         *  This event handler sets the current control to draw an arrow pointing southeast. Updates
+         *  the panel's mouse cursor to match the current control. Updates selection colors for controls.
          * 
          * RETURNS
          *  Nothing
@@ -962,8 +976,8 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This method sets the current control to draw an arrow pointing south. Updates the panel's
-         *  mouse cursor to match the current control. Updates selection colors for controls.
+         *  This event handler sets the current control to draw an arrow pointing south. Updates the
+         *  panel's mouse cursor to match the current control. Updates selection colors for controls.
          * 
          * RETURNS
          *  Nothing
@@ -992,8 +1006,8 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This method sets the current control to draw an arrow pointing southwest. Updates the panel's
-         *  mouse cursor to match the current control. Updates selection colors for controls.
+         *  This event handler sets the current control to draw an arrow pointing southwest. Updates the
+         *  panel's mouse cursor to match the current control. Updates selection colors for controls.
          * 
          * RETURNS
          *  Nothing
@@ -1022,8 +1036,8 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This method sets the current control to draw rectangles. Updates the panel's mouse
-         *  cursor to match the current control. Updates selection colors for controls.
+         *  This event handler sets the current control to draw rectangles. Updates the panel's
+         *  mouse cursor to match the current control. Updates selection colors for controls.
          * 
          * RETURNS
          *  Nothing
@@ -1042,12 +1056,6 @@ namespace My_Note
             rectangleSelectButton.BackColor = m_selectedControlButtonColor;
         } /* private void rectangleSelectButton_Click(object sender, EventArgs e) */
 
-        /*  This method sets the current control to draw ellipse. Updates the panel's
-         *  cursor to match the current control. Updates selection colors for controls.
-         *  
-         *  Murat Zazi
-         *  7:35am 3/19/2015
-         */
         /*
          * NAME
          *  ovalSelectButton_Click() - selects oval drawing tool
@@ -1058,8 +1066,8 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This method sets the current control to draw ellipses. Updates the panel's mouse
-         *  cursor to match the current control. Updates selection colors for controls.
+         *  This event handler sets the current control to draw ellipses. Updates the panel's
+         *  mouse cursor to match the current control. Updates selection colors for controls.
          * 
          * RETURNS
          *  Nothing
@@ -1088,8 +1096,8 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This method sets the current control to draw solid line. Updates the panel's mouse
-         *  cursor to match the current control. Updates selection colors for controls.
+         *  This event handler sets the current control to draw solid line. Updates the panel's
+         *  mouse cursor to match the current control. Updates selection colors for controls.
          * 
          * RETURNS
          *  Nothing
@@ -1118,8 +1126,8 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This method sets the current control to draw dashed line. Updates the panel's mouse
-         *  cursor to match the current control. Updates selection colors for controls.
+         *  This event handler sets the current control to draw dashed line. Updates the panel's
+         *  mouse cursor to match the current control. Updates selection colors for controls.
          * 
          * RETURNS
          *  Nothing
@@ -1148,8 +1156,8 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This method sets the current control to draw dotted line. Updates the panel's mouse
-         *  cursor to match the current control. Updates selection colors for controls.
+         *  This event handler sets the current control to draw dotted line. Updates the panel's
+         *  mouse cursor to match the current control. Updates selection colors for controls.
          * 
          * RETURNS
          *  Nothing
@@ -1178,9 +1186,9 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This method sets the current control to draw rotatable text. Updates the panel's mouse
-         *  cursor to match the current control. Updates selection colors for controls. Sets the
-         *  buttons of each VerticalText object on the form to 'Visible'.
+         *  This event handler sets the current control to draw rotatable text. Updates the panel's
+         *  mouse cursor to match the current control. Updates selection colors for controls. Sets
+         *  the buttons of each VerticalText object on the form to 'Visible'.
          * 
          * RETURNS
          *  Nothing
@@ -1210,7 +1218,7 @@ namespace My_Note
         #endregion
 
         // Region contains drawing color selection controls
-        #region Drawing Color Controls
+        #region Drawing Color Control Methods
 
         /*
          * NAME
@@ -1222,8 +1230,8 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This method brings up a color dialog box to select a custom color for currently selected
-         *  drawing tool.
+         *  This event handler brings up a color dialog box to select a custom color for currently
+         *  selected drawing tool.
          * 
          * RETURNS
          *  Nothing
@@ -1259,8 +1267,8 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  Set current drawing color to black and update it in the drawColorButton.BackColor
-         *  to let the user know which color they selected.
+         *  Set current drawing color to black and update it in the drawColorButton.BackColor to let
+         *  the user know which color they selected.
          * 
          * RETURNS
          *  Nothing
@@ -1291,8 +1299,8 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  Set current drawing color to white and update it in the drawColorButton.BackColor
-         *  to let the user know which color they selected.
+         *  Set current drawing color to white and update it in the drawColorButton.BackColor to let
+         *  the user know which color they selected.
          * 
          * RETURNS
          *  Nothing
@@ -1323,8 +1331,8 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  Set current drawing color to gray and update it in the drawColorButton.BackColor
-         *  to let the user know which color they selected.
+         *  Set current drawing color to gray and update it in the drawColorButton.BackColor to let
+         *  the user know which color they selected.
          * 
          * RETURNS
          *  Nothing
@@ -1355,8 +1363,8 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  Set current drawing color to greent and update it in the drawColorButton.BackColor
-         *  to let the user know which color they selected.
+         *  Set current drawing color to greent and update it in the drawColorButton.BackColor to let
+         *  the user know which color they selected.
          * 
          * RETURNS
          *  Nothing
@@ -1387,8 +1395,8 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  Set current drawing color to red and update it in the drawColorButton.BackColor
-         *  to let the user know which color they selected.
+         *  Set current drawing color to red and update it in the drawColorButton.BackColor to let
+         *  the user know which color they selected.
          * 
          * RETURNS
          *  Nothing
@@ -1419,7 +1427,8 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  
+         *  Set current drawing color to teal and update it in the drawColorButton.BackColor to let
+         *  the user know which color they selected.
          * 
          * RETURNS
          *  Nothing
@@ -1450,8 +1459,8 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  Set current drawing color to orange and update it in the drawColorButton.BackColor
-         *  to let the user know which color they selected.
+         *  Set current drawing color to orange and update it in the drawColorButton.BackColor to let
+         *  the user know which color they selected.
          * 
          * RETURNS
          *  Nothing
@@ -1482,8 +1491,8 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  Set current drawing color to blue and update it in the drawColorButton.BackColor
-         *  to let the user know which color they selected.
+         *  Set current drawing color to blue and update it in the drawColorButton.BackColor to let
+         *  the user know which color they selected.
          * 
          * RETURNS
          *  Nothing
@@ -1514,8 +1523,8 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  Set current drawing color to yellow and update it in the drawColorButton.BackColor
-         *  to let the user know which color they selected.
+         *  Set current drawing color to yellow and update it in the drawColorButton.BackColor to let
+         *  the user know which color they selected.
          * 
          * RETURNS
          *  Nothing
@@ -1546,8 +1555,8 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  Set current drawing color to purple and update it in the drawColorButton.BackColor
-         *  to let the user know which color they selected.
+         *  Set current drawing color to purple and update it in the drawColorButton.BackColor to let
+         *  the user know which color they selected.
          * 
          * RETURNS
          *  Nothing
@@ -1640,10 +1649,11 @@ namespace My_Note
          *  private void selectTextControl();
          * 
          * DESCRIPTION
-         *  This method sets the current control to 'text' edit control. It updates the mouse cursor to match one for text
-         *  editing. It then sets richTextBox as the 'focus' of the user interface with the character index at the end of
-         *  the text on the page. This method gets called upon changing editing control, 'flipping' pages, changing subjects,
-         *  and during start of the application.
+         *  This method sets the current control to 'text' edit control. It updates the mouse cursor
+         *  to match one for text editing. It then sets richTextBox as the 'focus' of the user
+         *  interface with the character index at the end of the text on the page. This method gets
+         *  called upon changing editing control, 'flipping' pages, changing subjects, and during
+         *  start of the application.
          * 
          * RETURNS
          *  Nothing

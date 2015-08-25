@@ -13,14 +13,14 @@ using System.Runtime.Serialization.Formatters.Binary;
  *      
  *  DESCRIPTION:
  *      The purpose of this class is to provide the capacity to draw a shape by using individual points and connecting
- *      them based on a shape number. This class is intended to work with ShapeContainer class, therefore, each shape
+ *      them based on a shape number. This class is intended to work with ShapeContainer class; therefore, each shape
  *      number can have many points as well as custom line width and line color. The reason for creating so many points
- *      is to accomodate erase functionality where the eraser can remove individual points and not just full sections,
+ *      is to accommodate erase functionality where the eraser can remove individual points and not just full sections,
  *      especially when this shape class is used to draw rectangles and ellipses. Initial code for this class was taken
  *      from an existing project on the web with pencil and eraser functionality and extended to work with other shapes
  *      like lines, ellipses, and rectangles. Changes to this class were made to member variables and arguments in methods
  *      by updating the naming conventions to match this application. Public member variables were converted to private and
- *      were assigned propeties. This class now implements 'ISerializable' interface, which allows this object to control
+ *      were assigned properties. This class now implements 'ISerializable' interface, which allows this object to control
  *      its own serialization and deserialization. This class is marked with the 'SerializableAttribute' and is 'sealed' to
  *      prevent inheritance.
  *      A link to the author and site is provided below:
@@ -28,7 +28,10 @@ using System.Runtime.Serialization.Formatters.Binary;
  *      http://www.codeproject.com/Articles/198419/Painting-on-a-panel
  *      
  *  CODE STRUCTURE:
- *      This class maintains much of original code structure with the addition of data persistence methods at the end.
+ *      - Member variables
+ *      - Properties
+ *      - Constructors
+ *      - Data peristence and serialization methods
  */
 
 namespace My_Note
@@ -105,8 +108,8 @@ namespace My_Note
          *      a_shapeNumber       -> stores the shape number
          *      
          * DESCRIPTION
-         *  This constructor gets called when instances of this object are created by and are being added
-         *  to the ShapeContainer object.
+         *  This constructor gets called when instances of this object are created by and are being
+         *  added to the ShapeContainer object.
          *  
          * RETURNS
          *  Nothing

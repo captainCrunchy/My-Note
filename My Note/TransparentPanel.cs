@@ -16,14 +16,16 @@ using System.Windows.Forms;
  *      any graphics or drawing. It is currently used as a layer on top of a RichTexbox. It draws
  *      lines to resemble those of a notebook and also allows user to 'freehand' draw custom shapes
  *      anywhere on the panel. Initial code for this class was taken from a website and slightly modified
- *      to accomodate the needs of this application. These modifications are new member variables, new
- *      struct, update to original methods, and update to match naming conventions of this application.
- *      A link to the author and site is provided below:
+ *      to accommodate the needs of this application. These modifications include addding new member
+ *      variables updating the original methods, and updating elements to match the naming conventions
+ *      of this application. A link to the author and site is provided below:
  *      Patrick Bailey, February 5, 2014
  *      http://www.whiteboardcoder.com/2014/02/visual-studio-2012-c-transparent.html
  *      
  *  CODE STRUCTURE:
- *      This class has a basic layout with member variables and methods.
+ *      - Member variables
+ *      - Properties
+ *      - Regular methods
  */
 
 namespace My_Note
@@ -44,7 +46,8 @@ namespace My_Note
             get
             {
                 CreateParams cp = base.CreateParams;
-                cp.ExStyle |= 0x00000020; // WS_EX_TRANSPARENT
+                // WS_EX_TRANSPARENT
+                cp.ExStyle |= 0x00000020;
                 return cp;
             }
         }
@@ -103,7 +106,8 @@ namespace My_Note
         protected override void OnPaint(PaintEventArgs e)
         {
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
-            base.OnPaint(e);  // This draws the shapes by 'owner' object
+            // This draws the shapes by 'owner' object
+            base.OnPaint(e);
             // The rest draws lines
             for (int i = 0; i < 28; i++)
             {

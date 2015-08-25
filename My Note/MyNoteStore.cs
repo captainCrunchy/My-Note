@@ -19,8 +19,10 @@ using System.Runtime.Serialization.Formatters.Binary;
  *      of this object.
  *      
  *  CODE STRUCTURE:
- *      This class organizes code in the following order: member variables, properties, regular methods, data peristence
- *      methods.
+ *      - Member variables
+ *      - Properties
+ *      - Constructors
+ *      - Data peristence and serialization methods
  */
 
 namespace My_Note
@@ -61,7 +63,8 @@ namespace My_Note
          *  public int NumberOfSubjects();
          *      
          * DESCRIPTION
-         *  This method checks to see how many subjects in the container are being 'used' and returns the count. 
+         *  This method checks to see how many subjects in the container are being 'used' and
+         *  returns the count. 
          *  
          * RETURNS
          *  A number of objects currently used in this object

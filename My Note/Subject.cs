@@ -19,8 +19,10 @@ using System.Runtime.Serialization.Formatters.Binary;
  *      of this object.
  *      
  *  CODE STRUCTURE:
- *      This class organizes code in the following order: member variables, properties, regular methods, data peristence
- *      methods.
+ *      - Member variables
+ *      - Constructors
+ *      - Regular methods
+ *      - Data peristence and serialization methods
  */
 
 namespace My_Note
@@ -69,6 +71,31 @@ namespace My_Note
 
         /*
          * NAME
+         *  Subject() - gets called to construct this object
+         *  
+         * SYNOPSIS
+         *  public Subject();
+         * 
+         * DESCRIPTION
+         *  This constructor gets called when instances of this object are used during normal
+         *  application execution.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  6:00pm 5/19/2015
+         */
+        public Subject()
+        {
+
+        } /* public Subject() */
+
+        /*
+         * NAME
          *  getPageForPageNumber() - looks up and returns a 'Page' object
          *  
          * SYNOPSIS
@@ -76,9 +103,9 @@ namespace My_Note
          *      a_pageNumber    -> used as an index to look up an existing page
          *      
          * DESCRIPTION
-         *  This method looks for a page in the container of 'Page' objects based on a given index. If the
-         *  index number is beyond the number of pages in the container, then a new page is created, added
-         *  to the container, and returned to the caller.
+         *  This method looks for a page in the container of 'Page' objects based on a given index.
+         *  If the index number is beyond the number of pages in the container, then a new page is
+         *  created, added to the container, and returned to the caller.
          *  
          * RETURNS
          *  Returns either a new 'blank' Page object or an existing one
@@ -115,8 +142,8 @@ namespace My_Note
          *      a_pageNumber    -> helps index the page location
          *      
          * DESCRIPTION
-         *  This method saves a 'Page' object into the container at the location based on the
-         *  given page number.
+         *  This method saves a 'Page' object into the container at the location based on the given
+         *  page number.
          *  
          * RETURNS
          *  Nothing
@@ -132,31 +159,6 @@ namespace My_Note
             int index = a_pageNumber - 1;
             m_pages[index] = a_page;
         } /* public void savePageWithPageNumber(Page a_page, int a_pageNumber) */
-        
-        /*
-         * NAME
-         *  Subject() - gets called to construct this object
-         *  
-         * SYNOPSIS
-         *  public Subject();
-         * 
-         * DESCRIPTION
-         *  This constructor gets called when instances of this object are used during normal
-         *  application execution.
-         *  
-         * RETURNS
-         *  Nothing
-         *  
-         * AUTHOR
-         *  Murat Zazi
-         *  
-         * DATE
-         *  6:00pm 5/19/2015
-         */
-        public Subject()
-        {
-
-        } /* public Subject() */
 
         /*
          * NAME

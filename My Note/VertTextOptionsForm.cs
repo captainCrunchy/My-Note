@@ -15,14 +15,16 @@ using System.Windows.Forms;
  *  DESCRIPTION:
  *      This class creates a form which allows the user to select and set different properties for the
  *      VerticalText object. These properties include the actual text, text font, text font size, and
- *      text color. An instace of this class lives inside each VerticalText object and is triggered upon
+ *      text color. An instance of this class lives inside each VerticalText object and is triggered upon
  *      clicking the options button. Current values are passed to this object and are later returned to
  *      the calling VerticalText object. This object also uses a custom ComboBox in addition to regular
  *      ComboBox(es).
  * 
  *  CODE STRUCTURE:
- *      In order: member variables, load/initializer methods, private methods, public methods.
- *      Event handlers for UI objects correspond to the layout of the UI objects in the form.
+ *      - Member variables
+ *      - Constructors
+ *      - Event handlers
+ *      - Regular Methods
  */
 
 namespace My_Note
@@ -77,10 +79,11 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This event handler gets called when this form loads. It sets default values for a custom ComboBox
-         *  control called "FontColorComboBox". This custom control is an instance of VTextColorComboBox.cs class
-         *  which is designed to accomodate a selection of text color by using a ComboBox. Default values are set
-         *  in order to prevent an exception to be thrown at load time, they are later dynamically updated.
+         *  This event handler gets called when this form loads. It sets default values for a custom
+         *  ComboBox control called "FontColorComboBox". This custom control is an instance of
+         *  VTextColorComboBox.cs class which is designed to accomodate a selection of text color by
+         *  using a ComboBox. Default values are set in order to prevent an exception to be thrown
+         *  at load time, they are later dynamically updated.
          *  
          * RETURNS
          *  Nothing
@@ -107,10 +110,11 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This event handler gets called when this form is closing. It checks to see how the form was closed:
-         *  i.e. by clicking 'OK', 'Cancel', 'X', 'Alt + F4', etc... and updates/saves changes appropriately. 'OK'
-         *  button click updates the text for VerticalText based on contents of RichTextBox. Other attributes are
-         *  assigned as the user makes his selection using one of the ComboBox(s).
+         *  This event handler gets called when this form is closing. It checks to see how the form
+         *  was closed, i.e. by clicking 'OK', 'Cancel', 'X', 'Alt + F4', etc... and updates/saves
+         *  changes appropriately. 'OK' button click updates the text for VerticalText based on
+         *  contents of RichTextBox. Other attributes are assigned as the user makes his selection
+         *  using one of the ComboBox(s).
          *  
          * RETURNS
          *  Nothing
@@ -147,9 +151,9 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This event handler gets called when the value is changed in the ComboBox that changes the font.
-         *  It updates the newly selected font to be passed back to the VertText.cs object as well as to
-         *  diplay it to the user in the 'local' RichTextBox.
+         *  This event handler gets called when the value is changed in the ComboBox that changes the
+         *  font. It updates the newly selected font to be passed back to the VertText.cs object as
+         *  well as to diplay it to the user in the 'local' RichTextBox.
          *  
          * RETURNS
          *  Nothing
@@ -177,9 +181,9 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This event handler gets called when ththe value is changed in the ComboBox that changes the font
-         *  size. It updates the newly selected fot to be passed back to the VerticalText object as well as
-         *  to display it to the user in the 'local' RichTextBox.
+         *  This event handler gets called when ththe value is changed in the ComboBox that changes
+         *  the font size. It updates the newly selected fot to be passed back to the VerticalText
+         *  object as well as to display it to the user in the 'local' RichTextBox.
          *  
          * RETURNS
          *  Nothing
@@ -207,9 +211,9 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This event handler gets called when the value is changed in the ComboBox that changes font
-         *  color. It updates the newly selected color to be passed back to the VerticalText object as
-         *  well as to display it to the user in the 'local' RichTextBox.
+         *  This event handler gets called when the value is changed in the ComboBox that changes
+         *  font color. It updates the newly selected color to be passed back to the VerticalText
+         *  object as well as to display it to the user in the 'local' RichTextBox.
          *  
          * RETURNS
          *  Nothing
@@ -236,8 +240,9 @@ namespace My_Note
          *      e       -> does nothing
          * 
          * DESCRIPTION
-         *  This method checks to see that there is at least one character in the RichTextBox before allowing
-         *  the user to make any changes to the VerticalText object by enabling or disabling 'OK' button.
+         *  This event handler checks to see that there is at least one character in the RichTextBox
+         *  before allowing the user to make any changes to the VerticalText object by enabling or
+         *  disabling 'OK' button.
          *  
          * RETURNS
          *  Nothing
@@ -270,8 +275,9 @@ namespace My_Note
          *      e       -> checks to see if the left mouse button was clicked
          * 
          * DESCRIPTION
-         *  This event handler gets called when the 'OK' button is clicked. It updates the enum property in order
-         *  to properly save changes; it also closes this form which triggers this form's _FormClosing event handler.
+         *  This event handler gets called when the 'OK' button is clicked. It updates the enum
+         *  property in order to properly save changes; it also closes this form which triggers
+         *  this form's _FormClosing event handler.
          *  
          * RETURNS
          *  Nothing
@@ -302,10 +308,11 @@ namespace My_Note
          *      e       -> checks to see if the left mouse button was clicked
          * 
          * DESCRIPTION
-         *  This event handler gets called when the 'Cancel' button is clicked. It updates the enum property in order
-         *   to properly save changes; it also closes this form which triggers this form's _FormClosing event handler.
-         *   Functionally, using 'Cancel' button to close this form does the same thing as clicking the 'X' or using
-         *   'Alt + F4'; its real purpose is to give the user a sense of control when using this form.
+         *  This event handler gets called when the 'Cancel' button is clicked. It updates the enum
+         *  property in order to properly save changes; it also closes this form which triggers this
+         *  form's _FormClosing event handler. Functionally, using 'Cancel' button to close this form
+         *  does the same thing as clicking the 'X' or using 'Alt + F4'; its real purpose is to give
+         *  the user a sense of control when using this form.
          *  
          * RETURNS
          *  Nothing
@@ -337,8 +344,9 @@ namespace My_Note
          *      a_brush -> used to save the current color of the VerticalText object
          * 
          * DESCRIPTION
-         *  This method gets called before this form is displayed to the user. It takes current values of the
-         *  VerticalText object and uses them to update the UI objects of this form and saves values for later use.
+         *  This method gets called before this form is displayed to the user. It takes current values
+         *  of the VerticalText object and uses them to update the UI objects of this form and saves
+         *  values for later use.
          *  
          * RETURNS
          *  Nothing
@@ -374,8 +382,8 @@ namespace My_Note
          *      a_brush -> updates the current color of the VerticalText object
          * 
          * DESCRIPTION
-         *  This method gets called from VerticalText object in order to update the newly selected values,
-         *  which are assigned through the arguments passed by reference.
+         *  This method gets called from VerticalText object in order to update the newly selected
+         *  values, which are assigned through the arguments passed by reference.
          *  
          * RETURNS
          *  Nothing

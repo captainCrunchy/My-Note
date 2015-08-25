@@ -17,36 +17,32 @@ using System.Drawing.Printing;
  *      common controls such as 'File' and 'Help' menu options, text editing and drawing controls, and a 'combined' panel
  *      for text editing and drawing shapes. This MainForm class is divided into four (.cs) files, which are simply extensions
  *      of this class; i.e. each is a 'public partial class MainForm : Form'. This was done to keep the code organized and
- *      readable. The user is interacting with some part of this class at all times.
- *    mainForm.cs:
- *      This file implements tasks that are responsible for starting and running the application. It performs general tasks
- *      like handling the user inteface elements of the form and communication with data persistence objects. It is also
- *      responsible for coordinating tasks between other 'partial class' files.
- *    formMenuStrip.cs: (YOU ARE HERE)
- *      This file handles events that are triggered by elements of the menu strip in the form and their appearances based on
- *      current data. Example: File, Edit, ..., Help.
- *    formToolbar.cs:
- *      This file is responsible for appearance of controls in the toolbar and their events. These controls trigger such tasks
- *      as text editing, drawing shapes, and erasing.
- *    formTextBox.cs:
- *      This file is responsible for appearances and events of the richTextBox and its layers. Such additional layers are
- *      transparent and background panels. Events handled in this files are tasks such as applying text editing and drawing
- *      shapes onto the panels, and erasing them based on currently selected controls and options. The mechanics of drawing
- *      certain shapes like arrows, rectangles, ovals, and lines have been separated into two categories. One category is
- *      while the user has the mouse down and is moving it, shapes are being drawn and displayed at optimal speed. Other category
- *      is when the user releases the mouse, shapes are saved using individual points and are redrawn so in the future; this is
- *      done in order to accomodate the erase functionality.
+ *      readable. The following are descriptions of the four (.cs) files, including this one, that make up this class.
+ *      
+ *      mainForm.cs:
+ *          This file implements tasks that are responsible for starting and running the application. It performs general tasks
+ *          like handling the user inteface elements of the form and communication with data persistence objects. It is also
+ *          responsible for coordinating tasks between other 'partial class' files.
+ *      formMenuStrip.cs: (CURRENTLY HERE)
+ *          This file handles events that are triggered by elements of the menu strip in the form and their appearances based
+ *          on current data. Example: File, Edit, ..., Help.
+ *      formToolbar.cs:
+ *          This file is responsible for appearance of controls in the toolbar and their events. These controls trigger such
+ *          tasks as text editing, drawing shapes, and erasing.
+ *      formTextBox.cs:
+ *          This file is responsible for appearances and events of the richTextBox and its layers. Such additional layers are
+ *          the transparent panel and the background panel. Events handled in this files are tasks such as applying text editing
+ *          and drawing shapes onto the panels, and erasing them based on currently selected controls and options. The mechanics
+ *          of drawing certain shapes like arrows, rectangles, ovals, and lines have been separated into two categories. First
+ *          category is when the user has the mouse down and is moving it, shapes are being drawn and displayed at optimal speed.
+ *          Second category is when the user releases the mouse, shapes are saved using individual points and are redrawn again
+ *          from the saved container, this is done in order to accomodate the erase functionality.
  *      
  *  CODE STRUCTURE:
- *    MainForm class:
- *      This class is divided into four (.cs) files based on functionality. Each is responsible for performing specific tasks
- *      based on the user interface elements and controls. Each (.cs) file declares and initializes member variables that are
- *      needed in that file. Some member variables can only be initialized in the constructor, which is in the mainForm.cs file.
- *    formMenuStrip.cs: (YOU ARE HERE)
- *      This file organizes code by separating it into regions based on UI element functionality. Member variables are grouped
- *      together. 'File', 'Edit', and 'Help menus methods get their own regions to handle all functionality of their submenus,
- *      items, and respective helper methods. Some member variables need to be initialized in the constructor which is in the 
- *      mainForm.cs file.
+ *      Member Variables - Region contains member variables for this class
+ *      File Menu Item Methods - Region contains methods for 'File' menu items
+ *      Edit Menu Item Methods - Region contains methods for 'Edit' menu items
+ *      Help Menu Item Methods - Region contains methods for 'Help' menu items
  */
 
 namespace My_Note
@@ -60,8 +56,8 @@ namespace My_Note
         private int m_autoSaveTimeInterval = 0;               // Determines how often current work gets automatically saved
         private Timer m_autoSaveTimer = new Timer();          // Used to save current content automatically based on set time
         private Timer m_autoSaveNotifyTimer = new Timer();    // Used to help label 'fade out' after auto-save notification
-        private Label m_autoSaveNotifyLabel = new Label();    /* Appears in top left corner of form to notify the user when an
-                                                                 an auto-save task has executed, then gradually fades out. */
+        private Label m_autoSaveNotifyLabel = new Label();    // Appears in top left corner of form to notify the user when an
+                                                              // an auto-save task has executed, then gradually fades out.
 
         #endregion
 
@@ -78,8 +74,8 @@ namespace My_Note
          *      e       -> does nothing
          *      
          * DESCRIPTION
-         *  This event handler is triggered by the user to save all changes up to this point. It calls a
-         *  method which updates all data in data persistence objects and writes them to disk.
+         *  This event handler is triggered by the user to save all changes up to this point. It calls
+         *  a method which updates all data in data persistence objects and writes them to disk.
          * 
          * RETURNS
          *  Nothing
@@ -105,10 +101,11 @@ namespace My_Note
          *      e       -> does nothing
          *      
          * DESCRIPTION
-         *  This event handler is triggered by the user to preview current page before it is printed. The current page
-         *  is sized to fit the portion of the print page inside the margins. The technique used in this method is necessary
-         *  in order to capture the contents of two 'overlaying' elements at once. First one is the transparent panel and
-         *  below it is the rich text box. This strategy was taken from an online forum and properly documented.
+         *  This event handler is triggered by the user to preview current page before it is printed.
+         *  The current page is sized to fit the portion of the print page inside the margins. The
+         *  technique used in this method is necessary in order to capture the contents of two
+         *  'overlaying' elements at once. First one is the transparent panel and below it is the
+         *  rich text box. This strategy was taken from an online forum and properly documented.
          * 
          * RETURNS
          *  Nothing
@@ -145,10 +142,11 @@ namespace My_Note
          *      e       -> does nothing
          *      
          * DESCRIPTION
-         *  This event handler is triggered by the user to preview current page before it is printed. The current page
-         *  is sized to fit the full area of the print page. The technique used in this method is necessary in order to
-         *  capture the contents of two 'overlaying' elements at once. First one is the transparent panel and below it
-         *  is the rich text box. This strategy was taken from an online forum and properly documented.
+         *  This event handler is triggered by the user to preview current page before it is printed.
+         *  The current page is sized to fit the full area of the print page. The technique used in
+         *  this method is necessary in order to capture the contents of two 'overlaying' elements
+         *  at once. First one is the transparent panel and below it is the rich text box. This
+         *  strategy was taken from an online forum and properly documented.
          * 
          * RETURNS
          *  Nothing
@@ -185,10 +183,11 @@ namespace My_Note
          *      e       -> does nothing
          *      
          * DESCRIPTION
-         *  This event handler is triggered by the user to print the current page. Current page is sized to fit the
-         *  portion of the print page inside the margins. The technique used in this method is necessary in order to
-         *  capture the contents of two 'overlaying' elements at once. First one is the transparent panel and below
-         *  it is the rich text box. This strategy was taken from an online forum and properly documented.
+         *  This event handler is triggered by the user to print the current page. Current page is
+         *  sized to fit the portion of the print page inside the margins. The technique used in this
+         *  method is necessary in order to capture the contents of two 'overlaying' elements at once.
+         *  First one is the transparent panel and below it is the rich text box. This strategy was
+         *  taken from an online forum and properly documented.
          * 
          * RETURNS
          *  Nothing
@@ -227,10 +226,11 @@ namespace My_Note
          *      e       -> does nothing
          *      
          * DESCRIPTION
-         *  This event handler is triggered by the user to print the current page. Current page is sized to fit the
-         *  full area of the print page. The technique used in this method is necessary in order to capture the
-         *  contents of two 'overlaying' elements at once. First one is the transparent panel and below it is the
-         *  rich text box. This strategy was taken from an online forum and properly documented.
+         *  This event handler is triggered by the user to print the current page. Current page is
+         *  sized to fit the full area of the print page. The technique used in this method is
+         *  necessary in order to capture the contents of two 'overlaying' elements at once. First
+         *  one is the transparent panel and below it is the rich text box. This strategy was taken
+         *  from an online forum and properly documented.
          * 
          * RETURNS
          *  Nothing
@@ -269,9 +269,10 @@ namespace My_Note
          *      e       -> does nothing
          *      
          * DESCRIPTION
-         *  This event handler gets assigned to a PrintPage event of a PrintDocument object. It uses an image stored in
-         *  a local variable to fill graphics that are to be printed. The DrawImage() method sizes the image to fit the
-         *  portion of the print page inside the margins. This method gets used for preview and print tasks.
+         *  This event handler gets assigned to a PrintPage event of a PrintDocument object. It uses
+         *  an image stored in a local variable to fill graphics that are to be printed. The DrawImage()
+         *  method sizes the image to fit the portion of the print page inside the margins. This
+         *  method gets used for preview and print tasks.
          * 
          * RETURNS
          *  Nothing
@@ -297,9 +298,10 @@ namespace My_Note
          *      e       -> does nothing
          *      
          * DESCRIPTION
-         *  This event handler gets assigned to a PrintPage event of a PrintDocument object. It uses an image stored in
-         *  a local variable to fill graphics that are to be printed. The DrawImage() method sizes the image to fit the
-         *  full area of the print page. This method gets used for preview and print tasks.
+         *  This event handler gets assigned to a PrintPage event of a PrintDocument object. It uses
+         *  an image stored in a local variable to fill graphics that are to be printed. The DrawImage()
+         *  method sizes the image to fit the full area of the print page. This method gets used for
+         *  preview and print tasks.
          * 
          * RETURNS
          *  Nothing
@@ -325,9 +327,9 @@ namespace My_Note
          *      e       -> does nothing
          *      
          * DESCRIPTION
-         *  This event handler gets triggered by the user upon selecting the 'Close' option in the 'File' menu. It
-         *  does not close this form immediately because the MainForm_FormClosing() event will be triggered to handle
-         *  the necessary confirmations from the user.
+         *  This event handler gets triggered by the user upon selecting the 'Close' option in the
+         *  'File' menu. It does not close this form immediately because the MainForm_FormClosing()
+         *  event handler will be triggered to handle the necessary confirmations from the user.
          * 
          * RETURNS
          *  Nothing
@@ -358,13 +360,14 @@ namespace My_Note
          *      e       -> does nothing
          *      
          * DESCRIPTION
-         *  This event handler is triggered by the user to add a new 'Subject' to this application. First, it
-         *  prompts the user to enter a title for the new 'Subject', which cannot match an existing title. The
-         *  invalid titles are passed to a container in the RenameSubjectForm object and tested there. Upon user
-         *  clicking 'OK' in the result dialog, current page is saved to its 'Subject'. Then the new 'Subject'
-         *  is selected from the first available empty subject in the data persistence object and is assigned the
-         *  new, user entered, non-default title. Next, this new 'Subject' is displayed to the user by becoming the
-         *  new focus of the user interface. Finally, all UI elements are redrawn based on updated values. Data is
+         *  This event handler is triggered by the user to add a new 'Subject' to this application.
+         *  First, it prompts the user to enter a title for the new 'Subject', which cannot match
+         *  an existing title. The invalid titles are passed to a container in the RenameSubjectForm
+         *  object and tested there. Upon user clicking 'OK' in the result dialog, current page is
+         *  saved to its 'Subject'. Then the new 'Subject' is selected from the first available empty
+         *  subject in the data persistence object and is assigned the new, user entered, non-default
+         *  title. Next, this new 'Subject' is displayed to the user by becoming the new focus of the
+         *  user interface. Finally, all UI elements are redrawn based on updated values. Data is
          *  saved in the data persistence object but it is not written to disk in this method.
          * 
          * RETURNS
@@ -435,11 +438,12 @@ namespace My_Note
          *      e       -> does nothing
          *      
          * DESCRIPTION
-         *  This event handler is triggered by the user to rename the currently displayed subject. First, it prompts
-         *  the user to enter a new title for the current 'Subject', which cannot match an existing title. The invalid
-         *  titles are passed to a container in the RenameSubjectForm object and tested there. Upon user clicking 'OK'
-         *  in the result dialog, title of the currently displayed subject is updated and UI elements are redrawn. Data
-         *  is not saved in the data persistence object and is not written to disk from this method.
+         *  This event handler is triggered by the user to rename the currently displayed subject.
+         *  First, it prompts the user to enter a new title for the current 'Subject', which cannot
+         *  match an existing title. The invalid titles are passed to a container in the RenameSubjectForm
+         *  object and tested there. Upon user clicking 'OK' in the result dialog, title of the
+         *  currently displayed subject is updated and UI elements are redrawn. Data is not saved in
+         *  the data persistence object and is not written to disk from this method.
          * 
          * RETURNS
          *  Nothing
@@ -484,11 +488,12 @@ namespace My_Note
          *      e       -> does nothing
          *      
          * DESCRIPTION
-         *  This event handler is triggered by the user to delete the currently displayed 'Subject'. First, it asks
-         *  the user to confirm a subject delete. Upon user clicking 'OK', this method iterates through the container
-         *  of the data persistence object and removes the currently marked subject. Existing subjects 'move up' towards
-         *  the first one and a new empty subject is appended to the end of the container. Finally, UI elements are
-         *  redrawn on screen based on current data values.
+         *  This event handler is triggered by the user to delete the currently displayed 'Subject'.
+         *  First, it asks the user to confirm a subject delete. Upon user clicking 'OK', this method
+         *  iterates through the container of the data persistence object and removes the currently
+         *  marked subject. Existing subjects 'move up' towards the first one and a new empty subject
+         *  is appended to the end of the container. Finally, UI elements are redrawn on screen based
+         *  on current data values.
          * 
          * RETURNS
          *  Nothing
@@ -534,11 +539,11 @@ namespace My_Note
          *  private void updateToolStripMenuItems();
          *      
          * DESCRIPTION
-         *  This method is used to set and update the availability of tool strip menu items based on existing data
-         *  values. If there is only one 'Subject' being used in the application, then the 'Delete Subject' option
-         *  is disabled. If all the subjects are currently being used in the application, then the 'Add Subject'
-         *  option is disabled. This method gets called when the application loads or whenever any 'Subject' related
-         *  modifications are being made.
+         *  This method is used to set and update the availability of tool strip menu items based on
+         *  existing data values. If there is only one 'Subject' being used in the application, then
+         *  the 'Delete Subject' option is disabled. If all the subjects are currently being used in
+         *  the application, then the 'Add Subject' option is disabled. This method gets called when
+         *  the application loads or whenever any 'Subject' related modifications are being made.
          * 
          * RETURNS
          *  Nothing
@@ -580,10 +585,11 @@ namespace My_Note
          *      e       -> does nothing
          *      
          * DESCRIPTION
-         *  This event handler is triggered by the user to set the auto-save option to one minute intervals. It
-         *  updates the local and data persistence variables to the value of the user preferred option. Then check
-         *  marks are updated in the menu appropriately. Finally, it calls a method to adjust the behavior of the
-         *  timer responsible for automatically saving current work. 
+         *  This event handler is triggered by the user to set the auto-save option to one minute
+         *  intervals. It updates the local and data persistence variables to the value of the user
+         *  preferred option. Then check marks are updated in the menu appropriately. Finally, it
+         *  calls a method to adjust the behavior of the timer responsible for automatically saving
+         *  current work. 
          * 
          * RETURNS
          *  Nothing
@@ -612,10 +618,11 @@ namespace My_Note
          *      e       -> does nothing
          *      
          * DESCRIPTION
-         *  This event handler is triggered by the user to set the auto-save option to five minute intervals. It
-         *  updates the local and data persistence variables to the value of the user preferred option. Then check
-         *  marks are updated in the menu appropriately. Finally, it calls a method to adjust the behavior of the
-         *  timer responsible for automatically saving current work. 
+         *  This event handler is triggered by the user to set the auto-save option to five minute
+         *  intervals. It updates the local and data persistence variables to the value of the user
+         *  preferred option. Then check marks are updated in the menu appropriately. Finally, it
+         *  calls a method to adjust the behavior of the timer responsible for automatically saving
+         *  current work. 
          * 
          * RETURNS
          *  Nothing
@@ -644,10 +651,11 @@ namespace My_Note
          *      e       -> does nothing
          *      
          * DESCRIPTION
-         *  This event handler is triggered by the user to set the auto-save option to ten minute intervals. It
-         *  updates the local and data persistence variables to the value of the user preferred option. Then check
-         *  marks are updated in the menu appropriately. Finally, it calls a method to adjust the behavior of the
-         *  timer responsible for automatically saving current work. 
+         *  This event handler is triggered by the user to set the auto-save option to ten minute
+         *  intervals. It updates the local and data persistence variables to the value of the user
+         *  preferred option. Then check marks are updated in the menu appropriately. Finally, it
+         *  calls a method to adjust the behavior of the timer responsible for automatically saving
+         *  current work. 
          * 
          * RETURNS
          *  Nothing
@@ -676,10 +684,11 @@ namespace My_Note
          *      e       -> does nothing
          *      
          * DESCRIPTION
-         *  This event handler is triggered by the user to disable the auto-save option. It uses the '0' value as a
-         *  reference to indicate that no auto-save will be used. It updates the local and data persistence variables
-         *  to remember this value. Then check marks are updated in the menu appropriately. Finally, it calls a method
-         *  to adjust the behavior of the timer responsible for automatically saving current work.
+         *  This event handler is triggered by the user to disable the auto-save option. It uses the
+         *  '0' value as a reference to indicate that no auto-save will be used. It updates the local
+         *  and data persistence variables to remember this value. Then check marks are updated in
+         *  the menu appropriately. Finally, it calls a method to adjust the behavior of the timer
+         *  responsible for automatically saving current work.
          * 
          * RETURNS
          *  Nothing
@@ -706,9 +715,10 @@ namespace My_Note
          *  private void updateCheckMarksForAutoSaveItems();
          *      
          * DESCRIPTION
-         *  This method gets called to update the 'Checkmark' properties for menu items in the 'Auto Save' sub
-         *  menu, based on current values, to indicate to the user current setting for the auto-save feature. It
-         *  gets called once on startup and then anytime a new auto-save option is selected from the menu.
+         *  This method gets called to update the 'Checkmark' properties for menu items in the
+         *  'Auto Save' sub menu, based on current values, to indicate to the user current setting
+         *  for the auto-save feature. It gets called once on startup and then anytime a new auto-save
+         *  option is selected from the menu.
          * 
          * RETURNS
          *  Nothing
@@ -752,11 +762,12 @@ namespace My_Note
          *  private void updateAutoSaveTimer();
          *      
          * DESCRIPTION
-         *  This method gets called to update the values for the auto-save timer and adjust its behavior. A new
-         *  time interval (in milliseconds) is assigned to the m_autoSaveTimer variable or it is disabled based
-         *  on the user's selection. Value used for testing the user selection is the local variable which gets
-         *  saved in the data persistence object to remember the user 'preference'. If the user is changing the
-         *  time interval, then the timer stops, a new interval is assigned, and timer starts again.
+         *  This method gets called to update the values for the auto-save timer and adjust its
+         *  behavior. A new time interval (in milliseconds) is assigned to the m_autoSaveTimer
+         *  variable or it is disabled based on the user's selection. Value used for testing the
+         *  user selection is the local variable which gets saved in the data persistence object
+         *  to remember the user 'preference'. If the user is changing the time interval, then the
+         *  timer stops, a new interval is assigned, and timer starts again.
          * 
          * RETURNS
          *  Nothing
@@ -784,21 +795,26 @@ namespace My_Note
                 default:
                     break;
             }
-            if (m_autoSaveTimeInterval == 0)  // disable auto-save (or leave it disabled)
+            // disable auto-save (or leave it disabled)
+            if (m_autoSaveTimeInterval == 0)
             {
-                if (m_autoSaveTimer.Enabled == true)  // currently running
+                // currently running
+                if (m_autoSaveTimer.Enabled == true)
                 {
                     m_autoSaveTimer.Stop();
                 }
             }
-            else  // enable auto-save (or update the time interval)
+            // enable auto-save (or update the time interval)
+            else
             {
-                if (m_autoSaveTimer.Enabled == false)  // currently not running
+                // currently not running
+                if (m_autoSaveTimer.Enabled == false)
                 {
                     m_autoSaveTimer.Interval = newTimerInterval;
                     m_autoSaveTimer.Start();
                 }
-                else  // currently running
+                // currently running
+                else
                 {
                     m_autoSaveTimer.Stop();
                     m_autoSaveTimer.Interval = newTimerInterval;
@@ -817,14 +833,15 @@ namespace My_Note
          *      a_eventArgs     -> does nothing
          *      
          * DESCRIPTION
-         *  This event handler is assigned to the local 'm_autoSaveTimer' variable's 'Tick' event in the constructor
-         *  in mainForm.cs. It first triggers a save task, which saves all current content to a data persistence object
-         *  and writes it to disk. Then it strategically utilizes a 'notify' event, which mechanically adds a label to
-         *  the formm and triggers an additional timer. The new label 'subtly' shows up in top left corner of the form
-         *  to remind the user that the application has just automatically saved current content. This new timer is then
-         *  used to help to make the notification label fade out and disappear. This method and its usage was taken
-         *  directly from a MSDN website and properly documented. Change made is the addition of the custom 'notify'
-         *  technique.
+         *  This event handler is assigned to the local 'm_autoSaveTimer' variable's 'Tick' event
+         *  in the constructor in mainForm.cs. It first triggers a save task, which saves all current
+         *  content to a data persistence object and writes it to disk. Then it strategically utilizes
+         *  a 'notify' event, which mechanically adds a label to the formm and triggers an additional
+         *  timer. The new label 'subtly' shows up in top left corner of the form to remind the user
+         *  that the application has just automatically saved current content. This new timer is then
+         *  used to help to make the notification label fade out and disappear. This method and its
+         *  usage was taken directly from a MSDN website and properly documented. Change made is the
+         *  addition of the custom 'notify' technique.
          * 
          * RETURNS
          *  Nothing
@@ -839,7 +856,8 @@ namespace My_Note
         private void TimerEventProcessor(Object a_object, EventArgs a_eventArgs)
         {
             saveAllContent();
-            if (!this.Controls.Contains(m_autoSaveNotifyLabel)) // prevent adding too many labels
+            // prevent adding too many labels
+            if (!this.Controls.Contains(m_autoSaveNotifyLabel))
             {
                 this.Controls.Add(m_autoSaveNotifyLabel);
             }
@@ -856,13 +874,14 @@ namespace My_Note
          *      a_eventArgs     -> does nothing
          *      
          * DESCRIPTION
-         *  This event handler is assigned to the local 'm_autoSaveNotifyTimer' variable's 'Tick' event in the constructor
-         *  in mainForm.cs. It is triggered by and is meant to work with 'TimerEventProcessor()' event when an auto-save
-         *  task occurs. Its task is to visually fade the notification label and remove it from the 'Controls' container.
-         *  The 'fade' process uses the RGB values and fadingSpeed to gradually increase the RGB values for the ForeColor
-         *  of the label until it becomes transparent while the autoSaveNotify() event is being called. It then removes the
-         *  label from the form and stops the notify timer. This technique was taken from an online forum and is properly
-         *  documented.
+         *  This event handler is assigned to the local 'm_autoSaveNotifyTimer' variable's 'Tick'
+         *  event in the constructor in mainForm.cs. It is triggered by and is meant to work with
+         *  'TimerEventProcessor()' event when an auto-save task occurs. Its task is to visually
+         *  fade the notification label and remove it from the 'Controls' container. The 'fade'
+         *  process uses the RGB values and fadingSpeed to gradually increase the RGB values for
+         *  the ForeColor of the label until it becomes transparent while the autoSaveNotify() event
+         *  is being called. It then removes the label from the form and stops the notify timer.
+         *  This technique was taken from an online forum and is properly documented.
          *  
          * RETURNS
          *  Nothing

@@ -24,7 +24,9 @@ using System.Windows.Forms;
  *      http://www.blackbeltcoder.com/Articles/controls/creating-a-color-picker-with-an-owner-draw-combobox
  *      
  *  CODE STRUCTURE:
- *      This class maintains much of the structure designed by the original author.
+ *      - Properties
+ *      - Constructors
+ *      - Regular methods
  */
 
 namespace My_Note
@@ -154,7 +156,7 @@ namespace My_Note
          * SYNOPSIS
          *  protected void OnDrawItem(object sender, DrawItemEventArgs e);
          *      sender  -> does nothing
-         *      e       -> does nothing
+         *      e       -> provides data for the drawing of colored boxes
          * 
          * DESCRIPTION
          *  Draw list item.

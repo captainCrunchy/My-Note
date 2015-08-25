@@ -16,15 +16,17 @@ using System.Windows.Forms;
  *      This class is used when assigning or reassigning a new title to a subject. Its member variables are used to enhance
  *      functionality and a more appealing appearance of this form to the user. The m_subjectTitle string variable is used to
  *      store the title of the current subject being worked on and becomes a placeholder in the text box. The m_formTitle string
- *      variable is used to indicate which title is currently being changed. for example, when changing a current subject title 
+ *      variable is used to indicate which title is currently being changed, for example, when changing a current subject title 
  *      or adding a new subject title. The m_invalidTitles container holds a list of invalid titles that the caller/owner of this
  *      object needs to compare against when assigning a new subject title. Invalid titles are simply different versions of the
  *      current title, i.e. strings containing spacing or different capitalization but all the same character. 'New Subject' is
  *      also an invalid title.
  *      
  *  CODE STRUCTURE:
- *      Code structure in this file follows a simple order: member variables, properties, constructor/load methods, event handlers
- *      ordered based on their layout in the form immediately followed by each event handler's 'helper' methods. 
+ *      - Member variables
+ *      - Properties
+ *      - Constructors/load methods
+ *      - Event handlers (each followed by helper methods)
  */
 
 namespace My_Note
@@ -33,8 +35,8 @@ namespace My_Note
     {
         private string m_formTitle = "";                            // Assigns form title based on caller-passed title
         private string m_subjectTitle = "";                         // Stores subject title passed by caller object
-        private List<string> m_invalidTitles = new List<string>();  /* Stores a list of invalid title strings, gets
-                                                                       assigned dynamically (current) subject title */
+        private List<string> m_invalidTitles = new List<string>();  // Stores a list of invalid title strings, gets
+                                                                    // assigned dynamically (current) subject title
 
         // Assigns form title
         public string FormTitle
@@ -109,9 +111,10 @@ namespace My_Note
          *      e       -> does nothing
          *      
          * DESCRIPTION
-         *  This method gets called after the constructor has been called, when the form is loading and is about to be
-         *  presented to the user. It updates UI values of this form based on the values assigned by the caller. This
-         *  is done to present to the user a more appealing functionality and user interface.
+         *  This method gets called after the constructor has been called, when the form is loading
+         *  and is about to be presented to the user. It updates UI values of this form based on the
+         *  values assigned by the caller. This is done to present to the user a more appealing
+         *  functionality and user interface.
          * 
          * RETURNS
          *  Nothing
@@ -139,9 +142,9 @@ namespace My_Note
          *      e       -> does nothing
          *      
          * DESCRIPTION
-         *  This event handler method gets called as the user enters characters into the text box. It checks the validity
-         *  of the new title that the user is entering with each keystroke and enables or disables the 'OK button based
-         *  on the validity of the new title.
+         *  This event handler method gets called as the user enters characters into the text box. It
+         *  checks the validity of the new title that the user is entering with each keystroke and
+         *  enables or disables the 'OK button based on the validity of the new title.
          * 
          * RETURNS
          *  Nothing
@@ -165,10 +168,10 @@ namespace My_Note
          *  private void checkValidTitle();
          *      
          * DESCRIPTION
-         *  This method gets called to validate and update UI elements based on the current or default titles.
-         *  Invalid titles to compare against are populated in the InvalidTitles array by the calling object, and
-         *  the default title ('New Subject') is manually coded. If a valid title is found, then 'OK' button 
-         *  becomes enabled for the user to click on and update changes.
+         *  This method gets called to validate and update UI elements based on the current or default
+         *  titles. Invalid titles to compare against are populated in the InvalidTitles array by the
+         *  calling object, and the default title ('New Subject') is manually coded. If a valid title
+         *  is found, then 'OK' button becomes enabled for the user to click on and update changes.
          * 
          * RETURNS
          *  Nothing
@@ -210,8 +213,8 @@ namespace My_Note
          *      e       -> does nothing
          *      
          * DESCRIPTION
-         *  This method gets called when the 'OK' button is clicked and uses a method to validate and
-         *  update member variables, UI elements, and close this form.
+         *  This event handler gets called when the 'OK' button is clicked and uses a method to
+         *  validate and update member variables, UI elements, and close this form.
          * 
          * RETURNS
          *  Nothing
@@ -237,8 +240,8 @@ namespace My_Note
          *      e       -> does nothing
          *      
          * DESCRIPTION
-         *  This method gets called when the 'Enter' key is pressed on the keyboard and uses a method to 
-         *  validate and update member variables, UI elements, and close this form.
+         *  This event handler gets called when the 'Enter' key is pressed on the keyboard and uses
+         *  a method to validate and update member variables, UI elements, and close this form.
          * 
          * RETURNS
          *  Nothing
@@ -265,9 +268,9 @@ namespace My_Note
          *  private void updateTitle();
          *      
          * DESCRIPTION
-         *  This method gets called to validate and update member variables, UI elements, and close this
-         *  form. It assigns DialogResult = 'OK' to accomodate this functionality when the user presses
-         *  'Enter' on the keyboard.
+         *  This method gets called to validate and update member variables, UI elements, and close
+         *  this form. It assigns DialogResult = 'OK' to accomodate this functionality when the user
+         *  presses 'Enter' on the keyboard.
          * 
          * RETURNS
          *  Nothing
@@ -285,11 +288,6 @@ namespace My_Note
             this.Close();
         } /* private void updateTitle() */
 
-        /*  This method gets called when the 'Cancel' button is clicked to close this form.
-         * 
-         *  Murat Zazi
-         *  2:18pm 5/21/2015
-         */
         /*
          * NAME
          *  private void renameCancelButton_Click() - cancels operation and closes 'this' form
@@ -300,7 +298,8 @@ namespace My_Note
          *      e       -> does nothing
          *      
          * DESCRIPTION
-         *  This method gets called when the 'Cancel' button is clicked to dismiss changed and close this form.
+         *  This event handler gets called when the 'Cancel' button is clicked to dismiss changed
+         *  and close this form.
          * 
          * RETURNS
          *  Nothing

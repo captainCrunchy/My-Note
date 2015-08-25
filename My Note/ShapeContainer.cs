@@ -12,13 +12,13 @@ using System.Runtime.Serialization.Formatters.Binary;
  *      ShapeContainer
  *      
  *  DESCRIPTION:
- *      The purpose of this class is to store instances of the Shape class. 'Shapes' in the container are related based on a 
- *      shape number. An object of this class is intended to be used in a (someObject_Paint) event method by using a for-loop
- *      and connecting shapes based on their shape number. This class contains methods that accomodate the creation of shapes
+ *      The purpose of this class is to store instances of the Shape class. 'Shape(s)' in the container are related based on
+ *      a shape number. An object of this class is intended to be used in a (someObject_Paint) event method by using a for-loop
+ *      and connecting shapes based on their shape number. This class contains methods that accommodate the creation of shapes
  *      using points and removal of points upon erase execution by the user. Initial code for this class was taken from an
  *      existing project on the web with pencil and eraser functionality and extended to work with other shapes like lines,
  *      ellipses, and rectangles. The only changes to this class were made to member variables and arguments in methods by
- *      udpating the naming conventions to match this application. Public member variables were converted to private and were
+ *      updating the naming conventions to match this application. Public member variables were converted to private and were
  *      assigned properties. This class now implements 'ISerializable' interface, which allows this object to control its own
  *      serialization and deserialization. This class is marked with the 'SerializableAttribute' and is 'sealed' to prevent
  *      inheritance. 
@@ -27,7 +27,10 @@ using System.Runtime.Serialization.Formatters.Binary;
  *      http://www.codeproject.com/Articles/198419/Painting-on-a-panel
  * 
  *  CODE STRUCTURE:
- *      This class maintains much of original code structure with the addition of data persistence methods at the end.
+ *      - Member variables
+ *      - Constructors
+ *      - Regular methods
+ *      - Data peristence and serialization methods
  */
 
 namespace My_Note
@@ -36,6 +39,32 @@ namespace My_Note
     sealed public class ShapeContainer : ISerializable
     {
         private List<Shape> m_shapes;           // stores all the shapes
+
+        /*
+         * NAME
+         *  ShapeContainer() - gets called to deserialize this object
+         *  
+         * SYNOPSIS
+         *  public ShapeContainer(SerializationInfo a_info, StreamingContext a_context);
+         *      a_info      -> provides data it has stored
+         *      a_context   -> does nothing (required)
+         *      
+         * DESCRIPTION
+         *  This constructor gets called when instances of this object are to be deserialized.
+         *  
+         * RETURNS
+         *  Nothing
+         *  
+         * AUTHOR
+         *  Murat Zazi
+         *  
+         * DATE
+         *  9:33am 5/20/2015
+         */
+        public ShapeContainer(SerializationInfo a_info, StreamingContext a_context)
+        {
+            m_shapes = (List<Shape>)a_info.GetValue("Shapes", typeof(List<Shape>));
+        } /* public ShapeContainer(SerializationInfo a_info, StreamingContext a_context) */
 
         /*
          * NAME
@@ -140,10 +169,10 @@ namespace My_Note
 
         /*
          * NAME
-         *  GetShape() - gets a specific shape form container
+         *  RmoveShape() - removes parts of shapes form container
          *  
          * SYNOPSIS
-         *  public Shape GetShape(int a_index);
+         *  public void RemoveShape(Point a_pointLocation, float a_threshold);
          *      a_pointLocation     -> location of the point to be removed
          *      a_threshold         -> the proximity of shapes to location to be removed
          *      
@@ -170,7 +199,8 @@ namespace My_Note
                     // Removes all data for that number
                     m_shapes.RemoveAt(i);
 
-                    // Goes through the rest of the data and adds an extra 1 to defined them as a seprate shape and shuffles on the effect
+                    // Goes through the rest of the data and adds an extra '1' to
+                    // define them as a seprate shape and shuffles on the effect
                     for (int n = i; n < m_shapes.Count; n++)
                     {
                         m_shapes[n].ShapeNumber += 1;
@@ -180,32 +210,6 @@ namespace My_Note
                 }
             }
         } /* public void RemoveShape(Point a_pointLocation, float a_threshold) */
-
-        /*
-         * NAME
-         *  ShapeContainer() - gets called to deserialize this object
-         *  
-         * SYNOPSIS
-         *  public ShapeContainer(SerializationInfo a_info, StreamingContext a_context);
-         *      a_info      -> provides data it has stored
-         *      a_context   -> does nothing (required)
-         *      
-         * DESCRIPTION
-         *  This constructor gets called when instances of this object are to be deserialized.
-         *  
-         * RETURNS
-         *  Nothing
-         *  
-         * AUTHOR
-         *  Murat Zazi
-         *  
-         * DATE
-         *  9:33am 5/20/2015
-         */
-        public ShapeContainer(SerializationInfo a_info, StreamingContext a_context)
-        {
-            m_shapes = (List<Shape>)a_info.GetValue("Shapes", typeof(List<Shape>));
-        } /* public ShapeContainer(SerializationInfo a_info, StreamingContext a_context) */
 
         /*
          * NAME
