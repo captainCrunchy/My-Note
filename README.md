@@ -1,3 +1,3 @@
 # My-Note
-Senior Project
-This is the senior project for Murat Zazi. First real project in C#. This app is supposed to be a notebook.
+Better OneNote
+This is an improved version of OneNote that uses transparent overlay that can be used to draw on text
